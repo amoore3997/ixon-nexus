@@ -29,95 +29,168 @@
       <section class="page-title-section">
         <a class="breadcrumb" href="../">← Return to Nexus</a>
 
-        <div class="pill">Build forces. Track IP. Manage units. Prepare for battle.</div>
+        <div class="pill">Warlords. Influence. Coalition Keys. Veto Flags.</div>
 
         <h1>
-          Assemble your warband for
+          Build a legal Band for
           <span class="gradient-text">Ixon</span>.
         </h1>
 
         <p class="lead">
-          The Warbands section will become the tabletop companion for building
-          armies, selecting units, tracking Ixon Points, pulling up cards, and
-          managing live battlefield stats during play.
+          Warbands in Ixon are built around a single Warlord. The Warlord defines
+          faction alignment, Command Points, Influence, Coalition Keys, and Veto
+          Flags. If the Warlord cannot command a unit, that unit cannot be taken.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="#builder-preview">View Builder Plan</a>
-          <a class="button secondary" href="#play-mode">View Play Mode Plan</a>
+          <a class="button primary" href="#construction-rules">Army Construction</a>
+          <a class="button secondary" href="#builder-preview">Builder Preview</a>
         </div>
       </section>
 
-      <section class="section" id="builder-preview">
-        <div class="section-eyebrow">Warband Builder</div>
-        <h2>Planned builder features</h2>
+      <section class="section" id="construction-rules">
+        <div class="section-eyebrow">Band Construction</div>
+        <h2>Legal Band checklist</h2>
 
         <div class="card-grid">
           <div class="codex-card">
-            <h3>Faction Selection</h3>
+            <h3>1. Choose One Warlord</h3>
             <p>
-              Choose a primary faction such as Rangers, Veydrith Concord, Zol
-              Empire, Dominion of Thawn, TROI, Arcanum Order, Factionless, or
-              Everturned.
+              Every Band must include exactly one Warlord. The Warlord defines the
+              Band’s legal unit options and command economy.
             </p>
-            <span>Planned</span>
+            <span>Required</span>
           </div>
 
           <div class="codex-card">
-            <h3>Unit Roster</h3>
+            <h3>2. Check Influence</h3>
             <p>
-              Browse available units, view their cards, compare roles, and add
-              them to your active warband.
+              Add the Influence costs of all non-Warlord units. The total may not
+              exceed the Warlord’s Influence value.
             </p>
-            <span>Planned</span>
+            <span>Construction Only</span>
           </div>
 
           <div class="codex-card">
-            <h3>Ixon Points Tracker</h3>
+            <h3>3. Match Coalition Keys</h3>
             <p>
-              Track total IP cost automatically and warn players when a warband
-              exceeds the selected match limit.
+              A unit must share at least one Coalition Key with the Warlord to be
+              included.
             </p>
-            <span>Planned</span>
+            <span>Legality Check</span>
           </div>
 
           <div class="codex-card">
-            <h3>Role Limits</h3>
+            <h3>4. Apply Veto Flags</h3>
             <p>
-              Support commander slots, infantry limits, heavy units, specialists,
-              allied units, named characters, and scenario restrictions.
+              If the Warlord or unit has a VETO that negates a matching Coalition
+              Key, the unit is illegal.
             </p>
-            <span>Planned</span>
+            <span>Veto Overrides</span>
           </div>
 
           <div class="codex-card">
-            <h3>Save Warbands</h3>
+            <h3>5. Check Uniques</h3>
             <p>
-              Save lists locally in the browser first. Later, cloud saves can be
-              added with user accounts.
+              Warlords and unique cards may only appear once. Unique variations with
+              the same character name cannot both appear in the same Band.
             </p>
-            <span>Future Feature</span>
+            <span>Name Locked</span>
           </div>
 
           <div class="codex-card">
-            <h3>Share Lists</h3>
+            <h3>6. Review Unit Types</h3>
             <p>
-              Export warbands as text, JSON, printable sheets, or shareable
-              links for friends and playtest groups.
+              Bands may include Infantry, Ranged, Heavy, and Spec. units unless a
+              card, scenario, or future format rule limits them.
             </p>
-            <span>Future Feature</span>
+            <span>Roster Review</span>
           </div>
         </div>
       </section>
 
       <section class="section">
-        <div class="section-eyebrow">Example Warband</div>
-        <h2>Rangers test roster</h2>
+        <div class="section-eyebrow">Unit Types</div>
+        <h2>Battlefield roles</h2>
+
+        <div class="factions">
+          <div class="faction">Warlord Unit</div>
+          <div class="faction">Infantry Unit</div>
+          <div class="faction">Ranged Unit</div>
+          <div class="faction">Heavy Unit</div>
+          <div class="faction">Spec. Unit</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-eyebrow">Coalition System</div>
+        <h2>Faction mixing rules</h2>
+
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Survival</h3>
+            <p>
+              Cooperation based on endurance, necessity, exile, crisis response,
+              or mutual survival.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Conquest</h3>
+            <p>
+              Cooperation based on expansion, domination, militarism, hierarchy,
+              or aggressive ideology.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Technology</h3>
+            <p>
+              Cooperation based on machines, industry, cybernetics, engineering,
+              AI, or advanced systems.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Devotion</h3>
+            <p>
+              Cooperation based on faith, oath, duty, spiritual authority,
+              metaphysics, or sacred obligation.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Veto Flags</h3>
+            <p>
+              A Veto Flag is written as VETO: [KEY]. It negates that key and makes
+              incompatible units illegal.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Warlord Authority</h3>
+            <p>
+              The Warlord determines who can be included. Units follow the command
+              logic of their Warlord, not the other way around.
+            </p>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          <strong>Core principle:</strong>
+          Coalition Keys allow lore-appropriate faction mixing. Veto Flags prevent
+          “soup” armies by making certain ideological alliances impossible.
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-eyebrow">Example Warlord Card Logic</div>
+        <h2>Prototype Warlord profile</h2>
 
         <div class="status-card">
           <div class="status-inner">
-            <div class="section-eyebrow">Prototype List</div>
-            <h2>Hollowfang Patrol</h2>
+            <div class="section-eyebrow">Warlord Unit</div>
+            <h2>Example Ranger Warlord</h2>
 
             <div class="status-row">
               <span>Faction</span>
@@ -125,18 +198,71 @@
             </div>
 
             <div class="status-row">
-              <span>Match Limit</span>
-              <strong>100 IP</strong>
+              <span>Command Points</span>
+              <strong>3 CP</strong>
             </div>
 
             <div class="status-row">
-              <span>Current Total</span>
-              <strong>100 IP</strong>
+              <span>Influence</span>
+              <strong>10 Influence</strong>
+            </div>
+
+            <div class="status-row">
+              <span>Coalition Keys</span>
+              <strong>Survival, Technology</strong>
+            </div>
+
+            <div class="status-row">
+              <span>Veto Flags</span>
+              <strong>VETO: Conquest</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          This example Warlord could include units sharing Survival or Technology,
+          unless those units are blocked by VETO: Conquest or another relevant Veto
+          Flag.
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-eyebrow">Example Band</div>
+        <h2>Hollowfang Patrol</h2>
+
+        <div class="status-card">
+          <div class="status-inner">
+            <div class="section-eyebrow">Prototype Legal Band</div>
+            <h2>Hollowfang Patrol</h2>
+
+            <div class="status-row">
+              <span>Warlord</span>
+              <strong>Kaelen Veyne</strong>
+            </div>
+
+            <div class="status-row">
+              <span>Faction</span>
+              <strong>Rangers</strong>
+            </div>
+
+            <div class="status-row">
+              <span>Command Points</span>
+              <strong>3 CP</strong>
+            </div>
+
+            <div class="status-row">
+              <span>Influence Limit</span>
+              <strong>10</strong>
+            </div>
+
+            <div class="status-row">
+              <span>Current Influence</span>
+              <strong>10 / 10</strong>
             </div>
 
             <div class="status-row">
               <span>Status</span>
-              <strong>Legal Test List</strong>
+              <strong>Legal Test Band</strong>
             </div>
           </div>
         </div>
@@ -145,105 +271,160 @@
           <div class="codex-card">
             <h3>Kaelen Veyne</h3>
             <p>
-              Warlord. Hollowfang leader. Built for command presence,
-              aggressive movement, and close-range pressure.
+              Warlord. Defines the Band’s command structure, Influence limit,
+              Coalition Keys, and Veto Flags.
             </p>
-            <span>0 IP</span>
+            <span>Required Warlord</span>
           </div>
 
           <div class="codex-card">
-            <h3>Hollowfang Skirmishers</h3>
+            <h3>Hollowfang Skirmisher</h3>
             <p>
-              Infantry unit. Fast-moving Ranger fighters suited for ambush,
-              cover movement, and objective play.
+              Infantry unit. Mobile objective pressure and flexible activation use.
             </p>
-            <span>20 IP</span>
+            <span>2 Influence</span>
           </div>
 
           <div class="codex-card">
-            <h3>Ironvale Marksmen</h3>
+            <h3>Ironvale Marksman</h3>
             <p>
-              Ranged unit. Precision fire support designed to control lanes and
-              punish exposed enemy units.
+              Ranged unit. Lane control, ranged pressure, and punishment against
+              exposed units.
             </p>
-            <span>25 IP</span>
+            <span>3 Influence</span>
           </div>
 
           <div class="codex-card">
             <h3>Ashen Hollow Vanguard</h3>
             <p>
-              Heavy unit. Durable frontline pressure with stronger defenses and
-              battlefield control.
+              Heavy unit. Durable frontline presence for contesting Shard Nodes.
             </p>
-            <span>35 IP</span>
+            <span>3 Influence</span>
           </div>
 
           <div class="codex-card">
             <h3>Dustspire Scout</h3>
             <p>
-              Specialist unit. Mobile objective runner with utility actions,
-              scouting options, and tactical flexibility.
+              Spec. unit. Utility actions, scouting pressure, and objective play.
             </p>
-            <span>20 IP</span>
+            <span>2 Influence</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="builder-preview">
+        <div class="section-eyebrow">Future Interactive Tool</div>
+        <h2>Warband builder plan</h2>
+
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Select Warlord</h3>
+            <p>
+              The builder starts by choosing a Warlord. This automatically sets
+              Influence, CP, Coalition Keys, and Veto Flags.
+            </p>
+            <span>Planned</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Filter Legal Units</h3>
+            <p>
+              Units that do not share a Coalition Key or are blocked by a Veto Flag
+              should be hidden or marked illegal.
+            </p>
+            <span>Planned</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Track Influence</h3>
+            <p>
+              The builder should automatically total Influence and warn the player
+              if the Band exceeds the Warlord’s limit.
+            </p>
+            <span>Planned</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Check Unique Names</h3>
+            <p>
+              The builder should prevent duplicate Warlords and duplicate unique
+              character names.
+            </p>
+            <span>Planned</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Save Locally</h3>
+            <p>
+              First version can save Bands in the browser using local storage, with
+              no account or backend required.
+            </p>
+            <span>First Version</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Export Band</h3>
+            <p>
+              Players should eventually export a Band as text, JSON, printable
+              roster, or a shareable link.
+            </p>
+            <span>Future Feature</span>
           </div>
         </div>
       </section>
 
       <section class="section" id="play-mode">
-        <div class="section-eyebrow">Live Companion</div>
-        <h2>Play mode plan</h2>
+        <div class="section-eyebrow">Live Play Companion</div>
+        <h2>During-game tracking</h2>
 
         <div class="card-grid">
           <div class="codex-card">
-            <h3>HP Tracking</h3>
+            <h3>Command Points</h3>
             <p>
-              Tap buttons to raise or lower each unit’s HP during a match without
-              needing paper notes.
+              Track current CP each turn. CP resets at the beginning of each turn and
+              is spent to activate units or play Tactical Cards.
             </p>
-            <span>First Interactive Feature</span>
+            <span>Core Tracker</span>
           </div>
 
           <div class="codex-card">
-            <h3>Activation Toggle</h3>
+            <h3>Shard CP Bonus</h3>
             <p>
-              Mark units as activated during the round, then reset all activation
-              states at the start of the next round.
+              Add temporary CP when a Warlord gains command from controlled Shard
+              Nodes.
             </p>
-            <span>First Interactive Feature</span>
+            <span>Core Tracker</span>
           </div>
 
           <div class="codex-card">
-            <h3>Status Effects</h3>
+            <h3>Unit Activation</h3>
             <p>
-              Track effects like pinned, wounded, shielded, burning, corrupted,
-              stunned, hidden, or empowered.
+              Mark units as activated so each unit activates only once per turn.
             </p>
-            <span>Planned</span>
+            <span>Core Tracker</span>
           </div>
 
           <div class="codex-card">
-            <h3>Command Resources</h3>
+            <h3>Action Counter</h3>
             <p>
-              Manage command points, tactical resources, scenario points, or
-              faction-specific battlefield resources.
+              Track the two actions available to a unit during its activation.
             </p>
             <span>Planned</span>
           </div>
 
           <div class="codex-card">
-            <h3>Unit Card Viewer</h3>
+            <h3>Health Points</h3>
             <p>
-              Tap a unit to pull up its card, abilities, stats, traits, weapons,
-              and special rules.
+              Track HP changes from attacks, counters, healing, buffs, and action
+              resolution.
             </p>
-            <span>Planned</span>
+            <span>Core Tracker</span>
           </div>
 
           <div class="codex-card">
-            <h3>Round Tracker</h3>
+            <h3>Shard Control</h3>
             <p>
-              Track current round, objectives, end-of-round effects, and scenario
-              scoring.
+              Track claimed, contested, and controlled Shard Nodes during the match.
             </p>
             <span>Planned</span>
           </div>
@@ -253,10 +434,9 @@
       <section class="section">
         <div class="notice">
           <strong>Development path:</strong>
-          This page is currently a static planning shell. The first real
-          interactive version should use JavaScript and browser local storage so
-          players can build and track warbands without needing accounts,
-          databases, or a backend.
+          The first interactive version of this page should use JavaScript only.
+          It can track CP, activated units, HP, and Influence locally in the browser
+          before adding accounts, cloud saves, or multiplayer features.
         </div>
       </section>
     </main>
