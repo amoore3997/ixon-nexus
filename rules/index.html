@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Ixon Rules</title>
+  <title>Ixon Core Rules</title>
 
   <link rel="stylesheet" href="../styles.css" />
 </head>
@@ -14,7 +14,7 @@
     <header>
       <div>
         <div class="brand-eyebrow">Ixon Nexus Rules Archive</div>
-        <div class="brand-title">GAME RULES</div>
+        <div class="brand-title">CORE RULES</div>
       </div>
 
       <nav aria-label="Main navigation">
@@ -29,205 +29,544 @@
       <section class="page-title-section">
         <a class="breadcrumb" href="../">← Return to Nexus</a>
 
-        <div class="pill">Core rules. Combat flow. Tactical cards. Living updates.</div>
+        <div class="pill">Skirmish combat. Tactical cards. Shard control. Warlord command.</div>
 
         <h1>
-          The tabletop command manual for
+          Core rules for
           <span class="gradient-text">Ixon</span>.
         </h1>
 
         <p class="lead">
-          This rules hub will hold the official living rules for the Ixon
-          tabletop game, including movement, combat, unit stats, tactical cards,
-          resources, army building, victory conditions, and future balance updates.
+          Ixon is a competitive tabletop skirmish game set in a fractured galaxy
+          shaped by war, ideology, and the control of Shard resources. Players
+          command individual miniatures led by a single Warlord, combining lethal
+          dice-based combat with tactical card play.
         </p>
       </section>
 
       <section class="section">
-        <div class="section-eyebrow">Rulebook Sections</div>
-        <h2>Browse the rules archive</h2>
+        <div class="section-eyebrow">Rules Index</div>
+        <h2>Browse the command manual</h2>
 
         <div class="card-grid">
-          <a class="codex-card" href="#core-rules">
-            <h3>Core Rules</h3>
-            <p>
-              The basic structure of the game, what players need to begin, table
-              setup, dice, measurements, and the overall match format.
-            </p>
-            <span>Open core rules →</span>
+          <a class="codex-card" href="#game-structure">
+            <h3>Game Structure</h3>
+            <p>Players, board size, deployment, initiative, model activation, and basic play format.</p>
+            <span>Open section →</span>
+          </a>
+
+          <a class="codex-card" href="#unit-cards">
+            <h3>Unit Cards</h3>
+            <p>Unit types, core stats, abilities, Health Points, Command Points, and Influence.</p>
+            <span>Open section →</span>
+          </a>
+
+          <a class="codex-card" href="#victory">
+            <h3>Victory Conditions</h3>
+            <p>Win through total elimination or by controlling all Shard Nodes for a full round.</p>
+            <span>Open section →</span>
+          </a>
+
+          <a class="codex-card" href="#shard-nodes">
+            <h3>Shard Nodes</h3>
+            <p>Claim, control, contest, and gain command bonuses from battlefield Shard deposits.</p>
+            <span>Open section →</span>
           </a>
 
           <a class="codex-card" href="#turn-structure">
             <h3>Turn Structure</h3>
-            <p>
-              Learn how rounds work, how units activate, how actions are spent,
-              and how the battlefield changes from phase to phase.
-            </p>
-            <span>Open turn flow →</span>
+            <p>Draw, Command, Activation, and End phases, including CP spending and action resolution.</p>
+            <span>Open section →</span>
           </a>
 
           <a class="codex-card" href="#combat">
             <h3>Combat</h3>
-            <p>
-              Rules for attacks, range, line of sight, cover, wounds, defense,
-              armor, critical effects, and battlefield pressure.
-            </p>
-            <span>Open combat rules →</span>
+            <p>Attack rolls, defense mitigation, critical hits, damage, and deflection damage.</p>
+            <span>Open section →</span>
           </a>
 
-          <a class="codex-card" href="#unit-stats">
-            <h3>Unit Stats</h3>
-            <p>
-              Explain HP, AP, movement, defense, attack profiles, faction tags,
-              unit roles, special traits, and IP cost.
-            </p>
-            <span>Open stat guide →</span>
-          </a>
-
-          <a class="codex-card" href="#tactical-cards">
+          <a class="codex-card" href="#cards">
             <h3>Tactical Cards</h3>
-            <p>
-              Rules for building tactical decks, drawing cards, playing effects,
-              resolving reactions, and managing card limits.
-            </p>
-            <span>Open card rules →</span>
+            <p>Deck size, hand limit, card types, counters, enhancements, mobilization, and card costs.</p>
+            <span>Open section →</span>
           </a>
 
-          <a class="codex-card" href="#army-building">
-            <h3>Army Building</h3>
-            <p>
-              Build warbands using IP limits, faction restrictions, role slots,
-              commanders, allies, and optional scenario rules.
-            </p>
-            <span>Open army rules →</span>
+          <a class="codex-card" href="#army-construction">
+            <h3>Army Construction</h3>
+            <p>Warlords, Influence, Coalition Keys, Veto Flags, and faction mixing legality.</p>
+            <span>Open section →</span>
+          </a>
+
+          <a class="codex-card" href="#design-principles">
+            <h3>Design Principles</h3>
+            <p>Lethal combat, limited resources, faction identity, and low bookkeeping.</p>
+            <span>Open section →</span>
           </a>
         </div>
       </section>
 
-      <section class="section" id="core-rules">
-        <div class="section-eyebrow">Foundation</div>
-        <h2>Core rules placeholder</h2>
+      <section class="section" id="game-structure">
+        <div class="section-eyebrow">I. Core Game Structure</div>
+        <h2>Basic format</h2>
 
-        <div class="notice">
-          <strong>Status:</strong>
-          This section will eventually contain the complete basic rules for
-          playing Ixon. For now, this page is the rulebook shell. Add your actual
-          rules here as the tabletop system develops.
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Players</h3>
+            <p>
+              Ixon is designed for 2–4 players in standard competitive play. Larger
+              games are possible with bigger tables, more Shard Nodes, and adjusted
+              model caps.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Board Size</h3>
+            <p>
+              Standard play uses at least a 36&quot; x 36&quot; tabletop. Larger maps
+              can support longer, more complex games with more terrain and multi-level
+              platforms.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Models</h3>
+            <p>
+              Units activate individually. There are no squad activations. Each model
+              is represented by its own unit card.
+            </p>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          <strong>Starting the game:</strong>
+          Each player rolls a D20. The highest roll goes first, and turns proceed
+          clockwise. Players deploy models in a zone along any edge or corner of the
+          map, starting at least 10&quot; away from each other’s deployment zones.
+        </div>
+      </section>
+
+      <section class="section" id="unit-cards">
+        <div class="section-eyebrow">II. Unit Cards</div>
+        <h2>Unit types and stats</h2>
+
+        <div class="factions">
+          <div class="faction">Warlord Unit</div>
+          <div class="faction">Infantry Unit</div>
+          <div class="faction">Ranged Unit</div>
+          <div class="faction">Heavy Unit</div>
+          <div class="faction">Spec. Unit</div>
+        </div>
+
+        <div class="card-grid" style="margin-top: 18px;">
+          <div class="codex-card">
+            <h3>MR: Movement Range</h3>
+            <p>
+              Determines how far a unit can move. Movement is measured freely in
+              inches with no grid or facing.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>AP: Attack Power</h3>
+            <p>
+              The number of d6 rolled when the model attacks. Higher AP means more
+              attack dice.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>AR: Attack Range</h3>
+            <p>
+              The maximum distance required to initiate an attack against an enemy
+              model.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>DR: Defense Rating</h3>
+            <p>
+              The number of d6 rolled when defending against attacks. Successful
+              defense dice mitigate incoming damage.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>HP: Health Points</h3>
+            <p>
+              A model reduced to 0 HP is destroyed and removed from the board
+              immediately.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Abilities</h3>
+            <p>
+              Some units include active or passive abilities that modify actions,
+              movement, attacks, defenses, or interactions.
+            </p>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          <strong>Warlord cards:</strong>
+          Warlords include Command Points and Influence values. CP powers unit
+          activations during play. Influence limits army construction before the game.
+        </div>
+      </section>
+
+      <section class="section" id="victory">
+        <div class="section-eyebrow">III. Victory Conditions</div>
+        <h2>How to win</h2>
+
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Total Elimination</h3>
+            <p>
+              A player wins immediately when all enemy models are destroyed.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Shard Dominion</h3>
+            <p>
+              A player wins by controlling all Shard Nodes for a full round without
+              that control being interrupted.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Shard Count</h3>
+            <p>
+              At least one Shard Node is required. Standard play is recommended with
+              1–5 Shard Nodes on the board.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="shard-nodes">
+        <div class="section-eyebrow">IV. Shard Nodes</div>
+        <h2>Claiming and contesting objectives</h2>
+
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Claim</h3>
+            <p>
+              A model may use an action to claim a Shard Node within 1&quot; if no
+              opponent models are within that range and the node is not already
+              controlled by that player.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Control</h3>
+            <p>
+              If successful, the player controls the node as long as their model
+              remains within range.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Command Bonus</h3>
+            <p>
+              While holding a Shard Node, the player’s Warlord gains 1 extra Command
+              Point.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Contested Nodes</h3>
+            <p>
+              If an opponent model enters range of a claimed node, the node becomes
+              contested and provides no bonuses.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>No Double Claim</h3>
+            <p>
+              A player may not claim a Shard Node they already control.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Objective Pressure</h3>
+            <p>
+              Shard Nodes force players to fight over territory instead of relying
+              only on elimination.
+            </p>
+          </div>
         </div>
       </section>
 
       <section class="section" id="turn-structure">
-        <div class="section-eyebrow">Round Flow</div>
-        <h2>Turn structure draft shell</h2>
+        <div class="section-eyebrow">V. Turn Structure</div>
+        <h2>The cycle of play</h2>
 
         <div class="card-grid">
           <div class="codex-card">
-            <h3>1. Start of Round</h3>
+            <h3>1. Draw Phase</h3>
             <p>
-              Resolve start-of-round effects, refresh temporary resources, and
-              prepare units for activation.
+              The active player may draw one card if they have fewer than five cards
+              in hand. A player with five cards may not draw unless they discard first.
             </p>
           </div>
 
           <div class="codex-card">
-            <h3>2. Unit Activations</h3>
+            <h3>2. Command Phase</h3>
             <p>
-              Players alternate activating units, spending actions, moving,
-              attacking, using abilities, and playing tactical cards.
+              Spend Command Points to activate units. One CP activates one unit.
+              Tactical Cards may also be played during this phase.
             </p>
           </div>
 
           <div class="codex-card">
-            <h3>3. End of Round</h3>
+            <h3>3. Activation Phase</h3>
             <p>
-              Resolve lasting effects, check objectives, remove expired statuses,
-              score points, and prepare for the next round.
+              An activated unit may perform up to two actions. Common actions include
+              Move, Attack, Claim, and Ability.
             </p>
           </div>
+
+          <div class="codex-card">
+            <h3>4. End Phase</h3>
+            <p>
+              The active player ends their turn. Play passes to the next player in
+              clockwise order.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>CP Exhaustion</h3>
+            <p>
+              When a player spends all available Command Points, their turn ends
+              after the final activation resolves.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Once Per Turn</h3>
+            <p>
+              Units activate individually and may only activate once per turn.
+            </p>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          <strong>Resolution timing:</strong>
+          Actions resolve after they have been physically completed unless interrupted
+          by a Counter or ability. Counters resolve before the interrupted action’s
+          final outcome is applied.
         </div>
       </section>
 
       <section class="section" id="combat">
-        <div class="section-eyebrow">Battlefield Resolution</div>
-        <h2>Combat topics to define</h2>
-
-        <div class="factions">
-          <div class="faction">Attack Rolls</div>
-          <div class="faction">Defense Rolls</div>
-          <div class="faction">Range</div>
-          <div class="faction">Cover</div>
-          <div class="faction">Line of Sight</div>
-          <div class="faction">Damage</div>
-          <div class="faction">Critical Effects</div>
-          <div class="faction">Status Effects</div>
-        </div>
-      </section>
-
-      <section class="section" id="unit-stats">
-        <div class="section-eyebrow">Unit Language</div>
-        <h2>Stat glossary draft</h2>
+        <div class="section-eyebrow">VI. Combat & Mitigation</div>
+        <h2>Lethal dice resolution</h2>
 
         <div class="card-grid">
           <div class="codex-card">
-            <h3>HP</h3>
-            <p>Health Points. Tracks how much damage a unit can take before being removed or defeated.</p>
+            <h3>Attack Roll</h3>
+            <p>
+              The attacking model rolls a number of d6 equal to its Attack Power.
+            </p>
           </div>
 
           <div class="codex-card">
-            <h3>AP</h3>
-            <p>Action Points. Determines how many actions a unit can spend during its activation.</p>
+            <h3>1–3: Miss</h3>
+            <p>
+              The attack die misses and deals no damage.
+            </p>
           </div>
 
           <div class="codex-card">
-            <h3>IP</h3>
-            <p>Ixon Points. The army-building cost used to construct balanced warbands.</p>
+            <h3>4–5: Hit</h3>
+            <p>
+              Each hit deals one damage before mitigation.
+            </p>
           </div>
 
           <div class="codex-card">
-            <h3>Role</h3>
-            <p>Defines battlefield purpose, such as commander, infantry, ranged, heavy, support, or specialist.</p>
+            <h3>6: Critical Hit</h3>
+            <p>
+              A critical hit deals damage that bypasses one form of mitigation.
+            </p>
           </div>
 
           <div class="codex-card">
-            <h3>Faction</h3>
-            <p>Identifies the force, culture, empire, guild, order, or origin a unit belongs to.</p>
+            <h3>Defense Roll</h3>
+            <p>
+              The defending model rolls d6 equal to its Defense Rating. Each die
+              result of 4–6 mitigates one incoming hit.
+            </p>
           </div>
 
           <div class="codex-card">
-            <h3>Traits</h3>
-            <p>Special keywords that alter how a unit moves, fights, reacts, or interacts with rules.</p>
+            <h3>Critical Mitigation</h3>
+            <p>
+              Critical damage may be mitigated only by using extra successful defense
+              dice. Two successful defense dice can counter one critical hit.
+            </p>
           </div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          <strong>Deflection damage:</strong>
+          Any unassigned successful defense dice may be used to deal Deflection
+          damage back to the attacking model, unless a card or ability says otherwise.
         </div>
       </section>
 
-      <section class="section" id="tactical-cards">
-        <div class="section-eyebrow">Tactical Decks</div>
-        <h2>Card system placeholder</h2>
+      <section class="section" id="cards">
+        <div class="section-eyebrow">VII. Tactical Card System</div>
+        <h2>Decks, hands, and card timing</h2>
 
-        <div class="notice">
-          <strong>Design note:</strong>
-          This section can eventually explain deck size, hand size, timing
-          windows, faction-specific cards, neutral cards, reactions, interrupts,
-          and scenario cards.
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Deck Size</h3>
+            <p>
+              Each player uses one tactical deck containing 20–40 cards.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Starting Hand</h3>
+            <p>
+              Each player draws three cards at the start of the game.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Hand Limit</h3>
+            <p>
+              The hand limit is five cards. Players may draw one card at the beginning
+              of their turn if below the limit.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Enhancements</h3>
+            <p>
+              Played during your turn to improve stats, attacks, abilities, or other
+              unit performance.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Mobilization</h3>
+            <p>
+              Played during your turn to affect movement, positioning, tempo, or board
+              control.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Counters</h3>
+            <p>
+              Reactive cards played during an opponent’s turn before an action resolves.
+            </p>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          <strong>Card cost:</strong>
+          To play a Tactical Card, the player must spend 1 CP and discard one
+          additional card from their hand or deck. A deck or hand may include no more
+          than four copies of the same card.
         </div>
       </section>
 
-      <section class="section" id="army-building">
-        <div class="section-eyebrow">Warband Construction</div>
-        <h2>Army building placeholder</h2>
+      <section class="section" id="army-construction">
+        <div class="section-eyebrow">VIII. Army Construction</div>
+        <h2>Warlord authority and legal bands</h2>
 
-        <div class="notice">
-          <strong>Coming next:</strong>
-          This section will define IP limits, faction restrictions, unit role
-          limits, commanders, allies, named characters, and starter warband formats.
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>One Warlord</h3>
+            <p>
+              Each army must include exactly one Warlord. Warlords are unique and
+              may only appear once in a Band.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Influence</h3>
+            <p>
+              Influence is used only during army construction. The total Influence
+              cost of all units may not exceed the Warlord’s Influence value.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Duplicate Units</h3>
+            <p>
+              Basic unit cards are non-unique and may be duplicated unless specified
+              otherwise.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Unique Cards</h3>
+            <p>
+              Unique cards cannot share the same name in a Band, even if they are
+              different variations of that character.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Coalition Keys</h3>
+            <p>
+              Coalition Keys represent legal reasons for cooperation. They do not
+              grant bonuses and exist only for army construction.
+            </p>
+          </div>
+
+          <div class="codex-card">
+            <h3>Veto Flags</h3>
+            <p>
+              Veto Flags are absolute incompatibilities. A VETO negates the matching
+              Coalition Key and overrides all other permissions.
+            </p>
+          </div>
+        </div>
+
+        <div class="factions" style="margin-top: 18px;">
+          <div class="faction">Survival</div>
+          <div class="faction">Conquest</div>
+          <div class="faction">Technology</div>
+          <div class="faction">Devotion</div>
+        </div>
+
+        <div class="notice" style="margin-top: 18px;">
+          <strong>Army legality rule:</strong>
+          A unit may join a Band only if it shares at least one Coalition Key with
+          the Warlord and no Coalition Key is negated by a Veto Flag on either the
+          Warlord or the unit. In short: if the Warlord cannot command them, they
+          cannot be taken.
+        </div>
+      </section>
+
+      <section class="section" id="design-principles">
+        <div class="section-eyebrow">IX. Design Principles</div>
+        <h2>What Ixon emphasizes</h2>
+
+        <div class="factions">
+          <div class="faction">Lethal Combat</div>
+          <div class="faction">Limited Resources</div>
+          <div class="faction">Faction Identity</div>
+          <div class="faction">Player Agency</div>
+          <div class="faction">Objective Pressure</div>
+          <div class="faction">Lore-Driven Army Building</div>
+          <div class="faction">Low Bookkeeping</div>
+          <div class="faction">Open Information</div>
         </div>
       </section>
     </main>
 
     <footer>
       <p>
-        Ixon Rules is part of Ixon Nexus, a public hub for the Ixon sci-fantasy
-        tabletop universe.
+        Ixon Core Rules is part of Ixon Nexus, a public hub for the Ixon
+        sci-fantasy tabletop universe.
       </p>
     </footer>
   </div>
