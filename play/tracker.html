@@ -54,7 +54,7 @@
 
     .tracker-summary {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(8, 1fr);
       gap: 12px;
       margin: 20px 0;
     }
@@ -88,6 +88,15 @@
       color: #cffafe;
     }
 
+    .qe-card {
+      border: 1px solid rgba(167, 139, 250, 0.38);
+      background: rgba(167, 139, 250, 0.08);
+    }
+
+    .qe-card strong {
+      color: #ddd6fe;
+    }
+
     .match-controls,
     .phase-controls {
       display: flex;
@@ -103,7 +112,8 @@
     .match-button,
     .unit-button,
     .action-choice,
-    .phase-button {
+    .phase-button,
+    .modal-action-button {
       border: 1px solid var(--border);
       background: rgba(31, 41, 55, 0.9);
       color: var(--text);
@@ -116,20 +126,23 @@
     .match-button:hover,
     .unit-button:hover,
     .action-choice:hover,
-    .phase-button:hover {
+    .phase-button:hover,
+    .modal-action-button:hover {
       border-color: rgba(103, 232, 249, 0.7);
       color: var(--cyan);
     }
 
     .match-button.primary,
-    .unit-button.primary {
+    .unit-button.primary,
+    .modal-action-button.primary {
       background: var(--cyan);
       color: #07111f;
       border-color: transparent;
     }
 
     .match-button.danger,
-    .unit-button.danger {
+    .unit-button.danger,
+    .modal-action-button.danger {
       color: #fecaca;
       border-color: rgba(248, 113, 113, 0.45);
     }
@@ -142,7 +155,8 @@
 
     .unit-button:disabled,
     .action-choice:disabled,
-    .tiny-button:disabled {
+    .tiny-button:disabled,
+    .modal-action-button:disabled {
       cursor: not-allowed;
       opacity: 0.4;
     }
@@ -268,7 +282,8 @@
     .stat-buttons,
     .hp-buttons,
     .unit-controls,
-    .action-controls {
+    .action-controls,
+    .modal-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -319,7 +334,8 @@
       margin-top: 20px;
     }
 
-    .card-modal-backdrop {
+    .card-modal-backdrop,
+    .activation-modal-backdrop {
       position: fixed;
       inset: 0;
       z-index: 100;
@@ -331,12 +347,14 @@
       backdrop-filter: blur(8px);
     }
 
-    .card-modal-backdrop.open {
+    .card-modal-backdrop.open,
+    .activation-modal-backdrop.open {
       display: flex;
     }
 
-    .card-modal {
-      width: min(520px, 100%);
+    .card-modal,
+    .activation-modal {
+      width: min(560px, 100%);
       border: 1px solid var(--border);
       background: rgba(17, 24, 39, 0.98);
       border-radius: 24px;
@@ -360,6 +378,12 @@
       color: var(--cyan);
     }
 
+    .modal-copy {
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 10px 0 18px;
+    }
+
     .card-placeholder {
       margin-top: 18px;
       min-height: 340px;
@@ -378,7 +402,7 @@
 
     @media (max-width: 1200px) {
       .tracker-summary {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
 
       .tracker-grid {
@@ -407,7 +431,8 @@
       .unit-button,
       .action-choice,
       .tiny-button,
-      .phase-button {
+      .phase-button,
+      .modal-action-button {
         width: 100%;
       }
     }
@@ -456,6 +481,11 @@
           <strong id="currentCpValue">4</strong>
         </div>
 
+        <div class="summary-card qe-card">
+          <span>QE Reserve</span>
+          <strong id="qeReserveValue">0</strong>
+        </div>
+
         <div class="summary-card">
           <span>Influence</span>
           <strong id="influenceValue">10 / 10</strong>
@@ -470,11 +500,11 @@
       <section class="match-controls">
         <button class="match-button" onclick="changeBaseCp(-1)">- Base CP</button>
         <button class="match-button" onclick="changeBaseCp(1)">+ Base CP</button>
-
         <button class="match-button" onclick="changeShardCp(-1)">- Shard CP</button>
         <button class="match-button" onclick="changeShardCp(1)">+ Shard CP</button>
-
         <button class="match-button" onclick="addTemporaryCp()">+1 Temporary CP</button>
+        <button class="match-button" onclick="changeQeReserve(1)">+ QE</button>
+        <button class="match-button" onclick="changeQeReserve(-1)">- QE</button>
         <button class="match-button" onclick="spendCp()">Spend 1 CP</button>
         <button class="match-button primary" onclick="resetTurn()">Reset Turn</button>
         <button class="match-button" onclick="nextRound()">Next Round</button>
@@ -494,12 +524,31 @@
 
       <section class="tracker-note">
         <strong>Turn flow:</strong>
-        Start in Draw Phase, move into Command Phase to spend CP, enter Activation Phase
-        while resolving a unit activation, then return to Command Phase if CP remains.
-        Once final CP is spent and resolved, move into End Phase to resolve end-of-turn
-        abilities before ending the turn.
+        Start in Draw Phase, move into Command Phase to spend CP or QE, enter Activation Phase
+        while resolving a unit activation, then return to Command Phase if CP or QE remains.
+        QE is a reserve pool and does not reset at the end of the turn.
       </section>
     </main>
+  </div>
+
+  <div class="activation-modal-backdrop" id="activationModal" onclick="closeActivationModal(event)">
+    <div class="activation-modal">
+      <button class="modal-close-button" onclick="closeActivationModal()">Close</button>
+
+      <div class="section-eyebrow">Activation Payment</div>
+      <h2 id="activationModalTitle">Activate Unit</h2>
+
+      <p class="modal-copy" id="activationModalText">
+        Choose how this activation is paid for.
+      </p>
+
+      <div class="modal-actions">
+        <button class="modal-action-button primary" id="payCpButton" onclick="confirmActivationPayment('cp')">Pay 1 CP</button>
+        <button class="modal-action-button" id="payQeButton" onclick="confirmActivationPayment('qe')">Pay 1 QE</button>
+        <button class="modal-action-button" onclick="confirmActivationPayment('free')">Free Activation</button>
+        <button class="modal-action-button danger" onclick="closeActivationModal()">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <div class="card-modal-backdrop" id="cardModal" onclick="closeCardModal(event)">
@@ -518,7 +567,8 @@
   </div>
 
   <script>
-    const storageKey = "ixonPlayTrackerV5";
+    const storageKey = "ixonPlayTrackerV6";
+    let pendingActivationUnitId = null;
 
     const defaultUnits = [
       {
@@ -673,6 +723,7 @@
       baseCp: 4,
       shardCp: 0,
       currentCp: 4,
+      qeReserve: 0,
       units: JSON.parse(JSON.stringify(defaultUnits))
     };
 
@@ -687,15 +738,24 @@
         trackerState = JSON.parse(savedTracker);
       }
 
+      if (trackerState.qeReserve === undefined) {
+        trackerState.qeReserve = 0;
+      }
+
+      if (!trackerState.phase) {
+        trackerState.phase = "Draw Phase";
+      }
+
       renderTracker();
     }
 
     function renderTracker() {
       document.getElementById("roundValue").textContent = trackerState.round;
+      document.getElementById("phaseValue").textContent = trackerState.phase;
       document.getElementById("baseCpValue").textContent = trackerState.baseCp;
       document.getElementById("shardCpValue").textContent = trackerState.shardCp;
       document.getElementById("currentCpValue").textContent = trackerState.currentCp;
-      document.getElementById("phaseValue").textContent = trackerState.phase;
+      document.getElementById("qeReserveValue").textContent = trackerState.qeReserve;
 
       document.getElementById("drawPhaseButton").classList.toggle("active", trackerState.phase === "Draw Phase");
       document.getElementById("commandPhaseButton").classList.toggle("active", trackerState.phase === "Command Phase");
@@ -765,8 +825,7 @@
         }).join("");
 
         const hpDisabled = unit.dead ? "disabled" : "";
-        const canActivateNormally = !unit.dead && !unit.activated && !unit.activationOpen && trackerState.currentCp > 0;
-        const canExtraActivate = !unit.dead && unit.activated && !unit.activationOpen && trackerState.currentCp > 0;
+        const canOpenActivationModal = !unit.dead && !unit.activationOpen;
 
         unitCard.innerHTML = `
           <div class="unit-topline">
@@ -842,18 +901,10 @@
           <div class="unit-controls" style="margin-top: 12px;">
             <button
               class="unit-button primary"
-              onclick="activateUnit('${unit.id}')"
-              ${canActivateNormally ? "" : "disabled"}
+              onclick="openActivationModal('${unit.id}')"
+              ${canOpenActivationModal ? "" : "disabled"}
             >
-              Activate Unit
-            </button>
-
-            <button
-              class="unit-button"
-              onclick="extraActivateUnit('${unit.id}')"
-              ${canExtraActivate ? "" : "disabled"}
-            >
-              Extra Activate
+              Activate
             </button>
 
             <button
@@ -899,6 +950,16 @@
       renderTracker();
     }
 
+    function changeQeReserve(amount) {
+      trackerState.qeReserve = Math.max(0, trackerState.qeReserve + amount);
+
+      if (trackerState.qeReserve > 0 && trackerState.phase === "End Phase") {
+        trackerState.phase = "Command Phase";
+      }
+
+      renderTracker();
+    }
+
     function changeBaseCp(amount) {
       trackerState.baseCp = Math.max(0, trackerState.baseCp + amount);
       trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
@@ -916,7 +977,7 @@
     function spendCp() {
       trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
 
-      if (trackerState.currentCp > 0) {
+      if (trackerState.currentCp > 0 || trackerState.qeReserve > 0) {
         trackerState.phase = "Command Phase";
       } else {
         trackerState.phase = "End Phase";
@@ -957,6 +1018,7 @@
       localStorage.removeItem("ixonPlayTrackerV2");
       localStorage.removeItem("ixonPlayTrackerV3");
       localStorage.removeItem("ixonPlayTrackerV4");
+      localStorage.removeItem("ixonPlayTrackerV5");
 
       trackerState = {
         round: 1,
@@ -964,6 +1026,7 @@
         baseCp: 4,
         shardCp: 0,
         currentCp: 4,
+        qeReserve: 0,
         units: JSON.parse(JSON.stringify(defaultUnits))
       };
 
@@ -1066,35 +1129,59 @@
       renderTracker();
     }
 
-    function activateUnit(unitId) {
-      trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId || unit.dead) {
-          return unit;
-        }
+    function openActivationModal(unitId) {
+      const unit = trackerState.units.find((unit) => unit.id === unitId);
 
-        return {
-          ...unit,
-          activated: true,
-          activationOpen: true,
-          selectedActions: [],
-          activationCount: unit.activationCount + 1
-        };
-      });
-
-      trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
-      trackerState.phase = "Activation Phase";
-      renderTracker();
-    }
-
-    function extraActivateUnit(unitId) {
-      const confirmExtraActivation = confirm("Use a card or effect to activate this unit again?");
-
-      if (!confirmExtraActivation) {
+      if (!unit || unit.dead || unit.activationOpen) {
         return;
       }
 
+      pendingActivationUnitId = unitId;
+
+      document.getElementById("activationModalTitle").textContent =
+        unit.activated ? "Reactivate " + unit.name : "Activate " + unit.name;
+
+      document.getElementById("activationModalText").textContent =
+        "Choose whether to pay with CP, spend a QE counter from reserve, or use a free activation from an ability/card.";
+
+      document.getElementById("payCpButton").disabled = trackerState.currentCp <= 0;
+      document.getElementById("payQeButton").disabled = trackerState.qeReserve <= 0;
+
+      document.getElementById("activationModal").classList.add("open");
+    }
+
+    function closeActivationModal(event) {
+      if (event && event.target.id !== "activationModal") {
+        return;
+      }
+
+      pendingActivationUnitId = null;
+      document.getElementById("activationModal").classList.remove("open");
+    }
+
+    function confirmActivationPayment(paymentType) {
+      if (!pendingActivationUnitId) {
+        return;
+      }
+
+      if (paymentType === "cp" && trackerState.currentCp <= 0) {
+        return;
+      }
+
+      if (paymentType === "qe" && trackerState.qeReserve <= 0) {
+        return;
+      }
+
+      if (paymentType === "cp") {
+        trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+      }
+
+      if (paymentType === "qe") {
+        trackerState.qeReserve = Math.max(0, trackerState.qeReserve - 1);
+      }
+
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId || unit.dead) {
+        if (unit.id !== pendingActivationUnitId || unit.dead) {
           return unit;
         }
 
@@ -1107,8 +1194,9 @@
         };
       });
 
-      trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
       trackerState.phase = "Activation Phase";
+      pendingActivationUnitId = null;
+      document.getElementById("activationModal").classList.remove("open");
       renderTracker();
     }
 
@@ -1152,7 +1240,7 @@
         };
       });
 
-      if (trackerState.currentCp > 0) {
+      if (trackerState.currentCp > 0 || trackerState.qeReserve > 0) {
         trackerState.phase = "Command Phase";
       } else {
         trackerState.phase = "End Phase";
