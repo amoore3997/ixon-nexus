@@ -565,65 +565,97 @@
       </div>
     </div>
   </div>
-    <script src="../data/cards.js"></script>
+
+  <script src="../data/cards.js"></script>
+
   <script>
-    const storageKey = "ixonPlayTrackerV6";
+    const storageKey = "ixonPlayTrackerV7";
     let pendingActivationUnitId = null;
 
-    const starterWarband = window.IXON_STARTER_WARBANDS.rangersPrototype;
+    const savedWarbandKey = "ixonSavedWarband";
 
-const defaultUnits = starterWarband.unitIds.map((unitId) => {
-  const card = window.IXON_CARDS.find((card) => card.id === unitId);
+    function getCardById(cardId) {
+      return window.IXON_CARDS.find((card) => card.id === cardId);
+    }
 
-  return {
-    id: card.id,
-    name: card.name,
-    role: card.role,
-    faction: card.faction,
-    influenceDisplay: card.influenceDisplay,
-    influenceCost: card.influenceCost,
-    commandPoints: card.commandPoints,
-    coalitionKey: card.coalitionKey,
-    vetoFlag: card.vetoFlag,
-    maxHp: card.maxHp,
-    currentHp: card.maxHp,
-    stats: {
-      MR: {
-        base: card.stats.MR,
-        current: card.stats.MR
-      },
-      AP: {
-        base: card.stats.AP,
-        current: card.stats.AP
-      },
-      AR: {
-        base: card.stats.AR,
-        current: card.stats.AR
-      },
-      DR: {
-        base: card.stats.DR,
-        current: card.stats.DR
+    function getActiveWarband() {
+      const savedWarband = localStorage.getItem(savedWarbandKey);
+
+      if (savedWarband) {
+        try {
+          const parsedWarband = JSON.parse(savedWarband);
+
+          if (parsedWarband && Array.isArray(parsedWarband.unitIds) && parsedWarband.unitIds.length > 0) {
+            return parsedWarband;
+          }
+        } catch (error) {
+          localStorage.removeItem(savedWarbandKey);
+        }
       }
-    },
-    cardImage: card.cardImage,
-    notes: card.notes,
-    activated: false,
-    activationOpen: false,
-    selectedActions: [],
-    activationCount: 0,
-    dead: false
-  };
-});
 
-    let trackerState = {
-      round: 1,
-      phase: "Draw Phase",
-      baseCp: 4,
-      shardCp: 0,
-      currentCp: 4,
-      qeReserve: 0,
-      units: JSON.parse(JSON.stringify(defaultUnits))
-    };
+      return window.IXON_STARTER_WARBANDS.rangersPrototype;
+    }
+
+    function buildUnitFromCard(card) {
+      return {
+        id: card.id,
+        name: card.name,
+        role: card.role,
+        faction: card.faction,
+        influenceDisplay: card.influenceDisplay,
+        influenceCost: card.influenceCost,
+        commandPoints: card.commandPoints,
+        coalitionKey: card.coalitionKey,
+        vetoFlag: card.vetoFlag,
+        maxHp: card.maxHp,
+        currentHp: card.maxHp,
+        stats: {
+          MR: { base: card.stats.MR, current: card.stats.MR },
+          AP: { base: card.stats.AP, current: card.stats.AP },
+          AR: { base: card.stats.AR, current: card.stats.AR },
+          DR: { base: card.stats.DR, current: card.stats.DR }
+        },
+        cardImage: card.cardImage,
+        notes: card.notes,
+        activated: false,
+        activationOpen: false,
+        selectedActions: [],
+        activationCount: 0,
+        dead: false
+      };
+    }
+
+    function buildDefaultUnits() {
+      const activeWarband = getActiveWarband();
+
+      return activeWarband.unitIds
+        .map((unitId) => getCardById(unitId))
+        .filter(Boolean)
+        .map((card) => buildUnitFromCard(card));
+    }
+
+    function buildNewTrackerState() {
+      const activeWarband = getActiveWarband();
+      const units = buildDefaultUnits();
+      const warlord = units.find((unit) => unit.id === activeWarband.warlordId) || units.find((unit) => unit.commandPoints !== null);
+      const baseCp = warlord && warlord.commandPoints !== null ? warlord.commandPoints : 0;
+
+      return {
+        round: 1,
+        phase: "Draw Phase",
+        warbandName: activeWarband.name || "Saved Warband",
+        influenceLimit: activeWarband.influenceLimit || 10,
+        baseCp: baseCp,
+        shardCp: 0,
+        currentCp: baseCp,
+        qeReserve: 0,
+        units: units
+      };
+    }
+
+    const defaultUnits = buildDefaultUnits();
+
+    let trackerState = buildNewTrackerState();
 
     function saveTracker() {
       localStorage.setItem(storageKey, JSON.stringify(trackerState));
@@ -642,6 +674,10 @@ const defaultUnits = starterWarband.unitIds.map((unitId) => {
 
       if (!trackerState.phase) {
         trackerState.phase = "Draw Phase";
+      }
+
+      if (!trackerState.influenceLimit) {
+        trackerState.influenceLimit = getActiveWarband().influenceLimit || 10;
       }
 
       renderTracker();
@@ -663,7 +699,7 @@ const defaultUnits = starterWarband.unitIds.map((unitId) => {
       const totalInfluence = trackerState.units.reduce((total, unit) => total + unit.influenceCost, 0);
       const livingUnits = trackerState.units.filter((unit) => !unit.dead).length;
 
-      document.getElementById("influenceValue").textContent = `${totalInfluence} / 10`;
+      document.getElementById("influenceValue").textContent = `${totalInfluence} / ${trackerState.influenceLimit || 10}`;
       document.getElementById("activeUnitsValue").textContent = livingUnits;
 
       const unitGrid = document.getElementById("unitTrackerGrid");
@@ -917,16 +953,9 @@ const defaultUnits = starterWarband.unitIds.map((unitId) => {
       localStorage.removeItem("ixonPlayTrackerV3");
       localStorage.removeItem("ixonPlayTrackerV4");
       localStorage.removeItem("ixonPlayTrackerV5");
+      localStorage.removeItem("ixonPlayTrackerV6");
 
-      trackerState = {
-        round: 1,
-        phase: "Draw Phase",
-        baseCp: 4,
-        shardCp: 0,
-        currentCp: 4,
-        qeReserve: 0,
-        units: JSON.parse(JSON.stringify(defaultUnits))
-      };
+      trackerState = buildNewTrackerState();
 
       renderTracker();
     }
