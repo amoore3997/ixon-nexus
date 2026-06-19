@@ -41,9 +41,8 @@
         </h1>
 
         <p class="lead">
-          Build your roster around a single Warlord, manage Influence, and save
-          your selected units locally in your browser. The next step is sending
-          this saved Warband directly into the Play Mode tracker.
+          Build your roster around a single Warlord. Your Warlord sets the total
+          Influence budget, while your other units spend from that budget.
         </p>
 
         <div class="actions">
@@ -61,18 +60,19 @@
             <h3>Warlord Required</h3>
             <p>
               Each Warband must include exactly one Warlord. The Warlord defines
-              Command Points, faction identity, Coalition Keys, and Veto Flags.
+              Command Points, faction identity, Coalition Keys, Veto Flags, and
+              the maximum Influence available to spend on other units.
             </p>
             <span>Required</span>
           </div>
 
           <div class="codex-card">
-            <h3>Influence Limit</h3>
+            <h3>Influence Budget</h3>
             <p>
-              The current prototype limit is 10 Influence. Standard units spend
-              Influence from this pool, while the Warlord anchors the Warband.
+              The Warlord does not spend Influence. Instead, the Warlord provides
+              the Influence limit that your other selected units spend from.
             </p>
-            <span>10 Influence</span>
+            <span>Warlord-set</span>
           </div>
 
           <div class="codex-card">
@@ -97,7 +97,7 @@
 
       <section class="section" id="builder">
         <div class="section-eyebrow">Builder Prototype</div>
-        <h2>Warband Builder</h2>
+        <h2>Rangers prototype builder</h2>
 
         <p class="lead">
           Select units from the shared card database. This builder saves locally
@@ -114,8 +114,13 @@
             </div>
 
             <div class="status-row">
-              <span>Influence</span>
-              <strong id="builderInfluenceValue">0 / 10</strong>
+              <span>Warlord Influence</span>
+              <strong id="warlordInfluenceValue">0</strong>
+            </div>
+
+            <div class="status-row">
+              <span>Influence Spent</span>
+              <strong id="builderInfluenceValue">0 / 0</strong>
             </div>
 
             <div class="status-row">
@@ -145,9 +150,8 @@
       <section class="section">
         <div class="notice">
           <strong>Prototype note:</strong>
-          This first builder does not yet enforce every Coalition Key or Veto Flag
-          rule. It gives us the important foundation: selecting units, tracking
-          Influence, and saving a Warband for Play Mode.
+          This builder now treats Warlord Influence correctly. The Warlord sets
+          the Warband budget. Non-Warlord units spend from that budget.
         </div>
       </section>
     </main>
@@ -164,7 +168,6 @@
 
   <script>
     const warbandStorageKey = "ixonSavedWarband";
-    const influenceLimit = 10;
 
     let selectedUnitIds = [];
 
@@ -178,6 +181,26 @@
         .filter(Boolean);
     }
 
+    function getSelectedWarlords() {
+      return getSelectedCards().filter((card) => card.unitType === "Warlord");
+    }
+
+    function getInfluenceLimit() {
+      const selectedWarlords = getSelectedWarlords();
+
+      if (selectedWarlords.length !== 1) {
+        return 0;
+      }
+
+      return selectedWarlords[0].influenceLimit || 0;
+    }
+
+    function getInfluenceSpent() {
+      return getSelectedCards()
+        .filter((card) => card.unitType !== "Warlord")
+        .reduce((total, card) => total + card.influenceCost, 0);
+    }
+
     function renderBuilder() {
       const builderGrid = document.getElementById("builderCardGrid");
       builderGrid.innerHTML = "";
@@ -187,12 +210,16 @@
         const cardElement = document.createElement("article");
         cardElement.className = selected ? "codex-card selected-builder-card" : "codex-card";
 
+        const influenceText = card.unitType === "Warlord"
+          ? `Provides ${card.influenceLimit || 0} Influence`
+          : `Costs ${card.influenceCost} Influence`;
+
         cardElement.innerHTML = `
           <h3>${card.name}</h3>
           <p>
             <strong>${card.role}</strong><br />
             Faction: ${card.faction}<br />
-            Influence: ${card.influenceDisplay}<br />
+            Influence: ${influenceText}<br />
             HP: ${card.maxHp}<br />
             MR ${card.stats.MR} | AP ${card.stats.AP} | AR ${card.stats.AR} | DR ${card.stats.DR}
           </p>
@@ -213,11 +240,13 @@
 
     function updateBuilderSummary() {
       const selectedCards = getSelectedCards();
-      const selectedWarlords = selectedCards.filter((card) => card.unitType === "Warlord");
-      const totalInfluence = selectedCards.reduce((total, card) => total + card.influenceCost, 0);
+      const selectedWarlords = getSelectedWarlords();
+      const influenceLimit = getInfluenceLimit();
+      const influenceSpent = getInfluenceSpent();
 
-      document.getElementById("builderInfluenceValue").textContent = `${totalInfluence} / ${influenceLimit}`;
+      document.getElementById("builderInfluenceValue").textContent = `${influenceSpent} / ${influenceLimit}`;
       document.getElementById("builderUnitCountValue").textContent = selectedCards.length;
+      document.getElementById("warlordInfluenceValue").textContent = influenceLimit;
       document.getElementById("selectedWarlordValue").textContent =
         selectedWarlords.length === 0 ? "None" : selectedWarlords.map((card) => card.name).join(", ");
 
@@ -231,7 +260,7 @@
         status = "Too many Warlords selected.";
       }
 
-      if (totalInfluence > influenceLimit) {
+      if (selectedWarlords.length === 1 && influenceSpent > influenceLimit) {
         status = "Influence limit exceeded.";
       }
 
@@ -262,16 +291,16 @@
     }
 
     function saveWarband() {
-      const selectedCards = getSelectedCards();
-      const selectedWarlords = selectedCards.filter((card) => card.unitType === "Warlord");
-      const totalInfluence = selectedCards.reduce((total, card) => total + card.influenceCost, 0);
+      const selectedWarlords = getSelectedWarlords();
+      const influenceLimit = getInfluenceLimit();
+      const influenceSpent = getInfluenceSpent();
 
       if (selectedWarlords.length !== 1) {
         alert("Your Warband must include exactly one Warlord.");
         return;
       }
 
-      if (totalInfluence > influenceLimit) {
+      if (influenceSpent > influenceLimit) {
         alert("Your Warband exceeds the Influence limit.");
         return;
       }
@@ -281,6 +310,7 @@
         name: "Custom Saved Warband",
         faction: selectedWarlords[0].faction,
         influenceLimit: influenceLimit,
+        influenceSpent: influenceSpent,
         warlordId: selectedWarlords[0].id,
         unitIds: selectedUnitIds
       };
