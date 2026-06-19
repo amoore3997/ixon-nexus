@@ -54,7 +54,7 @@
 
     .tracker-summary {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(7, 1fr);
       gap: 12px;
       margin: 20px 0;
     }
@@ -79,16 +79,31 @@
       font-size: 1.45rem;
     }
 
-    .match-controls {
+    .phase-card {
+      border: 1px solid rgba(103, 232, 249, 0.35);
+      background: rgba(103, 232, 249, 0.08);
+    }
+
+    .phase-card strong {
+      color: #cffafe;
+    }
+
+    .match-controls,
+    .phase-controls {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin: 14px 0 22px;
     }
 
+    .phase-controls {
+      margin-top: -8px;
+    }
+
     .match-button,
     .unit-button,
-    .action-choice {
+    .action-choice,
+    .phase-button {
       border: 1px solid var(--border);
       background: rgba(31, 41, 55, 0.9);
       color: var(--text);
@@ -100,7 +115,8 @@
 
     .match-button:hover,
     .unit-button:hover,
-    .action-choice:hover {
+    .action-choice:hover,
+    .phase-button:hover {
       border-color: rgba(103, 232, 249, 0.7);
       color: var(--cyan);
     }
@@ -116,6 +132,12 @@
     .unit-button.danger {
       color: #fecaca;
       border-color: rgba(248, 113, 113, 0.45);
+    }
+
+    .phase-button.active {
+      background: rgba(103, 232, 249, 0.16);
+      border-color: rgba(103, 232, 249, 0.8);
+      color: var(--cyan);
     }
 
     .unit-button:disabled,
@@ -384,7 +406,8 @@
       .match-button,
       .unit-button,
       .action-choice,
-      .tiny-button {
+      .tiny-button,
+      .phase-button {
         width: 100%;
       }
     }
@@ -411,6 +434,11 @@
         <div class="summary-card">
           <span>Round</span>
           <strong id="roundValue">1</strong>
+        </div>
+
+        <div class="summary-card phase-card">
+          <span>Current Phase</span>
+          <strong id="phaseValue">Draw Phase</strong>
         </div>
 
         <div class="summary-card">
@@ -446,10 +474,18 @@
         <button class="match-button" onclick="changeShardCp(-1)">- Shard CP</button>
         <button class="match-button" onclick="changeShardCp(1)">+ Shard CP</button>
 
+        <button class="match-button" onclick="addTemporaryCp()">+1 Temporary CP</button>
         <button class="match-button" onclick="spendCp()">Spend 1 CP</button>
         <button class="match-button primary" onclick="resetTurn()">Reset Turn</button>
         <button class="match-button" onclick="nextRound()">Next Round</button>
         <button class="match-button danger" onclick="resetMatch()">Reset Match</button>
+      </section>
+
+      <section class="phase-controls">
+        <button class="phase-button" id="drawPhaseButton" onclick="setPhase('Draw Phase')">Draw Phase</button>
+        <button class="phase-button" id="commandPhaseButton" onclick="setPhase('Command Phase')">Command Phase</button>
+        <button class="phase-button" id="activationPhaseButton" onclick="setPhase('Activation Phase')">Activation Phase</button>
+        <button class="phase-button" id="endPhaseButton" onclick="setPhase('End Phase')">End Phase</button>
       </section>
 
       <section class="tracker-grid" id="unitTrackerGrid">
@@ -457,12 +493,11 @@
       </section>
 
       <section class="tracker-note">
-        <strong>Table use:</strong>
-        Activate a unit to unlock its action buttons. A unit may select up to two
-        actions per activation: Move, Attack, Claim, or Ability. HP and stats can
-        rise above their base values to track buffs, effects, counters, and temporary
-        abilities. Extra Activate is for cards or effects that permit a unit to
-        activate more than once in a turn.
+        <strong>Turn flow:</strong>
+        Start in Draw Phase, move into Command Phase to spend CP, enter Activation Phase
+        while resolving a unit activation, then return to Command Phase if CP remains.
+        Once final CP is spent and resolved, move into End Phase to resolve end-of-turn
+        abilities before ending the turn.
       </section>
     </main>
   </div>
@@ -483,7 +518,7 @@
   </div>
 
   <script>
-    const storageKey = "ixonPlayTrackerV4";
+    const storageKey = "ixonPlayTrackerV5";
 
     const defaultUnits = [
       {
@@ -634,6 +669,7 @@
 
     let trackerState = {
       round: 1,
+      phase: "Draw Phase",
       baseCp: 4,
       shardCp: 0,
       currentCp: 4,
@@ -659,6 +695,12 @@
       document.getElementById("baseCpValue").textContent = trackerState.baseCp;
       document.getElementById("shardCpValue").textContent = trackerState.shardCp;
       document.getElementById("currentCpValue").textContent = trackerState.currentCp;
+      document.getElementById("phaseValue").textContent = trackerState.phase;
+
+      document.getElementById("drawPhaseButton").classList.toggle("active", trackerState.phase === "Draw Phase");
+      document.getElementById("commandPhaseButton").classList.toggle("active", trackerState.phase === "Command Phase");
+      document.getElementById("activationPhaseButton").classList.toggle("active", trackerState.phase === "Activation Phase");
+      document.getElementById("endPhaseButton").classList.toggle("active", trackerState.phase === "End Phase");
 
       const totalInfluence = trackerState.units.reduce((total, unit) => total + unit.influenceCost, 0);
       const livingUnits = trackerState.units.filter((unit) => !unit.dead).length;
@@ -842,24 +884,49 @@
       saveTracker();
     }
 
+    function setPhase(phaseName) {
+      trackerState.phase = phaseName;
+      renderTracker();
+    }
+
+    function addTemporaryCp() {
+      trackerState.currentCp += 1;
+
+      if (trackerState.phase === "End Phase") {
+        trackerState.phase = "Command Phase";
+      }
+
+      renderTracker();
+    }
+
     function changeBaseCp(amount) {
       trackerState.baseCp = Math.max(0, trackerState.baseCp + amount);
       trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
+      trackerState.phase = "Command Phase";
       renderTracker();
     }
 
     function changeShardCp(amount) {
       trackerState.shardCp = Math.max(0, trackerState.shardCp + amount);
       trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
+      trackerState.phase = "Command Phase";
       renderTracker();
     }
 
     function spendCp() {
       trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+
+      if (trackerState.currentCp > 0) {
+        trackerState.phase = "Command Phase";
+      } else {
+        trackerState.phase = "End Phase";
+      }
+
       renderTracker();
     }
 
     function resetTurn() {
+      trackerState.phase = "Draw Phase";
       trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
 
       trackerState.units = trackerState.units.map((unit) => ({
@@ -889,9 +956,11 @@
       localStorage.removeItem("ixonPlayTracker");
       localStorage.removeItem("ixonPlayTrackerV2");
       localStorage.removeItem("ixonPlayTrackerV3");
+      localStorage.removeItem("ixonPlayTrackerV4");
 
       trackerState = {
         round: 1,
+        phase: "Draw Phase",
         baseCp: 4,
         shardCp: 0,
         currentCp: 4,
@@ -1013,6 +1082,7 @@
       });
 
       trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+      trackerState.phase = "Activation Phase";
       renderTracker();
     }
 
@@ -1038,6 +1108,7 @@
       });
 
       trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+      trackerState.phase = "Activation Phase";
       renderTracker();
     }
 
@@ -1080,6 +1151,12 @@
           activationOpen: false
         };
       });
+
+      if (trackerState.currentCp > 0) {
+        trackerState.phase = "Command Phase";
+      } else {
+        trackerState.phase = "End Phase";
+      }
 
       renderTracker();
     }
