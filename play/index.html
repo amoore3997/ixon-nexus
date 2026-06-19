@@ -26,6 +26,7 @@
         <a href="../rules/">Rules</a>
         <a href="../downloads/">Downloads</a>
         <a href="../warbands/">Warbands</a>
+        <a href="./">Play</a>
       </nav>
     </header>
 
@@ -33,17 +34,17 @@
       <section class="page-title-section">
         <a class="breadcrumb" href="../">← Return to Nexus</a>
 
-        <div class="pill">Command Points. Shards. Activations. Health Points.</div>
+        <div class="pill">Physical tabletop companion. Live CP, HP, stats, and action tracking.</div>
 
         <h1>
-          Run your tabletop match in
+          Enter
           <span class="gradient-text">Play Mode</span>.
         </h1>
 
         <p class="lead">
-          Play Mode is the live match console for physical Ixon games. Use it at
-          the table to track CP, Shard bonuses, unit activations, actions, HP,
-          and round flow for your active Warband.
+          Play Mode is used during the physical tabletop match. Open the full-screen
+          tracker to manage your active Warband, Command Points, Shard bonuses,
+          unit HP, temporary stat changes, activations, actions, and destroyed units.
         </p>
 
         <div class="actions">
@@ -53,100 +54,72 @@
       </section>
 
       <section class="section">
-        <div class="section-eyebrow">Active Warband</div>
-        <h2>Rangers prototype roster</h2>
+        <div class="section-eyebrow">Live Match Tools</div>
+        <h2>What the tracker handles</h2>
 
-        <div class="status-card">
-          <div class="status-inner">
-            <div class="section-eyebrow">Warlord Unit</div>
-            <h2>Kaelen Veyne</h2>
-
-            <div class="status-row">
-              <span>Faction</span>
-              <strong>Rangers</strong>
-            </div>
-
-            <div class="status-row">
-              <span>Base Command Points</span>
-              <strong>4 CP</strong>
-            </div>
-
-            <div class="status-row">
-              <span>Influence</span>
-              <strong>10 / 10</strong>
-            </div>
-
-            <div class="status-row">
-              <span>Coalition Key</span>
-              <strong>Survival 🛡</strong>
-            </div>
-
-            <div class="status-row">
-              <span>Veto Flag</span>
-              <strong>Concord</strong>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="tracker">
-        <div class="section-eyebrow">Battlefield Tracker</div>
-        <h2>Active match console</h2>
-
-        <p class="lead">
-          This tracker matches the current Rangers prototype Warband. Use it while
-          playing the physical tabletop game to manage CP spending, Shard bonuses,
-          unit activations, action use, and HP changes.
-        </p>
-
-        <div class="tracker-panel">
-          <div class="tracker-top">
-            <div class="tracker-stat">
-              <span>Round</span>
-              <strong id="roundValue">1</strong>
-            </div>
-
-            <div class="tracker-stat">
-              <span>Base CP</span>
-              <strong id="baseCpValue">4</strong>
-            </div>
-
-            <div class="tracker-stat">
-              <span>Shard Bonus CP</span>
-              <strong id="shardCpValue">0</strong>
-            </div>
-
-            <div class="tracker-stat">
-              <span>Current CP</span>
-              <strong id="currentCpValue">4</strong>
-            </div>
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Command Points</h3>
+            <p>
+              Track base CP, Shard bonus CP, current CP, and CP spent to activate
+              units during the turn.
+            </p>
+            <span>Match Resource</span>
           </div>
 
-          <div class="tracker-controls">
-            <button class="tracker-button" onclick="changeBaseCp(-1)">- Base CP</button>
-            <button class="tracker-button" onclick="changeBaseCp(1)">+ Base CP</button>
-
-            <button class="tracker-button" onclick="changeShardCp(-1)">- Shard CP</button>
-            <button class="tracker-button" onclick="changeShardCp(1)">+ Shard CP</button>
-
-            <button class="tracker-button" onclick="spendCp()">Spend 1 CP</button>
-            <button class="tracker-button primary" onclick="resetTurn()">Reset Turn</button>
-            <button class="tracker-button" onclick="nextRound()">Next Round</button>
-            <button class="tracker-button danger" onclick="resetMatch()">Reset Match</button>
+          <div class="codex-card">
+            <h3>Health Points</h3>
+            <p>
+              Track HP below or above base values, such as 1/5 after damage or 10/5
+              after an ability, counter, or temporary buff.
+            </p>
+            <span>Live Unit State</span>
           </div>
 
-          <div class="unit-tracker-grid" id="unitTrackerGrid">
-            <!-- JavaScript creates unit cards here -->
+          <div class="codex-card">
+            <h3>Stat Modifiers</h3>
+            <p>
+              Adjust MR, AP, AR, and DR during play to reflect active effects,
+              debuffs, enhancements, counters, and abilities.
+            </p>
+            <span>Temporary Effects</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Activations</h3>
+            <p>
+              Activate a unit once per turn, spend CP, then choose up to two actions
+              from Move, Attack, Claim, and Ability.
+            </p>
+            <span>Turn Control</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Destroyed Units</h3>
+            <p>
+              Mark a unit as destroyed to grey it out while keeping its information
+              visible for reference.
+            </p>
+            <span>Battlefield State</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Warband Attributes</h3>
+            <p>
+              View faction, role, Influence, Coalition Key, Veto Flag, and Warlord
+              Command Points while playing.
+            </p>
+            <span>Reference Data</span>
           </div>
         </div>
       </section>
 
       <section class="section">
         <div class="notice">
-          <strong>Table use:</strong>
-          Each unit may activate once per turn and receives up to two actions.
-          Use the action buttons to count down from 2 as the unit moves, attacks,
-          claims a Shard Node, or uses an active ability.
+          <strong>Best use:</strong>
+          Build or review your Warband first, then open the Match Tracker when the
+          physical game starts. The tracker runs locally in your browser, so no login
+          or backend is required.
         </div>
       </section>
     </main>
@@ -158,279 +131,5 @@
       </p>
     </footer>
   </div>
-
-  <script>
-    const defaultUnits = [
-      {
-        id: "kaelen-veyne",
-        name: "Kaelen Veyne",
-        role: "Warlord - Unique",
-        influence: 10,
-        maxHp: 8,
-        currentHp: 8,
-        maxActions: 2,
-        actionsLeft: 2,
-        activated: false
-      },
-      {
-        id: "hollowfang-signal-ops-1",
-        name: "Hollowfang Signal Ops I",
-        role: "Basic Infantry",
-        influence: 1,
-        maxHp: 5,
-        currentHp: 5,
-        maxActions: 2,
-        actionsLeft: 2,
-        activated: false
-      },
-      {
-        id: "hollowfang-signal-ops-2",
-        name: "Hollowfang Signal Ops II",
-        role: "Basic Infantry",
-        influence: 1,
-        maxHp: 5,
-        currentHp: 5,
-        maxActions: 2,
-        actionsLeft: 2,
-        activated: false
-      },
-      {
-        id: "ashen-hallow-recon-sniper",
-        name: "Ashen-Hallow Recon Sniper",
-        role: "Basic Ranged",
-        influence: 2,
-        maxHp: 4,
-        currentHp: 4,
-        maxActions: 2,
-        actionsLeft: 2,
-        activated: false
-      },
-      {
-        id: "ironvale-shield-tech",
-        name: "Ironvale Shield Tech",
-        role: "Basic Heavy",
-        influence: 3,
-        maxHp: 7,
-        currentHp: 7,
-        maxActions: 2,
-        actionsLeft: 2,
-        activated: false
-      },
-      {
-        id: "braedon-forge",
-        name: "Braedon Forge, Hammer of the Forge",
-        role: "Unique Spec.",
-        influence: 3,
-        maxHp: 7,
-        currentHp: 7,
-        maxActions: 2,
-        actionsLeft: 2,
-        activated: false
-      }
-    ];
-
-    let trackerState = {
-      round: 1,
-      baseCp: 4,
-      shardCp: 0,
-      currentCp: 4,
-      units: JSON.parse(JSON.stringify(defaultUnits))
-    };
-
-    function saveTracker() {
-      localStorage.setItem("ixonPlayTracker", JSON.stringify(trackerState));
-    }
-
-    function loadTracker() {
-      const savedTracker = localStorage.getItem("ixonPlayTracker");
-
-      if (savedTracker) {
-        trackerState = JSON.parse(savedTracker);
-      }
-
-      renderTracker();
-    }
-
-    function renderTracker() {
-      document.getElementById("roundValue").textContent = trackerState.round;
-      document.getElementById("baseCpValue").textContent = trackerState.baseCp;
-      document.getElementById("shardCpValue").textContent = trackerState.shardCp;
-      document.getElementById("currentCpValue").textContent = trackerState.currentCp;
-
-      const unitGrid = document.getElementById("unitTrackerGrid");
-      unitGrid.innerHTML = "";
-
-      trackerState.units.forEach((unit) => {
-        const unitCard = document.createElement("div");
-        unitCard.className = unit.activated
-          ? "unit-tracker-card activated"
-          : "unit-tracker-card";
-
-        unitCard.innerHTML = `
-          <div class="unit-tracker-header">
-            <div>
-              <h3>${unit.name}</h3>
-              <div class="unit-role">${unit.role} • ${unit.influence} Influence</div>
-            </div>
-            <div class="unit-role">${unit.activated ? "Activated" : "Ready"}</div>
-          </div>
-
-          <div class="hp-display">
-            HP: ${unit.currentHp} / ${unit.maxHp}
-          </div>
-
-          <div class="hp-display">
-            Actions: ${unit.actionsLeft} / ${unit.maxActions}
-          </div>
-
-          <div class="unit-actions">
-            <button class="small-button" onclick="changeHp('${unit.id}', -1)">- HP</button>
-            <button class="small-button" onclick="changeHp('${unit.id}', 1)">+ HP</button>
-            <button class="small-button" onclick="fullHeal('${unit.id}')">Full Heal</button>
-
-            <button class="small-button" onclick="spendAction('${unit.id}')">Spend Action</button>
-            <button class="small-button" onclick="resetActions('${unit.id}')">Reset Actions</button>
-
-            <button class="small-button ${unit.activated ? "active" : ""}" onclick="toggleActivated('${unit.id}')">
-              ${unit.activated ? "Mark Ready" : "Mark Activated"}
-            </button>
-          </div>
-        `;
-
-        unitGrid.appendChild(unitCard);
-      });
-
-      saveTracker();
-    }
-
-    function changeBaseCp(amount) {
-      trackerState.baseCp = Math.max(0, trackerState.baseCp + amount);
-      trackerState.currentCp = Math.max(0, trackerState.baseCp + trackerState.shardCp);
-      renderTracker();
-    }
-
-    function changeShardCp(amount) {
-      trackerState.shardCp = Math.max(0, trackerState.shardCp + amount);
-      trackerState.currentCp = Math.max(0, trackerState.baseCp + trackerState.shardCp);
-      renderTracker();
-    }
-
-    function spendCp() {
-      trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
-      renderTracker();
-    }
-
-    function resetTurn() {
-      trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
-
-      trackerState.units = trackerState.units.map((unit) => ({
-        ...unit,
-        activated: false,
-        actionsLeft: unit.maxActions
-      }));
-
-      renderTracker();
-    }
-
-    function nextRound() {
-      trackerState.round += 1;
-      resetTurn();
-    }
-
-    function resetMatch() {
-      const confirmReset = confirm("Reset the entire match tracker?");
-
-      if (!confirmReset) {
-        return;
-      }
-
-      trackerState = {
-        round: 1,
-        baseCp: 4,
-        shardCp: 0,
-        currentCp: 4,
-        units: JSON.parse(JSON.stringify(defaultUnits))
-      };
-
-      renderTracker();
-    }
-
-    function changeHp(unitId, amount) {
-      trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
-          return unit;
-        }
-
-        return {
-          ...unit,
-          currentHp: Math.min(unit.maxHp, Math.max(0, unit.currentHp + amount))
-        };
-      });
-
-      renderTracker();
-    }
-
-    function fullHeal(unitId) {
-      trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
-          return unit;
-        }
-
-        return {
-          ...unit,
-          currentHp: unit.maxHp
-        };
-      });
-
-      renderTracker();
-    }
-
-    function spendAction(unitId) {
-      trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
-          return unit;
-        }
-
-        return {
-          ...unit,
-          actionsLeft: Math.max(0, unit.actionsLeft - 1)
-        };
-      });
-
-      renderTracker();
-    }
-
-    function resetActions(unitId) {
-      trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
-          return unit;
-        }
-
-        return {
-          ...unit,
-          actionsLeft: unit.maxActions
-        };
-      });
-
-      renderTracker();
-    }
-
-    function toggleActivated(unitId) {
-      trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
-          return unit;
-        }
-
-        return {
-          ...unit,
-          activated: !unit.activated
-        };
-      });
-
-      renderTracker();
-    }
-
-    loadTracker();
-  </script>
 </body>
 </html>
