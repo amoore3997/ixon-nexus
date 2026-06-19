@@ -1,1 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <title>Ixon Play Mode</title>
+
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <link rel="manifest" href="../site.webmanifest" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="brand-eyebrow">Ixon Nexus Live Companion</div>
+        <div class="brand-title">PLAY MODE</div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <a href="../">Home</a>
+        <a href="../codex/">Codex</a>
+        <a href="../rules/">Rules</a>
+        <a href="../downloads/">Downloads</a>
+        <a href="../warbands/">Warbands</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-title-section">
+        <a class="breadcrumb" href="../">← Return to Nexus</a>
+
+        <div class="pill">Live tabletop tracker. CP. HP. Activations. Shard pressure.</div>
+
+        <h1>
+          Command the table in
+          <span class="gradient-text">real time</span>.
+        </h1>
+
+        <p class="lead">
+          Play Mode is the live companion tool for physical Ixon matches. Use it
+          during the tabletop game to track Command Points, Shard bonuses, unit HP,
+          activations, and round flow without paper notes.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="#tracker">Open Tracker</a>
+          <a class="button secondary" href="../warbands/">Build a Band</a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-eyebrow">Live Match Tool</div>
+        <h2>What this tracker handles</h2>
+
+        <div class="card-grid">
+          <div class="codex-card">
+            <h3>Command Points</h3>
+            <p>
+              Track current CP during your turn. CP is spent to activate units and
+              play Tactical Cards.
+            </p>
+            <span>Core Tracker</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Shard Bonus CP</h3>
+            <p>
+              Add temporary CP from controlled Shard Nodes while those nodes remain
+              uncontested.
+            </p>
+            <span>Core Tracker</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Unit Activations</h3>
+            <p>
+              Mark units as activated so each unit only activates once per turn.
+            </p>
+            <span>Core Tracker</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Health Points</h3>
+            <p>
+              Adjust unit HP as damage, healing, counters, and abilities resolve.
+            </p>
+            <span>Core Tracker</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Round Flow</h3>
+            <p>
+              Track the current round and reset units at the start of each new turn.
+            </p>
+            <span>Core Tracker</span>
+          </div>
+
+          <div class="codex-card">
+            <h3>Local Save</h3>
+            <p>
+              The tracker saves to your browser, so refreshing the page will not wipe
+              the match state.
+            </p>
+            <span>No Account Needed</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="tracker">
+        <div class="section-eyebrow">Battlefield Tracker</div>
+        <h2>Active match console</h2>
+
+        <p class="lead">
+          This prototype uses the example Hollowfang Patrol roster. Later, this page
+          can pull in a saved Band from the Warbands page.
+        </p>
+
+        <div class="tracker-panel">
+          <div class="tracker-top">
+            <div class="tracker-stat">
+              <span>Round</span>
+              <strong id="roundValue">1</strong>
+            </div>
+
+            <div class="tracker-stat">
+              <span>Base CP</span>
+              <strong id="baseCpValue">3</strong>
+            </div>
+
+            <div class="tracker-stat">
+              <span>Shard Bonus CP</span>
+              <strong id="shardCpValue">0</strong>
+            </div>
+
+            <div class="tracker-stat">
+              <span>Current CP</span>
+              <strong id="currentCpValue">3</strong>
+            </div>
+          </div>
+
+          <div class="tracker-controls">
+            <button class="tracker-button" onclick="changeBaseCp(-1)">- Base CP</button>
+            <button class="tracker-button" onclick="changeBaseCp(1)">+ Base CP</button>
+
+            <button class="tracker-button" onclick="changeShardCp(-1)">- Shard CP</button>
+            <button class="tracker-button" onclick="changeShardCp(1)">+ Shard CP</button>
+
+            <button class="tracker-button" onclick="spendCp()">Spend 1 CP</button>
+            <button class="tracker-button primary" onclick="resetTurn()">Reset Turn</button>
+            <button class="tracker-button" onclick="nextRound()">Next Round</button>
+            <button class="tracker-button danger" onclick="resetMatch()">Reset Match</button>
+          </div>
+
+          <div class="unit-tracker-grid" id="unitTrackerGrid">
+            <!-- JavaScript creates unit cards here -->
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="notice">
+          <strong>Prototype note:</strong>
+          This tracker currently uses a hardcoded example roster. The next upgrade
+          is to connect it to a Warband Builder so players can choose their Warlord,
+          units, HP values, CP, and Influence before entering Play Mode.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Ixon Play Mode is part of Ixon Nexus, a public hub for the Ixon
+        sci-fantasy tabletop universe.
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    const defaultUnits = [
+      {
+        id: "kaelen-veyne",
+        name: "Kaelen Veyne",
+        role: "Warlord",
+        maxHp: 8,
+        currentHp: 8,
+        activated: false
+      },
+      {
+        id: "hollowfang-skirmisher",
+        name: "Hollowfang Skirmisher",
+        role: "Infantry",
+        maxHp: 5,
+        currentHp: 5,
+        activated: false
+      },
+      {
+        id: "ironvale-marksman",
+        name: "Ironvale Marksman",
+        role: "Ranged",
+        maxHp: 4,
+        currentHp: 4,
+        activated: false
+      },
+      {
+        id: "ashen-hollow-vanguard",
+        name: "Ashen Hollow Vanguard",
+        role: "Heavy",
+        maxHp: 7,
+        currentHp: 7,
+        activated: false
+      },
+      {
+        id: "dustspire-scout",
+        name: "Dustspire Scout",
+        role: "Spec.",
+        maxHp: 4,
+        currentHp: 4,
+        activated: false
+      }
+    ];
+
+    let trackerState = {
+      round: 1,
+      baseCp: 3,
+      shardCp: 0,
+      currentCp: 3,
+      units: JSON.parse(JSON.stringify(defaultUnits))
+    };
+
+    function saveTracker() {
+      localStorage.setItem("ixonPlayTracker", JSON.stringify(trackerState));
+    }
+
+    function loadTracker() {
+      const savedTracker = localStorage.getItem("ixonPlayTracker");
+
+      if (savedTracker) {
+        trackerState = JSON.parse(savedTracker);
+      }
+
+      renderTracker();
+    }
+
+    function renderTracker() {
+      document.getElementById("roundValue").textContent = trackerState.round;
+      document.getElementById("baseCpValue").textContent = trackerState.baseCp;
+      document.getElementById("shardCpValue").textContent = trackerState.shardCp;
+      document.getElementById("currentCpValue").textContent = trackerState.currentCp;
+
+      const unitGrid = document.getElementById("unitTrackerGrid");
+      unitGrid.innerHTML = "";
+
+      trackerState.units.forEach((unit) => {
+        const unitCard = document.createElement("div");
+        unitCard.className = unit.activated
+          ? "unit-tracker-card activated"
+          : "unit-tracker-card";
+
+        unitCard.innerHTML = `
+          <div class="unit-tracker-header">
+            <div>
+              <h3>${unit.name}</h3>
+              <div class="unit-role">${unit.role}</div>
+            </div>
+            <div class="unit-role">${unit.activated ? "Activated" : "Ready"}</div>
+          </div>
+
+          <div class="hp-display">
+            HP: ${unit.currentHp} / ${unit.maxHp}
+          </div>
+
+          <div class="unit-actions">
+            <button class="small-button" onclick="changeHp('${unit.id}', -1)">- HP</button>
+            <button class="small-button" onclick="changeHp('${unit.id}', 1)">+ HP</button>
+            <button class="small-button" onclick="fullHeal('${unit.id}')">Full Heal</button>
+            <button class="small-button ${unit.activated ? "active" : ""}" onclick="toggleActivated('${unit.id}')">
+              ${unit.activated ? "Mark Ready" : "Mark Activated"}
+            </button>
+          </div>
+        `;
+
+        unitGrid.appendChild(unitCard);
+      });
+
+      saveTracker();
+    }
+
+    function changeBaseCp(amount) {
+      trackerState.baseCp = Math.max(0, trackerState.baseCp + amount);
+      trackerState.currentCp = Math.max(0, trackerState.baseCp + trackerState.shardCp);
+      renderTracker();
+    }
+
+    function changeShardCp(amount) {
+      trackerState.shardCp = Math.max(0, trackerState.shardCp + amount);
+      trackerState.currentCp = Math.max(0, trackerState.baseCp + trackerState.shardCp);
+      renderTracker();
+    }
+
+    function spendCp() {
+      trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+      renderTracker();
+    }
+
+    function resetTurn() {
+      trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
+
+      trackerState.units = trackerState.units.map((unit) => ({
+        ...unit,
+        activated: false
+      }));
+
+      renderTracker();
+    }
+
+    function nextRound() {
+      trackerState.round += 1;
+      resetTurn();
+    }
+
+    function resetMatch() {
+      const confirmReset = confirm("Reset the entire match tracker?");
+
+      if (!confirmReset) {
+        return;
+      }
+
+      trackerState = {
+        round: 1,
+        baseCp: 3,
+        shardCp: 0,
+        currentCp: 3,
+        units: JSON.parse(JSON.stringify(defaultUnits))
+      };
+
+      renderTracker();
+    }
+
+    function changeHp(unitId, amount) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          currentHp: Math.min(unit.maxHp, Math.max(0, unit.currentHp + amount))
+        };
+      });
+
+      renderTracker();
+    }
+
+    function fullHeal(unitId) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          currentHp: unit.maxHp
+        };
+      });
+
+      renderTracker();
+    }
+
+    function toggleActivated(unitId) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          activated: !unit.activated
+        };
+      });
+
+      renderTracker();
+    }
+
+    loadTracker();
+  </script>
+</body>
+</html>
