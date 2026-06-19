@@ -565,157 +565,55 @@
       </div>
     </div>
   </div>
-
+    <script src="../data/cards.js"></script>
   <script>
     const storageKey = "ixonPlayTrackerV6";
     let pendingActivationUnitId = null;
 
-    const defaultUnits = [
-      {
-        id: "kaelen-veyne",
-        name: "Kaelen Veyne",
-        role: "Warlord - Unique",
-        faction: "Rangers",
-        influenceDisplay: "10 / 10",
-        influenceCost: 0,
-        commandPoints: 4,
-        coalitionKey: "Survival 🛡",
-        vetoFlag: "Concord",
-        maxHp: 8,
-        currentHp: 8,
-        stats: {
-          MR: { base: 3, current: 3 },
-          AP: { base: 5, current: 5 },
-          AR: { base: 3, current: 3 },
-          DR: { base: 3, current: 3 }
-        },
-        activated: false,
-        activationOpen: false,
-        selectedActions: [],
-        activationCount: 0,
-        dead: false
+    const starterWarband = window.IXON_STARTER_WARBANDS.rangersPrototype;
+
+const defaultUnits = starterWarband.unitIds.map((unitId) => {
+  const card = window.IXON_CARDS.find((card) => card.id === unitId);
+
+  return {
+    id: card.id,
+    name: card.name,
+    role: card.role,
+    faction: card.faction,
+    influenceDisplay: card.influenceDisplay,
+    influenceCost: card.influenceCost,
+    commandPoints: card.commandPoints,
+    coalitionKey: card.coalitionKey,
+    vetoFlag: card.vetoFlag,
+    maxHp: card.maxHp,
+    currentHp: card.maxHp,
+    stats: {
+      MR: {
+        base: card.stats.MR,
+        current: card.stats.MR
       },
-      {
-        id: "hollowfang-signal-ops-1",
-        name: "Hollowfang Signal Ops I",
-        role: "Basic Infantry",
-        faction: "Rangers",
-        influenceDisplay: "1 Influence",
-        influenceCost: 1,
-        commandPoints: null,
-        coalitionKey: "Survival 🛡",
-        vetoFlag: "None",
-        maxHp: 5,
-        currentHp: 5,
-        stats: {
-          MR: { base: 3, current: 3 },
-          AP: { base: 3, current: 3 },
-          AR: { base: 3, current: 3 },
-          DR: { base: 2, current: 2 }
-        },
-        activated: false,
-        activationOpen: false,
-        selectedActions: [],
-        activationCount: 0,
-        dead: false
+      AP: {
+        base: card.stats.AP,
+        current: card.stats.AP
       },
-      {
-        id: "hollowfang-signal-ops-2",
-        name: "Hollowfang Signal Ops II",
-        role: "Basic Infantry",
-        faction: "Rangers",
-        influenceDisplay: "1 Influence",
-        influenceCost: 1,
-        commandPoints: null,
-        coalitionKey: "Survival 🛡",
-        vetoFlag: "None",
-        maxHp: 5,
-        currentHp: 5,
-        stats: {
-          MR: { base: 3, current: 3 },
-          AP: { base: 3, current: 3 },
-          AR: { base: 3, current: 3 },
-          DR: { base: 2, current: 2 }
-        },
-        activated: false,
-        activationOpen: false,
-        selectedActions: [],
-        activationCount: 0,
-        dead: false
+      AR: {
+        base: card.stats.AR,
+        current: card.stats.AR
       },
-      {
-        id: "ashen-hallow-recon-sniper",
-        name: "Ashen-Hallow Recon Sniper",
-        role: "Basic Ranged",
-        faction: "Rangers",
-        influenceDisplay: "2 Influence",
-        influenceCost: 2,
-        commandPoints: null,
-        coalitionKey: "Survival 🛡",
-        vetoFlag: "None",
-        maxHp: 4,
-        currentHp: 4,
-        stats: {
-          MR: { base: 3, current: 3 },
-          AP: { base: 4, current: 4 },
-          AR: { base: 8, current: 8 },
-          DR: { base: 2, current: 2 }
-        },
-        activated: false,
-        activationOpen: false,
-        selectedActions: [],
-        activationCount: 0,
-        dead: false
-      },
-      {
-        id: "ironvale-shield-tech",
-        name: "Ironvale Shield Tech",
-        role: "Basic Heavy",
-        faction: "Rangers",
-        influenceDisplay: "3 Influence",
-        influenceCost: 3,
-        commandPoints: null,
-        coalitionKey: "Survival 🛡",
-        vetoFlag: "None",
-        maxHp: 7,
-        currentHp: 7,
-        stats: {
-          MR: { base: 2, current: 2 },
-          AP: { base: 3, current: 3 },
-          AR: { base: 2, current: 2 },
-          DR: { base: 5, current: 5 }
-        },
-        activated: false,
-        activationOpen: false,
-        selectedActions: [],
-        activationCount: 0,
-        dead: false
-      },
-      {
-        id: "braedon-forge",
-        name: "Braedon Forge, Hammer of the Forge",
-        role: "Unique Spec.",
-        faction: "Rangers",
-        influenceDisplay: "3 Influence",
-        influenceCost: 3,
-        commandPoints: null,
-        coalitionKey: "Survival 🛡",
-        vetoFlag: "None",
-        maxHp: 7,
-        currentHp: 7,
-        stats: {
-          MR: { base: 3, current: 3 },
-          AP: { base: 6, current: 6 },
-          AR: { base: 2, current: 2 },
-          DR: { base: 4, current: 4 }
-        },
-        activated: false,
-        activationOpen: false,
-        selectedActions: [],
-        activationCount: 0,
-        dead: false
+      DR: {
+        base: card.stats.DR,
+        current: card.stats.DR
       }
-    ];
+    },
+    cardImage: card.cardImage,
+    notes: card.notes,
+    activated: false,
+    activationOpen: false,
+    selectedActions: [],
+    activationCount: 0,
+    dead: false
+  };
+});
 
     let trackerState = {
       round: 1,
