@@ -119,7 +119,8 @@
     }
 
     .unit-button:disabled,
-    .action-choice:disabled {
+    .action-choice:disabled,
+    .tiny-button:disabled {
       cursor: not-allowed;
       opacity: 0.4;
     }
@@ -286,12 +287,6 @@
       color: var(--cyan);
     }
 
-    .action-choice.locked {
-      border-color: rgba(250, 204, 21, 0.6);
-      background: rgba(250, 204, 21, 0.1);
-      color: #fef3c7;
-    }
-
     .tracker-note {
       border: 1px solid rgba(250, 204, 21, 0.28);
       background: rgba(250, 204, 21, 0.08);
@@ -300,6 +295,63 @@
       color: #fef3c7;
       line-height: 1.6;
       margin-top: 20px;
+    }
+
+    .card-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .card-modal-backdrop.open {
+      display: flex;
+    }
+
+    .card-modal {
+      width: min(520px, 100%);
+      border: 1px solid var(--border);
+      background: rgba(17, 24, 39, 0.98);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+    }
+
+    .modal-close-button {
+      float: right;
+      border: 1px solid var(--border);
+      background: rgba(31, 41, 55, 0.9);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-close-button:hover {
+      border-color: rgba(103, 232, 249, 0.7);
+      color: var(--cyan);
+    }
+
+    .card-placeholder {
+      margin-top: 18px;
+      min-height: 340px;
+      border: 1px dashed rgba(103, 232, 249, 0.45);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(103, 232, 249, 0.08), rgba(167, 139, 250, 0.08)),
+        rgba(7, 10, 18, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
     }
 
     @media (max-width: 1200px) {
@@ -409,13 +461,29 @@
         Activate a unit to unlock its action buttons. A unit may select up to two
         actions per activation: Move, Attack, Claim, or Ability. HP and stats can
         rise above their base values to track buffs, effects, counters, and temporary
-        abilities.
+        abilities. Extra Activate is for cards or effects that permit a unit to
+        activate more than once in a turn.
       </section>
     </main>
   </div>
 
+  <div class="card-modal-backdrop" id="cardModal" onclick="closeCardModal(event)">
+    <div class="card-modal">
+      <button class="modal-close-button" onclick="closeCardModal()">Close</button>
+
+      <div class="section-eyebrow">Unit Card Preview</div>
+      <h2 id="modalCardTitle">Unit Card</h2>
+
+      <div class="card-placeholder">
+        <p id="modalCardText">
+          Card image placeholder. Later, this area can display the actual uploaded card art.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const storageKey = "ixonPlayTrackerV3";
+    const storageKey = "ixonPlayTrackerV4";
 
     const defaultUnits = [
       {
@@ -439,6 +507,7 @@
         activated: false,
         activationOpen: false,
         selectedActions: [],
+        activationCount: 0,
         dead: false
       },
       {
@@ -462,6 +531,7 @@
         activated: false,
         activationOpen: false,
         selectedActions: [],
+        activationCount: 0,
         dead: false
       },
       {
@@ -485,6 +555,7 @@
         activated: false,
         activationOpen: false,
         selectedActions: [],
+        activationCount: 0,
         dead: false
       },
       {
@@ -508,6 +579,7 @@
         activated: false,
         activationOpen: false,
         selectedActions: [],
+        activationCount: 0,
         dead: false
       },
       {
@@ -531,6 +603,7 @@
         activated: false,
         activationOpen: false,
         selectedActions: [],
+        activationCount: 0,
         dead: false
       },
       {
@@ -554,6 +627,7 @@
         activated: false,
         activationOpen: false,
         selectedActions: [],
+        activationCount: 0,
         dead: false
       }
     ];
@@ -612,17 +686,13 @@
 
         const actionButtons = ["Move", "Attack", "Claim", "Ability"].map((action) => {
           const selected = unit.selectedActions.includes(action);
-          const actionLimitReached = unit.selectedActions.length >= 2 && !selected;
-          const disabled = !unit.activationOpen || unit.dead || actionLimitReached;
+          const limitReached = unit.selectedActions.length >= 2 && !selected;
+          const disabled = !unit.activationOpen || unit.dead || limitReached;
 
           let className = "action-choice";
 
           if (selected) {
             className += " selected";
-          }
-
-          if (unit.selectedActions.length >= 2) {
-            className += " locked";
           }
 
           return `
@@ -638,18 +708,23 @@
 
         const statTrackers = Object.keys(unit.stats).map((statName) => {
           const stat = unit.stats[statName];
+          const disabled = unit.dead ? "disabled" : "";
 
           return `
             <div class="stat-tracker">
               <strong>${statName}: ${stat.current} / ${stat.base}</strong>
               <div class="stat-buttons">
-                <button class="tiny-button" onclick="changeStat('${unit.id}', '${statName}', -1)">-</button>
-                <button class="tiny-button" onclick="changeStat('${unit.id}', '${statName}', 1)">+</button>
-                <button class="tiny-button" onclick="resetStat('${unit.id}', '${statName}')">Reset</button>
+                <button class="tiny-button" onclick="changeStat('${unit.id}', '${statName}', -1)" ${disabled}>-</button>
+                <button class="tiny-button" onclick="changeStat('${unit.id}', '${statName}', 1)" ${disabled}>+</button>
+                <button class="tiny-button" onclick="resetStat('${unit.id}', '${statName}')" ${disabled}>Reset</button>
               </div>
             </div>
           `;
         }).join("");
+
+        const hpDisabled = unit.dead ? "disabled" : "";
+        const canActivateNormally = !unit.dead && !unit.activated && !unit.activationOpen && trackerState.currentCp > 0;
+        const canExtraActivate = !unit.dead && unit.activated && !unit.activationOpen && trackerState.currentCp > 0;
 
         unitCard.innerHTML = `
           <div class="unit-topline">
@@ -660,6 +735,8 @@
 
             <div class="unit-status">
               ${unit.dead ? "Destroyed" : unit.activationOpen ? "Activation Open" : unit.activated ? "Activated" : "Ready"}
+              <br />
+              Activations: ${unit.activationCount}
             </div>
           </div>
 
@@ -690,8 +767,8 @@
             </div>
 
             <div class="attribute">
-              <span>Activation</span>
-              <strong>${unit.selectedActions.length} / 2 Actions</strong>
+              <span>Selected Actions</span>
+              <strong>${unit.selectedActions.length} / 2</strong>
             </div>
           </div>
 
@@ -700,9 +777,9 @@
             <strong>${unit.currentHp} / ${unit.maxHp}</strong>
 
             <div class="hp-buttons">
-              <button class="tiny-button" onclick="changeHp('${unit.id}', -1)">- HP</button>
-              <button class="tiny-button" onclick="changeHp('${unit.id}', 1)">+ HP</button>
-              <button class="tiny-button" onclick="setHpToBase('${unit.id}')">Set Base</button>
+              <button class="tiny-button" onclick="changeHp('${unit.id}', -1)" ${hpDisabled}>- HP</button>
+              <button class="tiny-button" onclick="changeHp('${unit.id}', 1)" ${hpDisabled}>+ HP</button>
+              <button class="tiny-button" onclick="setHpToBase('${unit.id}')" ${hpDisabled}>Set Base</button>
             </div>
           </div>
 
@@ -712,7 +789,7 @@
 
           <div class="action-panel">
             <div class="action-panel-title">
-              Select up to two actions after activating this unit.
+              Activate this unit to choose up to two actions. Action choices stay highlighted and can be toggled.
             </div>
 
             <div class="action-controls">
@@ -724,20 +801,32 @@
             <button
               class="unit-button primary"
               onclick="activateUnit('${unit.id}')"
-              ${unit.dead || unit.activated || trackerState.currentCp <= 0 ? "disabled" : ""}
+              ${canActivateNormally ? "" : "disabled"}
             >
               Activate Unit
             </button>
 
             <button
               class="unit-button"
+              onclick="extraActivateUnit('${unit.id}')"
+              ${canExtraActivate ? "" : "disabled"}
+            >
+              Extra Activate
+            </button>
+
+            <button
+              class="unit-button"
               onclick="endActivation('${unit.id}')"
-              ${!unit.activationOpen ? "disabled" : ""}
+              ${!unit.activationOpen || unit.dead ? "disabled" : ""}
             >
               End Activation
             </button>
 
-            <button class="unit-button" onclick="resetUnitStats('${unit.id}')">
+            <button class="unit-button" onclick="openCardModal('${unit.id}')">
+              View Card
+            </button>
+
+            <button class="unit-button" onclick="resetUnitStats('${unit.id}')" ${unit.dead ? "disabled" : ""}>
               Reset Stats
             </button>
 
@@ -777,7 +866,8 @@
         ...unit,
         activated: false,
         activationOpen: false,
-        selectedActions: []
+        selectedActions: [],
+        activationCount: 0
       }));
 
       renderTracker();
@@ -798,6 +888,7 @@
       localStorage.removeItem(storageKey);
       localStorage.removeItem("ixonPlayTracker");
       localStorage.removeItem("ixonPlayTrackerV2");
+      localStorage.removeItem("ixonPlayTrackerV3");
 
       trackerState = {
         round: 1,
@@ -812,7 +903,7 @@
 
     function changeHp(unitId, amount) {
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
+        if (unit.id !== unitId || unit.dead) {
           return unit;
         }
 
@@ -827,7 +918,7 @@
 
     function setHpToBase(unitId) {
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
+        if (unit.id !== unitId || unit.dead) {
           return unit;
         }
 
@@ -842,7 +933,7 @@
 
     function changeStat(unitId, statName, amount) {
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
+        if (unit.id !== unitId || unit.dead) {
           return unit;
         }
 
@@ -863,7 +954,7 @@
 
     function resetStat(unitId, statName) {
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
+        if (unit.id !== unitId || unit.dead) {
           return unit;
         }
 
@@ -884,7 +975,7 @@
 
     function resetUnitStats(unitId) {
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
+        if (unit.id !== unitId || unit.dead) {
           return unit;
         }
 
@@ -908,7 +999,7 @@
 
     function activateUnit(unitId) {
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
+        if (unit.id !== unitId || unit.dead) {
           return unit;
         }
 
@@ -916,12 +1007,37 @@
           ...unit,
           activated: true,
           activationOpen: true,
-          selectedActions: []
+          selectedActions: [],
+          activationCount: unit.activationCount + 1
         };
       });
 
       trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+      renderTracker();
+    }
 
+    function extraActivateUnit(unitId) {
+      const confirmExtraActivation = confirm("Use a card or effect to activate this unit again?");
+
+      if (!confirmExtraActivation) {
+        return;
+      }
+
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId || unit.dead) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          activated: true,
+          activationOpen: true,
+          selectedActions: [],
+          activationCount: unit.activationCount + 1
+        };
+      });
+
+      trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
       renderTracker();
     }
 
@@ -944,12 +1060,9 @@
           return unit;
         }
 
-        const updatedActions = [...unit.selectedActions, actionName];
-
         return {
           ...unit,
-          selectedActions: updatedActions,
-          activationOpen: updatedActions.length < 2
+          selectedActions: [...unit.selectedActions, actionName]
         };
       });
 
@@ -958,7 +1071,7 @@
 
     function endActivation(unitId) {
       trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId) {
+        if (unit.id !== unitId || unit.dead) {
           return unit;
         }
 
@@ -980,11 +1093,34 @@
         return {
           ...unit,
           dead: !unit.dead,
-          activationOpen: false
+          activationOpen: false,
+          selectedActions: []
         };
       });
 
       renderTracker();
+    }
+
+    function openCardModal(unitId) {
+      const unit = trackerState.units.find((unit) => unit.id === unitId);
+
+      if (!unit) {
+        return;
+      }
+
+      document.getElementById("modalCardTitle").textContent = unit.name;
+      document.getElementById("modalCardText").textContent =
+        "Card image placeholder for " + unit.name + ". Later, this modal can display the uploaded card image.";
+
+      document.getElementById("cardModal").classList.add("open");
+    }
+
+    function closeCardModal(event) {
+      if (event && event.target.id !== "cardModal") {
+        return;
+      }
+
+      document.getElementById("cardModal").classList.remove("open");
     }
 
     loadTracker();
