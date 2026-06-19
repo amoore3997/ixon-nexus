@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Ixon Match Tracker</title>
+
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <link rel="manifest" href="../site.webmanifest" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    body.tracker-body {
+      background:
+        radial-gradient(circle at top left, rgba(103, 232, 249, 0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(167, 139, 250, 0.12), transparent 34%),
+        #050711;
+    }
+
+    .tracker-shell {
+      width: min(1600px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 18px 0 40px;
+    }
+
+    .tracker-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      background: rgba(5, 7, 17, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tracker-header h1 {
+      font-size: clamp(1.6rem, 4vw, 3.2rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .tracker-header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .tracker-summary {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .summary-card {
+      border: 1px solid var(--border);
+      background: rgba(17, 24, 39, 0.86);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .summary-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+    }
+
+    .summary-card strong {
+      display: block;
+      color: var(--cyan);
+      font-size: 1.45rem;
+    }
+
+    .match-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 22px;
+    }
+
+    .match-button,
+    .unit-button,
+    .action-choice {
+      border: 1px solid var(--border);
+      background: rgba(31, 41, 55, 0.9);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .match-button:hover,
+    .unit-button:hover,
+    .action-choice:hover {
+      border-color: rgba(103, 232, 249, 0.7);
+      color: var(--cyan);
+    }
+
+    .match-button.primary,
+    .unit-button.primary {
+      background: var(--cyan);
+      color: #07111f;
+      border-color: transparent;
+    }
+
+    .match-button.danger,
+    .unit-button.danger {
+      color: #fecaca;
+      border-color: rgba(248, 113, 113, 0.45);
+    }
+
+    .unit-button:disabled,
+    .action-choice:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    .tracker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .live-unit-card {
+      border: 1px solid var(--border);
+      background: rgba(17, 24, 39, 0.84);
+      border-radius: 22px;
+      padding: 16px;
+      min-height: 420px;
+    }
+
+    .live-unit-card.dead {
+      opacity: 0.42;
+      filter: grayscale(0.9);
+      border-color: rgba(148, 163, 184, 0.16);
+    }
+
+    .live-unit-card.activated {
+      border-color: rgba(250, 204, 21, 0.55);
+    }
+
+    .unit-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .unit-topline h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .unit-status {
+      color: var(--cyan);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .unit-subtitle {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .attribute-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .attribute {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(7, 10, 18, 0.66);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .attribute span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+      margin-bottom: 4px;
+    }
+
+    .attribute strong {
+      color: var(--text);
+      font-size: 0.92rem;
+    }
+
+    .hp-box {
+      border: 1px solid rgba(103, 232, 249, 0.26);
+      background: rgba(103, 232, 249, 0.08);
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .hp-box span {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .hp-box strong {
+      display: block;
+      color: var(--cyan);
+      font-size: 1.9rem;
+      margin-top: 4px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .stat-tracker {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(7, 10, 18, 0.62);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .stat-tracker strong {
+      display: block;
+      color: var(--cyan);
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-buttons,
+    .hp-buttons,
+    .unit-controls,
+    .action-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tiny-button {
+      border: 1px solid var(--border);
+      background: rgba(31, 41, 55, 0.88);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 7px 9px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .tiny-button:hover {
+      border-color: rgba(103, 232, 249, 0.7);
+      color: var(--cyan);
+    }
+
+    .action-panel {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(7, 10, 18, 0.48);
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    .action-panel-title {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+    }
+
+    .action-choice.selected {
+      border-color: rgba(103, 232, 249, 0.8);
+      background: rgba(103, 232, 249, 0.12);
+      color: var(--cyan);
+    }
+
+    .action-choice.locked {
+      border-color: rgba(250, 204, 21, 0.6);
+      background: rgba(250, 204, 21, 0.1);
+      color: #fef3c7;
+    }
+
+    .tracker-note {
+      border: 1px solid rgba(250, 204, 21, 0.28);
+      background: rgba(250, 204, 21, 0.08);
+      border-radius: 18px;
+      padding: 14px;
+      color: #fef3c7;
+      line-height: 1.6;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 1200px) {
+      .tracker-summary {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .tracker-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .tracker-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .tracker-header-actions {
+        justify-content: flex-start;
+      }
+
+      .tracker-summary,
+      .tracker-grid,
+      .attribute-grid,
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .match-button,
+      .unit-button,
+      .action-choice,
+      .tiny-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="tracker-body">
+  <div class="tracker-shell">
+    <header class="tracker-header">
+      <div>
+        <div class="brand-eyebrow">Ixon Nexus Live Companion</div>
+        <h1>Match Tracker</h1>
+      </div>
+
+      <div class="tracker-header-actions">
+        <a class="button secondary" href="./">← Play Overview</a>
+        <a class="button secondary" href="../warbands/">Warbands</a>
+        <a class="button secondary" href="../rules/">Rules</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="tracker-summary">
+        <div class="summary-card">
+          <span>Round</span>
+          <strong id="roundValue">1</strong>
+        </div>
+
+        <div class="summary-card">
+          <span>Base CP</span>
+          <strong id="baseCpValue">4</strong>
+        </div>
+
+        <div class="summary-card">
+          <span>Shard Bonus CP</span>
+          <strong id="shardCpValue">0</strong>
+        </div>
+
+        <div class="summary-card">
+          <span>Current CP</span>
+          <strong id="currentCpValue">4</strong>
+        </div>
+
+        <div class="summary-card">
+          <span>Influence</span>
+          <strong id="influenceValue">10 / 10</strong>
+        </div>
+
+        <div class="summary-card">
+          <span>Active Units</span>
+          <strong id="activeUnitsValue">6</strong>
+        </div>
+      </section>
+
+      <section class="match-controls">
+        <button class="match-button" onclick="changeBaseCp(-1)">- Base CP</button>
+        <button class="match-button" onclick="changeBaseCp(1)">+ Base CP</button>
+
+        <button class="match-button" onclick="changeShardCp(-1)">- Shard CP</button>
+        <button class="match-button" onclick="changeShardCp(1)">+ Shard CP</button>
+
+        <button class="match-button" onclick="spendCp()">Spend 1 CP</button>
+        <button class="match-button primary" onclick="resetTurn()">Reset Turn</button>
+        <button class="match-button" onclick="nextRound()">Next Round</button>
+        <button class="match-button danger" onclick="resetMatch()">Reset Match</button>
+      </section>
+
+      <section class="tracker-grid" id="unitTrackerGrid">
+        <!-- JavaScript creates unit cards here -->
+      </section>
+
+      <section class="tracker-note">
+        <strong>Table use:</strong>
+        Activate a unit to unlock its action buttons. A unit may select up to two
+        actions per activation: Move, Attack, Claim, or Ability. HP and stats can
+        rise above their base values to track buffs, effects, counters, and temporary
+        abilities.
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const storageKey = "ixonPlayTrackerV3";
+
+    const defaultUnits = [
+      {
+        id: "kaelen-veyne",
+        name: "Kaelen Veyne",
+        role: "Warlord - Unique",
+        faction: "Rangers",
+        influenceDisplay: "10 / 10",
+        influenceCost: 0,
+        commandPoints: 4,
+        coalitionKey: "Survival 🛡",
+        vetoFlag: "Concord",
+        maxHp: 8,
+        currentHp: 8,
+        stats: {
+          MR: { base: 3, current: 3 },
+          AP: { base: 5, current: 5 },
+          AR: { base: 3, current: 3 },
+          DR: { base: 3, current: 3 }
+        },
+        activated: false,
+        activationOpen: false,
+        selectedActions: [],
+        dead: false
+      },
+      {
+        id: "hollowfang-signal-ops-1",
+        name: "Hollowfang Signal Ops I",
+        role: "Basic Infantry",
+        faction: "Rangers",
+        influenceDisplay: "1 Influence",
+        influenceCost: 1,
+        commandPoints: null,
+        coalitionKey: "Survival 🛡",
+        vetoFlag: "None",
+        maxHp: 5,
+        currentHp: 5,
+        stats: {
+          MR: { base: 3, current: 3 },
+          AP: { base: 3, current: 3 },
+          AR: { base: 3, current: 3 },
+          DR: { base: 2, current: 2 }
+        },
+        activated: false,
+        activationOpen: false,
+        selectedActions: [],
+        dead: false
+      },
+      {
+        id: "hollowfang-signal-ops-2",
+        name: "Hollowfang Signal Ops II",
+        role: "Basic Infantry",
+        faction: "Rangers",
+        influenceDisplay: "1 Influence",
+        influenceCost: 1,
+        commandPoints: null,
+        coalitionKey: "Survival 🛡",
+        vetoFlag: "None",
+        maxHp: 5,
+        currentHp: 5,
+        stats: {
+          MR: { base: 3, current: 3 },
+          AP: { base: 3, current: 3 },
+          AR: { base: 3, current: 3 },
+          DR: { base: 2, current: 2 }
+        },
+        activated: false,
+        activationOpen: false,
+        selectedActions: [],
+        dead: false
+      },
+      {
+        id: "ashen-hallow-recon-sniper",
+        name: "Ashen-Hallow Recon Sniper",
+        role: "Basic Ranged",
+        faction: "Rangers",
+        influenceDisplay: "2 Influence",
+        influenceCost: 2,
+        commandPoints: null,
+        coalitionKey: "Survival 🛡",
+        vetoFlag: "None",
+        maxHp: 4,
+        currentHp: 4,
+        stats: {
+          MR: { base: 3, current: 3 },
+          AP: { base: 4, current: 4 },
+          AR: { base: 8, current: 8 },
+          DR: { base: 2, current: 2 }
+        },
+        activated: false,
+        activationOpen: false,
+        selectedActions: [],
+        dead: false
+      },
+      {
+        id: "ironvale-shield-tech",
+        name: "Ironvale Shield Tech",
+        role: "Basic Heavy",
+        faction: "Rangers",
+        influenceDisplay: "3 Influence",
+        influenceCost: 3,
+        commandPoints: null,
+        coalitionKey: "Survival 🛡",
+        vetoFlag: "None",
+        maxHp: 7,
+        currentHp: 7,
+        stats: {
+          MR: { base: 2, current: 2 },
+          AP: { base: 3, current: 3 },
+          AR: { base: 2, current: 2 },
+          DR: { base: 5, current: 5 }
+        },
+        activated: false,
+        activationOpen: false,
+        selectedActions: [],
+        dead: false
+      },
+      {
+        id: "braedon-forge",
+        name: "Braedon Forge, Hammer of the Forge",
+        role: "Unique Spec.",
+        faction: "Rangers",
+        influenceDisplay: "3 Influence",
+        influenceCost: 3,
+        commandPoints: null,
+        coalitionKey: "Survival 🛡",
+        vetoFlag: "None",
+        maxHp: 7,
+        currentHp: 7,
+        stats: {
+          MR: { base: 3, current: 3 },
+          AP: { base: 6, current: 6 },
+          AR: { base: 2, current: 2 },
+          DR: { base: 4, current: 4 }
+        },
+        activated: false,
+        activationOpen: false,
+        selectedActions: [],
+        dead: false
+      }
+    ];
+
+    let trackerState = {
+      round: 1,
+      baseCp: 4,
+      shardCp: 0,
+      currentCp: 4,
+      units: JSON.parse(JSON.stringify(defaultUnits))
+    };
+
+    function saveTracker() {
+      localStorage.setItem(storageKey, JSON.stringify(trackerState));
+    }
+
+    function loadTracker() {
+      const savedTracker = localStorage.getItem(storageKey);
+
+      if (savedTracker) {
+        trackerState = JSON.parse(savedTracker);
+      }
+
+      renderTracker();
+    }
+
+    function renderTracker() {
+      document.getElementById("roundValue").textContent = trackerState.round;
+      document.getElementById("baseCpValue").textContent = trackerState.baseCp;
+      document.getElementById("shardCpValue").textContent = trackerState.shardCp;
+      document.getElementById("currentCpValue").textContent = trackerState.currentCp;
+
+      const totalInfluence = trackerState.units.reduce((total, unit) => total + unit.influenceCost, 0);
+      const livingUnits = trackerState.units.filter((unit) => !unit.dead).length;
+
+      document.getElementById("influenceValue").textContent = `${totalInfluence} / 10`;
+      document.getElementById("activeUnitsValue").textContent = livingUnits;
+
+      const unitGrid = document.getElementById("unitTrackerGrid");
+      unitGrid.innerHTML = "";
+
+      trackerState.units.forEach((unit) => {
+        const unitCard = document.createElement("article");
+
+        let cardClass = "live-unit-card";
+
+        if (unit.activated) {
+          cardClass += " activated";
+        }
+
+        if (unit.dead) {
+          cardClass += " dead";
+        }
+
+        unitCard.className = cardClass;
+
+        const actionButtons = ["Move", "Attack", "Claim", "Ability"].map((action) => {
+          const selected = unit.selectedActions.includes(action);
+          const actionLimitReached = unit.selectedActions.length >= 2 && !selected;
+          const disabled = !unit.activationOpen || unit.dead || actionLimitReached;
+
+          let className = "action-choice";
+
+          if (selected) {
+            className += " selected";
+          }
+
+          if (unit.selectedActions.length >= 2) {
+            className += " locked";
+          }
+
+          return `
+            <button
+              class="${className}"
+              onclick="toggleAction('${unit.id}', '${action}')"
+              ${disabled ? "disabled" : ""}
+            >
+              ${action}
+            </button>
+          `;
+        }).join("");
+
+        const statTrackers = Object.keys(unit.stats).map((statName) => {
+          const stat = unit.stats[statName];
+
+          return `
+            <div class="stat-tracker">
+              <strong>${statName}: ${stat.current} / ${stat.base}</strong>
+              <div class="stat-buttons">
+                <button class="tiny-button" onclick="changeStat('${unit.id}', '${statName}', -1)">-</button>
+                <button class="tiny-button" onclick="changeStat('${unit.id}', '${statName}', 1)">+</button>
+                <button class="tiny-button" onclick="resetStat('${unit.id}', '${statName}')">Reset</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        unitCard.innerHTML = `
+          <div class="unit-topline">
+            <div>
+              <h2>${unit.name}</h2>
+              <div class="unit-subtitle">${unit.role}</div>
+            </div>
+
+            <div class="unit-status">
+              ${unit.dead ? "Destroyed" : unit.activationOpen ? "Activation Open" : unit.activated ? "Activated" : "Ready"}
+            </div>
+          </div>
+
+          <div class="attribute-grid">
+            <div class="attribute">
+              <span>Faction</span>
+              <strong>${unit.faction}</strong>
+            </div>
+
+            <div class="attribute">
+              <span>Influence</span>
+              <strong>${unit.influenceDisplay}</strong>
+            </div>
+
+            <div class="attribute">
+              <span>Coalition Key</span>
+              <strong>${unit.coalitionKey}</strong>
+            </div>
+
+            <div class="attribute">
+              <span>Veto Flag</span>
+              <strong>${unit.vetoFlag}</strong>
+            </div>
+
+            <div class="attribute">
+              <span>Command Points</span>
+              <strong>${unit.commandPoints === null ? "N/A" : unit.commandPoints + " CP"}</strong>
+            </div>
+
+            <div class="attribute">
+              <span>Activation</span>
+              <strong>${unit.selectedActions.length} / 2 Actions</strong>
+            </div>
+          </div>
+
+          <div class="hp-box">
+            <span>Health Points</span>
+            <strong>${unit.currentHp} / ${unit.maxHp}</strong>
+
+            <div class="hp-buttons">
+              <button class="tiny-button" onclick="changeHp('${unit.id}', -1)">- HP</button>
+              <button class="tiny-button" onclick="changeHp('${unit.id}', 1)">+ HP</button>
+              <button class="tiny-button" onclick="setHpToBase('${unit.id}')">Set Base</button>
+            </div>
+          </div>
+
+          <div class="stat-grid">
+            ${statTrackers}
+          </div>
+
+          <div class="action-panel">
+            <div class="action-panel-title">
+              Select up to two actions after activating this unit.
+            </div>
+
+            <div class="action-controls">
+              ${actionButtons}
+            </div>
+          </div>
+
+          <div class="unit-controls" style="margin-top: 12px;">
+            <button
+              class="unit-button primary"
+              onclick="activateUnit('${unit.id}')"
+              ${unit.dead || unit.activated || trackerState.currentCp <= 0 ? "disabled" : ""}
+            >
+              Activate Unit
+            </button>
+
+            <button
+              class="unit-button"
+              onclick="endActivation('${unit.id}')"
+              ${!unit.activationOpen ? "disabled" : ""}
+            >
+              End Activation
+            </button>
+
+            <button class="unit-button" onclick="resetUnitStats('${unit.id}')">
+              Reset Stats
+            </button>
+
+            <button class="unit-button danger" onclick="toggleDead('${unit.id}')">
+              ${unit.dead ? "Revive Unit" : "Mark Destroyed"}
+            </button>
+          </div>
+        `;
+
+        unitGrid.appendChild(unitCard);
+      });
+
+      saveTracker();
+    }
+
+    function changeBaseCp(amount) {
+      trackerState.baseCp = Math.max(0, trackerState.baseCp + amount);
+      trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
+      renderTracker();
+    }
+
+    function changeShardCp(amount) {
+      trackerState.shardCp = Math.max(0, trackerState.shardCp + amount);
+      trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
+      renderTracker();
+    }
+
+    function spendCp() {
+      trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+      renderTracker();
+    }
+
+    function resetTurn() {
+      trackerState.currentCp = trackerState.baseCp + trackerState.shardCp;
+
+      trackerState.units = trackerState.units.map((unit) => ({
+        ...unit,
+        activated: false,
+        activationOpen: false,
+        selectedActions: []
+      }));
+
+      renderTracker();
+    }
+
+    function nextRound() {
+      trackerState.round += 1;
+      resetTurn();
+    }
+
+    function resetMatch() {
+      const confirmReset = confirm("Reset the entire match tracker?");
+
+      if (!confirmReset) {
+        return;
+      }
+
+      localStorage.removeItem(storageKey);
+      localStorage.removeItem("ixonPlayTracker");
+      localStorage.removeItem("ixonPlayTrackerV2");
+
+      trackerState = {
+        round: 1,
+        baseCp: 4,
+        shardCp: 0,
+        currentCp: 4,
+        units: JSON.parse(JSON.stringify(defaultUnits))
+      };
+
+      renderTracker();
+    }
+
+    function changeHp(unitId, amount) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          currentHp: Math.max(0, unit.currentHp + amount)
+        };
+      });
+
+      renderTracker();
+    }
+
+    function setHpToBase(unitId) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          currentHp: unit.maxHp
+        };
+      });
+
+      renderTracker();
+    }
+
+    function changeStat(unitId, statName, amount) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          stats: {
+            ...unit.stats,
+            [statName]: {
+              ...unit.stats[statName],
+              current: Math.max(0, unit.stats[statName].current + amount)
+            }
+          }
+        };
+      });
+
+      renderTracker();
+    }
+
+    function resetStat(unitId, statName) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          stats: {
+            ...unit.stats,
+            [statName]: {
+              ...unit.stats[statName],
+              current: unit.stats[statName].base
+            }
+          }
+        };
+      });
+
+      renderTracker();
+    }
+
+    function resetUnitStats(unitId) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        const resetStats = {};
+
+        Object.keys(unit.stats).forEach((statName) => {
+          resetStats[statName] = {
+            ...unit.stats[statName],
+            current: unit.stats[statName].base
+          };
+        });
+
+        return {
+          ...unit,
+          stats: resetStats
+        };
+      });
+
+      renderTracker();
+    }
+
+    function activateUnit(unitId) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          activated: true,
+          activationOpen: true,
+          selectedActions: []
+        };
+      });
+
+      trackerState.currentCp = Math.max(0, trackerState.currentCp - 1);
+
+      renderTracker();
+    }
+
+    function toggleAction(unitId, actionName) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId || !unit.activationOpen || unit.dead) {
+          return unit;
+        }
+
+        const alreadySelected = unit.selectedActions.includes(actionName);
+
+        if (alreadySelected) {
+          return {
+            ...unit,
+            selectedActions: unit.selectedActions.filter((action) => action !== actionName)
+          };
+        }
+
+        if (unit.selectedActions.length >= 2) {
+          return unit;
+        }
+
+        const updatedActions = [...unit.selectedActions, actionName];
+
+        return {
+          ...unit,
+          selectedActions: updatedActions,
+          activationOpen: updatedActions.length < 2
+        };
+      });
+
+      renderTracker();
+    }
+
+    function endActivation(unitId) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          activationOpen: false
+        };
+      });
+
+      renderTracker();
+    }
+
+    function toggleDead(unitId) {
+      trackerState.units = trackerState.units.map((unit) => {
+        if (unit.id !== unitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          dead: !unit.dead,
+          activationOpen: false
+        };
+      });
+
+      renderTracker();
+    }
+
+    loadTracker();
+  </script>
+</body>
+</html>
