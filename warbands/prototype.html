@@ -85,17 +85,43 @@
     </div>
   </section>
 
-  <section class="section builder-shell">
-    <div class="builder-panel">
-      <div class="section-eyebrow">Current Build</div>
-      <h2>Prototype roster status</h2>
+ <div class="builder-panel">
+  <div class="section-eyebrow">Current Build</div>
+  <h2>Prototype roster status</h2>
 
-      <p class="lead">
-        This top panel will show your selected Warlord, Warlord Influence,
-        Influence spent, unit count, and whether the Warband is legal.
-      </p>
+  <div class="builder-summary-grid">
+    <div class="summary-tile">
+      <span>Selected Warlord</span>
+      <strong id="selectedWarlordValue">None</strong>
     </div>
 
+    <div class="summary-tile">
+      <span>Warlord Influence</span>
+      <strong id="warlordInfluenceValue">0</strong>
+    </div>
+
+    <div class="summary-tile">
+      <span>Influence Spent</span>
+      <strong id="builderInfluenceValue">0 / 0</strong>
+    </div>
+
+    <div class="summary-tile">
+      <span>Unit Slots</span>
+      <strong id="builderUnitCountValue">0</strong>
+    </div>
+
+    <div class="summary-tile">
+      <span>Status</span>
+      <strong id="builderStatusValue">Select a Warlord.</strong>
+    </div>
+  </div>
+
+  <div class="actions" style="margin-top: 18px;">
+    <button class="button primary" type="button">Load Prototype</button>
+    <button class="button secondary" type="button">Clear Builder</button>
+    <button class="button secondary" type="button">Clear Saved Warband</button>
+  </div>
+</div>
     <div class="builder-layout">
       <div class="builder-panel">
         <div class="section-eyebrow">Library Search Index</div>
