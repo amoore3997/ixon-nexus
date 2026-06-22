@@ -27,6 +27,32 @@
       box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
       padding: 20px;
     }
+    
+    .builder-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.summary-tile {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 14px;
+}
+
+.summary-tile span {
+  display: block;
+  color: rgba(205, 232, 255, 0.78);
+  font-size: 0.78rem;
+  margin-bottom: 7px;
+}
+
+.summary-tile strong {
+  color: #ffffff;
+  font-size: 1.05rem;
+}
 
     .builder-layout {
       display: grid;
@@ -34,12 +60,137 @@
       gap: 18px;
       align-items: start;
     }
+.library-toolbar {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr;
+  gap: 12px;
+  margin: 16px 0;
+}
 
+.library-toolbar input,
+.library-toolbar select {
+  width: 100%;
+  border: 1px solid rgba(93, 220, 255, 0.22);
+  border-radius: 14px;
+  background: rgba(4, 9, 18, 0.88);
+  color: #ffffff;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.library-toolbar input:focus,
+.library-toolbar select:focus {
+  border-color: rgba(93, 220, 255, 0.72);
+  box-shadow: 0 0 0 3px rgba(93, 220, 255, 0.12);
+}
+
+.library-list {
+  display: grid;
+  gap: 12px;
+}
+
+.empty-state {
+  border: 1px dashed rgba(93, 220, 255, 0.25);
+  border-radius: 18px;
+  color: rgba(205, 232, 255, 0.78);
+  padding: 18px;
+  text-align: center;
+}
+.slot-list {
+  display: grid;
+  gap: 12px;
+}
+
+.library-card,
+.slot-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 15px;
+}
+
+.library-card.selected,
+.slot-card.warlord-slot {
+  border-color: rgba(93, 220, 255, 0.7);
+  box-shadow: 0 0 0 1px rgba(93, 220, 255, 0.2) inset;
+}
+
+.library-card.disabled {
+  opacity: 0.55;
+}
+
+.card-topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card-topline h3 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.type-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(93, 220, 255, 0.28);
+  border-radius: 999px;
+  color: #5ddcff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 9px;
+  white-space: nowrap;
+}
+
+.card-meta {
+  display: grid;
+  gap: 5px;
+  color: rgba(205, 232, 255, 0.82);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 10px 0 12px;
+}
+
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+
+.stat-pill {
+  border-radius: 10px;
+  background: rgba(93, 220, 255, 0.08);
+  color: rgba(235, 248, 255, 0.95);
+  padding: 6px 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.warning-text {
+  color: #ffd166;
+  font-weight: 700;
+}
+
+.valid-text {
+  color: #5ddcff;
+  font-weight: 700;
+}
+
+.danger-text {
+  color: #ff7b7b;
+  font-weight: 700;
+}
     @media (max-width: 900px) {
-      .builder-layout {
-        grid-template-columns: 1fr;
-      }
-    }
+  .builder-layout,
+  .builder-summary-grid,
+  .library-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
 
 </head>
@@ -84,7 +235,8 @@
       <a class="button secondary" href="../play/tracker.html">Open Match Tracker</a>
     </div>
   </section>
-
+  
+<section class="section builder-shell">
  <div class="builder-panel">
   <div class="section-eyebrow">Current Build</div>
   <h2>Prototype roster status</h2>
@@ -123,23 +275,58 @@
   </div>
 </div>
     <div class="builder-layout">
-      <div class="builder-panel">
-        <div class="section-eyebrow">Library Search Index</div>
-        <h2>Unit card library</h2>
+     <div class="builder-panel">
+  <div class="section-eyebrow">Library Search Index</div>
+  <h2>Unit card library</h2>
 
-        <p class="lead">
-          This left panel will become the searchable/filterable unit library.
-        </p>
-      </div>
+  <p class="lead">
+    Search and filter the library, then add units to your build. The builder
+    will block units that exceed your Warlord's Influence cap.
+  </p>
 
-      <div class="builder-panel">
-        <div class="section-eyebrow">Selected Unit Slots</div>
-        <h2>Warband cards</h2>
+  <div class="library-toolbar">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Search name, faction, role, notes..."
+    />
 
-        <p class="lead">
-          This right panel will show the cards you have added to your Warband.
-        </p>
-      </div>
+    <select id="typeFilter">
+      <option value="All">All Unit Types</option>
+      <option value="Warlord">Warlord</option>
+      <option value="Infantry">Infantry</option>
+      <option value="Ranged">Ranged</option>
+      <option value="Heavy">Heavy</option>
+      <option value="Spec">Spec</option>
+    </select>
+
+    <select id="factionFilter">
+      <option value="All">All Factions</option>
+    </select>
+  </div>
+
+  <div id="libraryList" class="library-list">
+    <div class="empty-state">
+      Library cards will appear here once the builder script is connected.
+    </div>
+  </div>
+</div>
+
+     <div class="builder-panel">
+  <div class="section-eyebrow">Selected Unit Slots</div>
+  <h2>Warband cards</h2>
+
+  <p class="lead">
+    Added cards appear here with their details. Remove a card to free its
+    Influence and return it to the library.
+  </p>
+
+  <div id="slotList" class="slot-list">
+    <div class="empty-state">
+      No cards added yet. Choose a Warlord first, then add units from the library.
+    </div>
+  </div>
+</div>
     </div>
   </section>
 </main>
