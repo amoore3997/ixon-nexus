@@ -596,9 +596,10 @@
       return window.IXON_STARTER_WARBANDS.rangersPrototype;
     }
 
-    function buildUnitFromCard(card) {
+    function buildUnitFromCard(card, instanceNumber) {
       return {
-        id: card.id,
+        id: `${card.id}--${instanceNumber}`,
+        sourceCardId: card.id,
         name: card.name,
         role: card.role,
         faction: card.faction,
@@ -627,17 +628,26 @@
 
     function buildDefaultUnits() {
       const activeWarband = getActiveWarband();
+      const copyCounters = {};
 
       return activeWarband.unitIds
-        .map((unitId) => getCardById(unitId))
-        .filter(Boolean)
-        .map((card) => buildUnitFromCard(card));
+        .map((unitId) => {
+          const card = getCardById(unitId);
+
+          if (!card) {
+            return null;
+          }
+
+          copyCounters[unitId] = (copyCounters[unitId] || 0) + 1;
+          return buildUnitFromCard(card, copyCounters[unitId]);
+        })
+        .filter(Boolean);
     }
 
     function buildNewTrackerState() {
       const activeWarband = getActiveWarband();
       const units = buildDefaultUnits();
-      const warlord = units.find((unit) => unit.id === activeWarband.warlordId) || units.find((unit) => unit.commandPoints !== null);
+      const warlord = units.find((unit) => unit.sourceCardId === activeWarband.warlordId) || units.find((unit) => unit.commandPoints !== null);
       const baseCp = warlord && warlord.commandPoints !== null ? warlord.commandPoints : 0;
 
       return {
