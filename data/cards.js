@@ -9,6 +9,8 @@ window.IXON_CARDS = [
     influenceLimit: 10,
     influenceCost: 0,
     commandPoints: 4,
+    unique: true,
+    maxCopies: 1,
     coalitionKey: "Survival 🛡",
     vetoFlag: "Concord",
     maxHp: 8,
@@ -22,8 +24,8 @@ window.IXON_CARDS = [
     notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
   },
   {
-    id: "hollowfang-signal-ops-1",
-    name: "Hollowfang Signal Ops I",
+    id: "hollowfang-signal-ops",
+    name: "Hollowfang Signal Ops",
     role: "Basic Infantry",
     faction: "Rangers",
     unitType: "Infantry",
@@ -31,6 +33,8 @@ window.IXON_CARDS = [
     influenceLimit: null,
     influenceCost: 1,
     commandPoints: null,
+    unique: false,
+    maxCopies: null,
     coalitionKey: "Survival 🛡",
     vetoFlag: "None",
     maxHp: 5,
@@ -41,29 +45,7 @@ window.IXON_CARDS = [
       DR: 2
     },
     cardImage: "",
-    notes: "Prototype Rangers infantry unit."
-  },
-  {
-    id: "hollowfang-signal-ops-2",
-    name: "Hollowfang Signal Ops II",
-    role: "Basic Infantry",
-    faction: "Rangers",
-    unitType: "Infantry",
-    influenceDisplay: "1 Influence",
-    influenceLimit: null,
-    influenceCost: 1,
-    commandPoints: null,
-    coalitionKey: "Survival 🛡",
-    vetoFlag: "None",
-    maxHp: 5,
-    stats: {
-      MR: 3,
-      AP: 3,
-      AR: 3,
-      DR: 2
-    },
-    cardImage: "",
-    notes: "Second copy of the Hollowfang Signal Ops prototype infantry unit."
+    notes: "Prototype Rangers infantry unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
   {
     id: "ashen-hallow-recon-sniper",
@@ -75,6 +57,8 @@ window.IXON_CARDS = [
     influenceLimit: null,
     influenceCost: 2,
     commandPoints: null,
+    unique: false,
+    maxCopies: null,
     coalitionKey: "Survival 🛡",
     vetoFlag: "None",
     maxHp: 4,
@@ -97,6 +81,8 @@ window.IXON_CARDS = [
     influenceLimit: null,
     influenceCost: 3,
     commandPoints: null,
+    unique: false,
+    maxCopies: null,
     coalitionKey: "Survival 🛡",
     vetoFlag: "None",
     maxHp: 7,
@@ -119,6 +105,8 @@ window.IXON_CARDS = [
     influenceLimit: null,
     influenceCost: 3,
     commandPoints: null,
+    unique: true,
+    maxCopies: 1,
     coalitionKey: "Survival 🛡",
     vetoFlag: "None",
     maxHp: 7,
@@ -141,8 +129,8 @@ window.IXON_STARTER_WARBANDS = {
     warlordId: "kaelen-veyne",
     unitIds: [
       "kaelen-veyne",
-      "hollowfang-signal-ops-1",
-      "hollowfang-signal-ops-2",
+      "hollowfang-signal-ops",
+      "hollowfang-signal-ops",
       "ashen-hallow-recon-sniper",
       "ironvale-shield-tech",
       "braedon-forge"
