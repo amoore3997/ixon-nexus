@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Ixon Warband Builder Prototype</title>
+
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <link rel="manifest" href="../site.webmanifest" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .builder-shell {
+      display: grid;
+      gap: 22px;
+    }
+
+    .builder-panel {
+      border: 1px solid rgba(93, 220, 255, 0.28);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at top left, rgba(93, 220, 255, 0.08), transparent 42%),
+        rgba(8, 14, 27, 0.82);
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
+      padding: 20px;
+    }
+
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .builder-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="brand-eyebrow">Ixon Nexus Command Tools</div>
+        <div class="brand-title">WARBAND BUILDER</div>
+      </div>
+
+```
+  <nav aria-label="Main navigation">
+    <a href="../">Home</a>
+    <a href="../codex/">Codex</a>
+    <a href="../rules/">Rules</a>
+    <a href="../downloads/">Downloads</a>
+    <a href="./">Warbands</a>
+    <a href="../play/">Play</a>
+  </nav>
+</header>
+
+<main>
+  <section class="page-title-section">
+    <a class="breadcrumb" href="./">← Return to Warbands</a>
+
+    <div class="pill">Prototype Builder Console</div>
+
+    <h1>
+      Assemble a Warband from the
+      <span class="gradient-text">card library</span>.
+    </h1>
+
+    <p class="lead">
+      Choose one Warlord, search the unit library, add legal units to your
+      roster slots, and save the build for Play Mode.
+    </p>
+
+    <div class="actions">
+      <button class="button primary" type="button">Save Warband</button>
+      <a class="button secondary" href="../play/tracker.html">Open Match Tracker</a>
+    </div>
+  </section>
+
+  <section class="section builder-shell">
+    <div class="builder-panel">
+      <div class="section-eyebrow">Current Build</div>
+      <h2>Prototype roster status</h2>
+
+      <p class="lead">
+        This top panel will show your selected Warlord, Warlord Influence,
+        Influence spent, unit count, and whether the Warband is legal.
+      </p>
+    </div>
+
+    <div class="builder-layout">
+      <div class="builder-panel">
+        <div class="section-eyebrow">Library Search Index</div>
+        <h2>Unit card library</h2>
+
+        <p class="lead">
+          This left panel will become the searchable/filterable unit library.
+        </p>
+      </div>
+
+      <div class="builder-panel">
+        <div class="section-eyebrow">Selected Unit Slots</div>
+        <h2>Warband cards</h2>
+
+        <p class="lead">
+          This right panel will show the cards you have added to your Warband.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>
+    Ixon Warband Builder Prototype. Card data will load from
+    <strong>data/cards.js</strong>.
+  </p>
+</footer>
+```
+
+  </div>
+
+  <script src="../data/cards.js"></script>
+
+</body>
+</html>
