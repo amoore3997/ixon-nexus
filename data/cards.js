@@ -149,7 +149,6 @@ window.IXON_STARTER_WARBANDS = {
     ]
   }
 };
-"""
 
 warbands_html = """<!DOCTYPE html>
 <html lang="en">
