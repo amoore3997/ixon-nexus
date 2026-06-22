@@ -1,3 +1,34 @@
+window.IXON_RULES = {
+  factions: [
+    "Rangers",
+    "Concord",
+    "TROI",
+    "Zol Empire",
+    "Dominion of Thawn",
+    "Factionless",
+    "Everturned",
+    "The Arcanum Order"
+  ],
+
+  coalitionKeys: [
+    "Survival",
+    "Conquest",
+    "Technology",
+    "Devotion"
+  ],
+
+  factionCoalitionDefaults: {
+    Rangers: ["Survival"],
+    Concord: ["Technology"],
+    TROI: ["Technology", "Conquest"],
+    "Zol Empire": ["Conquest"],
+    "Dominion of Thawn": ["Survival", "Technology"],
+    Everturned: ["Devotion", "Technology"],
+    "The Arcanum Order": ["Devotion"],
+    Factionless: []
+  }
+};
+
 window.IXON_CARDS = [
   {
     id: "kaelen-veyne",
