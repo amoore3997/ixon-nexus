@@ -17,139 +17,230 @@ window.IXON_RULES = {
     "Devotion"
   ],
 
-  factionCoalitionDefaults: {
-    Rangers: ["Survival"],
-    Concord: ["Technology"],
-    TROI: ["Technology", "Conquest"],
-    "Zol Empire": ["Conquest"],
-    "Dominion of Thawn": ["Survival", "Technology"],
-    Everturned: ["Devotion", "Technology"],
-    "The Arcanum Order": ["Devotion"],
-    Factionless: []
+  factionProfiles: {
+    Rangers: {
+      coalitionKeys: ["Survival"],
+      defaultTags: ["Rangers", "Survival"],
+      defaultVetoTags: []
+    },
+
+    Concord: {
+      coalitionKeys: ["Technology"],
+      defaultTags: ["Concord", "Technology"],
+      defaultVetoTags: []
+    },
+
+    TROI: {
+      coalitionKeys: ["Technology", "Conquest"],
+      defaultTags: ["TROI", "Technology", "Conquest"],
+      defaultVetoTags: []
+    },
+
+    "Zol Empire": {
+      coalitionKeys: ["Conquest"],
+      defaultTags: ["Zol Empire", "Conquest"],
+      defaultVetoTags: []
+    },
+
+    "Dominion of Thawn": {
+      coalitionKeys: ["Survival", "Technology"],
+      defaultTags: ["Dominion of Thawn", "Survival", "Technology"],
+      defaultVetoTags: []
+    },
+
+    Everturned: {
+      coalitionKeys: ["Devotion", "Technology"],
+      defaultTags: ["Everturned", "Devotion", "Technology"],
+      defaultVetoTags: []
+    },
+
+    "The Arcanum Order": {
+      coalitionKeys: ["Devotion"],
+      defaultTags: ["The Arcanum Order", "Devotion"],
+      defaultVetoTags: []
+    },
+
+    Factionless: {
+      coalitionKeys: [],
+      defaultTags: ["Factionless"],
+      defaultVetoTags: []
+    }
   }
 };
 
 window.IXON_CARDS = [
-  {
-    id: "kaelen-veyne",
-    name: "Kaelen Veyne",
-    role: "Warlord - Unique",
-    faction: "Rangers",
-    unitType: "Warlord",
-    influenceDisplay: "10 Influence",
-    influenceLimit: 10,
-    influenceCost: 0,
-    commandPoints: 4,
-    unique: true,
-    maxCopies: 1,
-    coalitionKey: "Survival 🛡",
-    vetoFlag: "Concord",
-    maxHp: 8,
-    stats: {
-      MR: 3,
-      AP: 5,
-      AR: 3,
-      DR: 3
-    },
-    cardImage: "",
-    notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
+ {
+  id: "kaelen-veyne",
+  name: "Kaelen Veyne",
+  role: "Warlord - Unique",
+  faction: "Rangers",
+  subFaction: null,
+  unitType: "Warlord",
+  cardClass: "Warlord",
+
+  influenceDisplay: "10 Influence",
+  influenceLimit: 10,
+  influenceCost: 0,
+  commandPoints: 4,
+  unique: true,
+  maxCopies: 1,
+
+  coalitionKey: "Survival 🛡",
+  vetoFlag: "Concord",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Warlord", "Unique"],
+  extraVetoTags: ["Concord"],
+
+  warlordRules: {
+    allowedFactions: ["Rangers", "Factionless"],
+    allowedCoalitionKeys: ["Survival"],
+    allowedTags: [],
+    vetoTags: ["Concord"]
   },
-  {
-    id: "hollowfang-signal-ops",
-    name: "Hollowfang Signal Ops",
-    role: "Basic Infantry",
-    faction: "Rangers",
-    unitType: "Infantry",
-    influenceDisplay: "1 Influence",
-    influenceLimit: null,
-    influenceCost: 1,
-    commandPoints: null,
-    unique: false,
-    maxCopies: null,
-    coalitionKey: "Survival 🛡",
-    vetoFlag: "None",
-    maxHp: 5,
-    stats: {
-      MR: 3,
-      AP: 3,
-      AR: 3,
-      DR: 2
-    },
-    cardImage: "",
-    notes: "Prototype Rangers infantry unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
+
+  maxHp: 8,
+  stats: {
+    MR: 3,
+    AP: 5,
+    AR: 3,
+    DR: 3
   },
-  {
-    id: "ashen-hallow-recon-sniper",
-    name: "Ashen-Hallow Recon Sniper",
-    role: "Basic Ranged",
-    faction: "Rangers",
-    unitType: "Ranged",
-    influenceDisplay: "2 Influence",
-    influenceLimit: null,
-    influenceCost: 2,
-    commandPoints: null,
-    unique: false,
-    maxCopies: null,
-    coalitionKey: "Survival 🛡",
-    vetoFlag: "None",
-    maxHp: 4,
-    stats: {
-      MR: 3,
-      AP: 4,
-      AR: 8,
-      DR: 2
-    },
-    cardImage: "",
-    notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
+  cardImage: "",
+  notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
+}
+ {
+  id: "hollowfang-signal-ops",
+  name: "Hollowfang Signal Ops",
+  role: "Basic Infantry",
+  faction: "Rangers",
+  subFaction: null,
+  unitType: "Infantry",
+  cardClass: "Basic",
+
+  influenceDisplay: "1 Influence",
+  influenceLimit: null,
+  influenceCost: 1,
+  commandPoints: null,
+  unique: false,
+  maxCopies: null,
+
+  coalitionKey: "Survival 🛡",
+  vetoFlag: "None",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Basic", "Infantry"],
+  extraVetoTags: [],
+
+  maxHp: 5,
+  stats: {
+    MR: 3,
+    AP: 3,
+    AR: 3,
+    DR: 2
   },
+  cardImage: "",
+  notes: "Prototype Rangers infantry unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
+}
   {
-    id: "ironvale-shield-tech",
-    name: "Ironvale Shield Tech",
-    role: "Basic Heavy",
-    faction: "Rangers",
-    unitType: "Heavy",
-    influenceDisplay: "3 Influence",
-    influenceLimit: null,
-    influenceCost: 3,
-    commandPoints: null,
-    unique: false,
-    maxCopies: null,
-    coalitionKey: "Survival 🛡",
-    vetoFlag: "None",
-    maxHp: 7,
-    stats: {
-      MR: 2,
-      AP: 3,
-      AR: 2,
-      DR: 5
-    },
-    cardImage: "",
-    notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
+  id: "ashen-hallow-recon-sniper",
+  name: "Ashen-Hallow Recon Sniper",
+  role: "Basic Ranged",
+  faction: "Rangers",
+  subFaction: null,
+  unitType: "Ranged",
+  cardClass: "Basic",
+
+  influenceDisplay: "2 Influence",
+  influenceLimit: null,
+  influenceCost: 2,
+  commandPoints: null,
+  unique: false,
+  maxCopies: null,
+
+  coalitionKey: "Survival 🛡",
+  vetoFlag: "None",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Basic", "Ranged"],
+  extraVetoTags: [],
+
+  maxHp: 4,
+  stats: {
+    MR: 3,
+    AP: 4,
+    AR: 8,
+    DR: 2
   },
+  cardImage: "",
+  notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
+}
   {
-    id: "braedon-forge",
-    name: "Braedon Forge, Hammer of the Forge",
-    role: "Unique Spec.",
-    faction: "Rangers",
-    unitType: "Spec",
-    influenceDisplay: "3 Influence",
-    influenceLimit: null,
-    influenceCost: 3,
-    commandPoints: null,
-    unique: true,
-    maxCopies: 1,
-    coalitionKey: "Survival 🛡",
-    vetoFlag: "None",
-    maxHp: 7,
-    stats: {
-      MR: 3,
-      AP: 6,
-      AR: 2,
-      DR: 4
-    },
-    cardImage: "",
-    notes: "Unique Rangers Spec unit for the current prototype roster."
-  }
+  id: "ironvale-shield-tech",
+  name: "Ironvale Shield Tech",
+  role: "Basic Heavy",
+  faction: "Rangers",
+  subFaction: null,
+  unitType: "Heavy",
+  cardClass: "Basic",
+
+  influenceDisplay: "3 Influence",
+  influenceLimit: null,
+  influenceCost: 3,
+  commandPoints: null,
+  unique: false,
+  maxCopies: null,
+
+  coalitionKey: "Survival 🛡",
+  vetoFlag: "None",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Basic", "Heavy"],
+  extraVetoTags: [],
+
+  maxHp: 7,
+  stats: {
+    MR: 2,
+    AP: 3,
+    AR: 2,
+    DR: 5
+  },
+  cardImage: "",
+  notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
+}
+  {
+  id: "braedon-forge",
+  name: "Braedon Forge, Hammer of the Forge",
+  role: "Unique Spec.",
+  faction: "Rangers",
+  subFaction: null,
+  unitType: "Spec",
+  cardClass: "Unique",
+
+  influenceDisplay: "3 Influence",
+  influenceLimit: null,
+  influenceCost: 3,
+  commandPoints: null,
+  unique: true,
+  maxCopies: 1,
+
+  coalitionKey: "Survival 🛡",
+  vetoFlag: "None",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Unique", "Spec"],
+  extraVetoTags: [],
+
+  maxHp: 7,
+  stats: {
+    MR: 3,
+    AP: 6,
+    AR: 2,
+    DR: 4
+  },
+  cardImage: "",
+  notes: "Unique Rangers Spec unit for the current prototype roster."
+}
 ];
 
 window.IXON_STARTER_WARBANDS = {
