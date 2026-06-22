@@ -69,178 +69,182 @@ window.IXON_RULES = {
 };
 
 window.IXON_CARDS = [
- {
-  id: "kaelen-veyne",
-  name: "Kaelen Veyne",
-  role: "Warlord - Unique",
-  faction: "Rangers",
-  subFaction: null,
-  unitType: "Warlord",
-  cardClass: "Warlord",
-
-  influenceDisplay: "10 Influence",
-  influenceLimit: 10,
-  influenceCost: 0,
-  commandPoints: 4,
-  unique: true,
-  maxCopies: 1,
-
-  coalitionKey: "Survival 🛡",
-  vetoFlag: "Concord",
-
-  extraCoalitionKeys: [],
-  extraTags: ["Warlord", "Unique"],
-  extraVetoTags: ["Concord"],
-
-  warlordRules: {
-    allowedFactions: ["Rangers", "Factionless"],
-    allowedCoalitionKeys: ["Survival"],
-    allowedTags: [],
-    vetoTags: ["Concord"]
-  },
-
-  maxHp: 8,
-  stats: {
-    MR: 3,
-    AP: 5,
-    AR: 3,
-    DR: 3
-  },
-  cardImage: "",
-  notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
-}
- {
-  id: "hollowfang-signal-ops",
-  name: "Hollowfang Signal Ops",
-  role: "Basic Infantry",
-  faction: "Rangers",
-  subFaction: null,
-  unitType: "Infantry",
-  cardClass: "Basic",
-
-  influenceDisplay: "1 Influence",
-  influenceLimit: null,
-  influenceCost: 1,
-  commandPoints: null,
-  unique: false,
-  maxCopies: null,
-
-  coalitionKey: "Survival 🛡",
-  vetoFlag: "None",
-
-  extraCoalitionKeys: [],
-  extraTags: ["Basic", "Infantry"],
-  extraVetoTags: [],
-
-  maxHp: 5,
-  stats: {
-    MR: 3,
-    AP: 3,
-    AR: 3,
-    DR: 2
-  },
-  cardImage: "",
-  notes: "Prototype Rangers infantry unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
-}
   {
-  id: "ashen-hallow-recon-sniper",
-  name: "Ashen-Hallow Recon Sniper",
-  role: "Basic Ranged",
-  faction: "Rangers",
-  subFaction: null,
-  unitType: "Ranged",
-  cardClass: "Basic",
+    id: "kaelen-veyne",
+    name: "Kaelen Veyne",
+    role: "Warlord - Unique",
+    faction: "Rangers",
+    subFaction: null,
+    unitType: "Warlord",
+    cardClass: "Warlord",
 
-  influenceDisplay: "2 Influence",
-  influenceLimit: null,
-  influenceCost: 2,
-  commandPoints: null,
-  unique: false,
-  maxCopies: null,
+    influenceDisplay: "10 Influence",
+    influenceLimit: 10,
+    influenceCost: 0,
+    commandPoints: 4,
+    unique: true,
+    maxCopies: 1,
 
-  coalitionKey: "Survival 🛡",
-  vetoFlag: "None",
+    coalitionKey: "Survival 🛡",
+    vetoFlag: "Concord",
 
-  extraCoalitionKeys: [],
-  extraTags: ["Basic", "Ranged"],
-  extraVetoTags: [],
+    extraCoalitionKeys: [],
+    extraTags: ["Warlord", "Unique"],
+    extraVetoTags: ["Concord"],
 
-  maxHp: 4,
-  stats: {
-    MR: 3,
-    AP: 4,
-    AR: 8,
-    DR: 2
+    warlordRules: {
+      allowedFactions: ["Rangers", "Factionless"],
+      allowedCoalitionKeys: ["Survival"],
+      allowedTags: [],
+      vetoTags: ["Concord"]
+    },
+
+    maxHp: 8,
+    stats: {
+      MR: 3,
+      AP: 5,
+      AR: 3,
+      DR: 3
+    },
+    cardImage: "",
+    notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
   },
-  cardImage: "",
-  notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
-}
+
   {
-  id: "ironvale-shield-tech",
-  name: "Ironvale Shield Tech",
-  role: "Basic Heavy",
-  faction: "Rangers",
-  subFaction: null,
-  unitType: "Heavy",
-  cardClass: "Basic",
+    id: "hollowfang-signal-ops",
+    name: "Hollowfang Signal Ops",
+    role: "Basic Infantry",
+    faction: "Rangers",
+    subFaction: null,
+    unitType: "Infantry",
+    cardClass: "Basic",
 
-  influenceDisplay: "3 Influence",
-  influenceLimit: null,
-  influenceCost: 3,
-  commandPoints: null,
-  unique: false,
-  maxCopies: null,
+    influenceDisplay: "1 Influence",
+    influenceLimit: null,
+    influenceCost: 1,
+    commandPoints: null,
+    unique: false,
+    maxCopies: null,
 
-  coalitionKey: "Survival 🛡",
-  vetoFlag: "None",
+    coalitionKey: "Survival 🛡",
+    vetoFlag: "None",
 
-  extraCoalitionKeys: [],
-  extraTags: ["Basic", "Heavy"],
-  extraVetoTags: [],
+    extraCoalitionKeys: [],
+    extraTags: ["Basic", "Infantry"],
+    extraVetoTags: [],
 
-  maxHp: 7,
-  stats: {
-    MR: 2,
-    AP: 3,
-    AR: 2,
-    DR: 5
+    maxHp: 5,
+    stats: {
+      MR: 3,
+      AP: 3,
+      AR: 3,
+      DR: 2
+    },
+    cardImage: "",
+    notes: "Prototype Rangers infantry unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
-  cardImage: "",
-  notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
-}
+
   {
-  id: "braedon-forge",
-  name: "Braedon Forge, Hammer of the Forge",
-  role: "Unique Spec.",
-  faction: "Rangers",
-  subFaction: null,
-  unitType: "Spec",
-  cardClass: "Unique",
+    id: "ashen-hallow-recon-sniper",
+    name: "Ashen-Hallow Recon Sniper",
+    role: "Basic Ranged",
+    faction: "Rangers",
+    subFaction: null,
+    unitType: "Ranged",
+    cardClass: "Basic",
 
-  influenceDisplay: "3 Influence",
-  influenceLimit: null,
-  influenceCost: 3,
-  commandPoints: null,
-  unique: true,
-  maxCopies: 1,
+    influenceDisplay: "2 Influence",
+    influenceLimit: null,
+    influenceCost: 2,
+    commandPoints: null,
+    unique: false,
+    maxCopies: null,
 
-  coalitionKey: "Survival 🛡",
-  vetoFlag: "None",
+    coalitionKey: "Survival 🛡",
+    vetoFlag: "None",
 
-  extraCoalitionKeys: [],
-  extraTags: ["Unique", "Spec"],
-  extraVetoTags: [],
+    extraCoalitionKeys: [],
+    extraTags: ["Basic", "Ranged"],
+    extraVetoTags: [],
 
-  maxHp: 7,
-  stats: {
-    MR: 3,
-    AP: 6,
-    AR: 2,
-    DR: 4
+    maxHp: 4,
+    stats: {
+      MR: 3,
+      AP: 4,
+      AR: 8,
+      DR: 2
+    },
+    cardImage: "",
+    notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
-  cardImage: "",
-  notes: "Unique Rangers Spec unit for the current prototype roster."
-}
+
+  {
+    id: "ironvale-shield-tech",
+    name: "Ironvale Shield Tech",
+    role: "Basic Heavy",
+    faction: "Rangers",
+    subFaction: null,
+    unitType: "Heavy",
+    cardClass: "Basic",
+
+    influenceDisplay: "3 Influence",
+    influenceLimit: null,
+    influenceCost: 3,
+    commandPoints: null,
+    unique: false,
+    maxCopies: null,
+
+    coalitionKey: "Survival 🛡",
+    vetoFlag: "None",
+
+    extraCoalitionKeys: [],
+    extraTags: ["Basic", "Heavy"],
+    extraVetoTags: [],
+
+    maxHp: 7,
+    stats: {
+      MR: 2,
+      AP: 3,
+      AR: 2,
+      DR: 5
+    },
+    cardImage: "",
+    notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
+  },
+
+  {
+    id: "braedon-forge",
+    name: "Braedon Forge, Hammer of the Forge",
+    role: "Unique Spec.",
+    faction: "Rangers",
+    subFaction: null,
+    unitType: "Spec",
+    cardClass: "Unique",
+
+    influenceDisplay: "3 Influence",
+    influenceLimit: null,
+    influenceCost: 3,
+    commandPoints: null,
+    unique: true,
+    maxCopies: 1,
+
+    coalitionKey: "Survival 🛡",
+    vetoFlag: "None",
+
+    extraCoalitionKeys: [],
+    extraTags: ["Unique", "Spec"],
+    extraVetoTags: [],
+
+    maxHp: 7,
+    stats: {
+      MR: 3,
+      AP: 6,
+      AR: 2,
+      DR: 4
+    },
+    cardImage: "",
+    notes: "Unique Rangers Spec unit for the current prototype roster."
+  }
 ];
 
 window.IXON_STARTER_WARBANDS = {
