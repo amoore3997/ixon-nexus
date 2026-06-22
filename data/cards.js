@@ -69,7 +69,7 @@ window.IXON_CARDS = [
       DR: 2
     },
     cardImage: "",
-    notes: "Prototype Rangers ranged unit."
+    notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
   {
     id: "ironvale-shield-tech",
@@ -93,7 +93,7 @@ window.IXON_CARDS = [
       DR: 5
     },
     cardImage: "",
-    notes: "Prototype Rangers heavy unit."
+    notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
   {
     id: "braedon-forge",
