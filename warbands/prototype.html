@@ -653,23 +653,35 @@
     factionFilter.value = factions.includes(currentValue) ? currentValue : "All";
   }
 
+  function getCardCopyCount(cardId) {
+    return selectedUnitIds.filter((unitId) => unitId === cardId).length;
+  }
+
   function canAddCard(card) {
     const alreadySelected = selectedUnitIds.includes(card.id);
     const selectedWarlords = getSelectedWarlords();
     const influenceLimit = getInfluenceLimit();
     const influenceSpent = getInfluenceSpent();
-
-    if (alreadySelected) {
-      return {
-        allowed: false,
-        reason: "In Build"
-      };
-    }
+    const copyCount = getCardCopyCount(card.id);
 
     if (card.unitType === "Warlord" && selectedWarlords.length >= 1) {
       return {
         allowed: false,
-        reason: "Only one Warlord"
+        reason: alreadySelected ? "In Build" : "Only one Warlord"
+      };
+    }
+
+    if (card.unique && alreadySelected) {
+      return {
+        allowed: false,
+        reason: "Unique"
+      };
+    }
+
+    if (card.maxCopies !== null && card.maxCopies !== undefined && copyCount >= card.maxCopies) {
+      return {
+        allowed: false,
+        reason: "Max copies"
       };
     }
 
@@ -689,7 +701,7 @@
 
     return {
       allowed: true,
-      reason: "Add"
+      reason: alreadySelected && !card.unique ? `Add another (${copyCount})` : "Add"
     };
   }
 
@@ -725,7 +737,8 @@
     }
 
     cards.forEach((card) => {
-      const selected = selectedUnitIds.includes(card.id);
+      const copyCount = getCardCopyCount(card.id);
+      const selected = copyCount > 0;
       const addCheck = canAddCard(card);
       const cardElement = document.createElement("article");
       cardElement.className = `library-card ${selected ? "selected" : ""} ${!addCheck.allowed && !selected ? "disabled" : ""}`;
@@ -733,7 +746,7 @@
       cardElement.innerHTML = `
         <div class="index-name">
           <strong>${card.name}</strong>
-          <span>${card.role}</span>
+          <span>${card.role}${copyCount > 0 ? ` • ${copyCount} in build` : ""}</span>
         </div>
 
         <span class="type-chip">${card.unitType}</span>
@@ -778,12 +791,12 @@
 
         <div class="slot-name">
           <strong>${card.name}</strong>
-          <span>${card.role}</span>
+          <span>${card.role}${copyCount > 0 ? ` • ${copyCount} in build` : ""}</span>
         </div>
 
         <div class="slot-cost">${getInfluenceText(card)}</div>
 
-        <button class="button secondary" type="button" onclick="removeCard('${card.id}')">Remove</button>
+        <button class="button secondary" type="button" onclick="removeCardAtIndex(${index})">Remove</button>
       `;
 
       slotList.appendChild(slotElement);
@@ -809,8 +822,8 @@
     renderAll();
   }
 
-  function removeCard(cardId) {
-    selectedUnitIds = selectedUnitIds.filter((unitId) => unitId !== cardId);
+  function removeCardAtIndex(index) {
+    selectedUnitIds.splice(index, 1);
     closeCardPreview();
     renderAll();
   }
