@@ -272,7 +272,9 @@
     <button class="button secondary" type="button" onclick="clearBuilder()">Clear Builder</button>
     <button class="button secondary" type="button" onclick="clearSavedWarband()">Clear Saved Warband</button>
   </div>
-    <div class="builder-layout">
+</div>
+
+<div class="builder-layout">
      <div class="builder-panel">
   <div class="section-eyebrow">Library Search Index</div>
   <h2>Unit card library</h2>
@@ -339,6 +341,7 @@
   </div>
 
   <script src="../data/cards.js"></script>
+
 <script>
   const warbandStorageKey = "ixonSavedWarband";
 
@@ -427,17 +430,229 @@
     statusElement.className = status.className;
   }
 
- function loadPrototype() {
-  selectedUnitIds = [...window.IXON_STARTER_WARBANDS.rangersPrototype.unitIds];
-  updateSummary();
-  renderLibrary();
-}
+  function renderFactionFilter() {
+    const factionFilter = document.getElementById("factionFilter");
+    const currentValue = factionFilter.value;
+    const factions = [...new Set(window.IXON_CARDS.map((card) => card.faction))].sort();
 
-function clearBuilder() {
-  selectedUnitIds = [];
-  updateSummary();
-  renderLibrary();
-}
+    factionFilter.innerHTML = `<option value="All">All Factions</option>`;
+
+    factions.forEach((faction) => {
+      const option = document.createElement("option");
+      option.value = faction;
+      option.textContent = faction;
+      factionFilter.appendChild(option);
+    });
+
+    factionFilter.value = factions.includes(currentValue) ? currentValue : "All";
+  }
+
+  function canAddCard(card) {
+    const alreadySelected = selectedUnitIds.includes(card.id);
+    const selectedWarlords = getSelectedWarlords();
+    const influenceLimit = getInfluenceLimit();
+    const influenceSpent = getInfluenceSpent();
+
+    if (alreadySelected) {
+      return {
+        allowed: false,
+        reason: "In Build"
+      };
+    }
+
+    if (card.unitType === "Warlord" && selectedWarlords.length >= 1) {
+      return {
+        allowed: false,
+        reason: "Only one Warlord"
+      };
+    }
+
+    if (card.unitType !== "Warlord" && selectedWarlords.length !== 1) {
+      return {
+        allowed: false,
+        reason: "Choose Warlord first"
+      };
+    }
+
+    if (card.unitType !== "Warlord" && influenceSpent + card.influenceCost > influenceLimit) {
+      return {
+        allowed: false,
+        reason: "Over cap"
+      };
+    }
+
+    return {
+      allowed: true,
+      reason: "Add"
+    };
+  }
+
+  function renderLibrary() {
+    const libraryList = document.getElementById("libraryList");
+    const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+    const typeFilter = document.getElementById("typeFilter").value;
+    const factionFilter = document.getElementById("factionFilter").value;
+
+    const cards = window.IXON_CARDS.filter((card) => {
+      const searchableText = [
+        card.name,
+        card.role,
+        card.faction,
+        card.unitType,
+        card.coalitionKey,
+        card.vetoFlag,
+        card.notes
+      ].join(" ").toLowerCase();
+
+      const matchesSearch = searchTerm === "" || searchableText.includes(searchTerm);
+      const matchesType = typeFilter === "All" || card.unitType === typeFilter;
+      const matchesFaction = factionFilter === "All" || card.faction === factionFilter;
+
+      return matchesSearch && matchesType && matchesFaction;
+    });
+
+    libraryList.innerHTML = "";
+
+    if (cards.length === 0) {
+      libraryList.innerHTML = `<div class="empty-state">No matching cards found.</div>`;
+      return;
+    }
+
+    cards.forEach((card) => {
+      const selected = selectedUnitIds.includes(card.id);
+      const addCheck = canAddCard(card);
+
+      const influenceText = card.unitType === "Warlord"
+        ? `Provides ${card.influenceLimit || 0} Influence`
+        : `Costs ${card.influenceCost} Influence`;
+
+      const cardElement = document.createElement("article");
+      cardElement.className = `library-card ${selected ? "selected" : ""} ${!addCheck.allowed && !selected ? "disabled" : ""}`;
+
+      cardElement.innerHTML = `
+        <div class="card-topline">
+          <h3>${card.name}</h3>
+          <span class="type-chip">${card.unitType}</span>
+        </div>
+
+        <div class="card-meta">
+          <span><strong>${card.role}</strong></span>
+          <span>Faction: ${card.faction}</span>
+          <span>Influence: ${influenceText}</span>
+          <span>Coalition: ${card.coalitionKey}</span>
+          <span>Veto: ${card.vetoFlag}</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-pill">HP ${card.maxHp}</span>
+          <span class="stat-pill">MR ${card.stats.MR}</span>
+          <span class="stat-pill">AP ${card.stats.AP}</span>
+          <span class="stat-pill">AR ${card.stats.AR}</span>
+          <span class="stat-pill">DR ${card.stats.DR}</span>
+        </div>
+
+        <p>${card.notes || ""}</p>
+
+        <div class="actions" style="margin-top: 12px;">
+          <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="addCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
+            ${addCheck.reason}
+          </button>
+        </div>
+      `;
+
+      libraryList.appendChild(cardElement);
+    });
+  }
+
+  function renderSlots() {
+    const slotList = document.getElementById("slotList");
+    const selectedCards = getSelectedCards();
+
+    slotList.innerHTML = "";
+
+    if (selectedCards.length === 0) {
+      slotList.innerHTML = `
+        <div class="empty-state">
+          No cards added yet. Choose a Warlord first, then add units from the library.
+        </div>
+      `;
+      return;
+    }
+
+    selectedCards.forEach((card, index) => {
+      const influenceText = card.unitType === "Warlord"
+        ? `Provides ${card.influenceLimit || 0} Influence`
+        : `Costs ${card.influenceCost} Influence`;
+
+      const slotElement = document.createElement("article");
+      slotElement.className = card.unitType === "Warlord" ? "slot-card warlord-slot" : "slot-card";
+
+      slotElement.innerHTML = `
+        <div class="card-topline">
+          <h3>${index + 1}. ${card.name}</h3>
+          <span class="type-chip">${card.unitType}</span>
+        </div>
+
+        <div class="card-meta">
+          <span><strong>${card.role}</strong></span>
+          <span>Faction: ${card.faction}</span>
+          <span>Influence: ${influenceText}</span>
+          <span>Coalition: ${card.coalitionKey}</span>
+          <span>Veto: ${card.vetoFlag}</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-pill">HP ${card.maxHp}</span>
+          <span class="stat-pill">MR ${card.stats.MR}</span>
+          <span class="stat-pill">AP ${card.stats.AP}</span>
+          <span class="stat-pill">AR ${card.stats.AR}</span>
+          <span class="stat-pill">DR ${card.stats.DR}</span>
+        </div>
+
+        <p>${card.notes || ""}</p>
+
+        <div class="actions" style="margin-top: 12px;">
+          <button class="button secondary" type="button" onclick="removeCard('${card.id}')">Remove</button>
+        </div>
+      `;
+
+      slotList.appendChild(slotElement);
+    });
+  }
+
+  function renderAll() {
+    updateSummary();
+    renderLibrary();
+    renderSlots();
+  }
+
+  function addCard(cardId) {
+    const card = getCardById(cardId);
+    const addCheck = canAddCard(card);
+
+    if (!addCheck.allowed) {
+      alert(`Cannot add ${card.name}: ${addCheck.reason}.`);
+      return;
+    }
+
+    selectedUnitIds.push(cardId);
+    renderAll();
+  }
+
+  function removeCard(cardId) {
+    selectedUnitIds = selectedUnitIds.filter((unitId) => unitId !== cardId);
+    renderAll();
+  }
+
+  function loadPrototype() {
+    selectedUnitIds = [...window.IXON_STARTER_WARBANDS.rangersPrototype.unitIds];
+    renderAll();
+  }
+
+  function clearBuilder() {
+    selectedUnitIds = [];
+    renderAll();
+  }
 
   function clearSavedWarband() {
     localStorage.removeItem(warbandStorageKey);
@@ -477,8 +692,7 @@ function clearBuilder() {
     const savedWarband = localStorage.getItem(warbandStorageKey);
 
     if (!savedWarband) {
-      updateSummary();
-      renderLibrary();
+      renderAll();
       return;
     }
 
@@ -489,169 +703,20 @@ function clearBuilder() {
       selectedUnitIds = [];
     }
 
-    updateSummary();
-  }
-function renderFactionFilter() {
-  const factionFilter = document.getElementById("factionFilter");
-  const currentValue = factionFilter.value;
-  const factions = [...new Set(window.IXON_CARDS.map((card) => card.faction))].sort();
-
-  factionFilter.innerHTML = `<option value="All">All Factions</option>`;
-
-  factions.forEach((faction) => {
-    const option = document.createElement("option");
-    option.value = faction;
-    option.textContent = faction;
-    factionFilter.appendChild(option);
-  });
-
-  factionFilter.value = factions.includes(currentValue) ? currentValue : "All";
-}
-
-function canAddCard(card) {
-  const alreadySelected = selectedUnitIds.includes(card.id);
-  const selectedWarlords = getSelectedWarlords();
-  const influenceLimit = getInfluenceLimit();
-  const influenceSpent = getInfluenceSpent();
-
-  if (alreadySelected) {
-    return {
-      allowed: false,
-      reason: "In Build"
-    };
+    renderAll();
   }
 
-  if (card.unitType === "Warlord" && selectedWarlords.length >= 1) {
-    return {
-      allowed: false,
-      reason: "Only one Warlord"
-    };
-  }
+  function initializeBuilder() {
+    if (!window.IXON_CARDS || !window.IXON_STARTER_WARBANDS) {
+      alert("Card database failed to load. Check data/cards.js.");
+      return;
+    }
 
-  if (card.unitType !== "Warlord" && selectedWarlords.length !== 1) {
-    return {
-      allowed: false,
-      reason: "Choose Warlord first"
-    };
-  }
+    document.getElementById("searchInput").addEventListener("input", renderLibrary);
+    document.getElementById("typeFilter").addEventListener("change", renderLibrary);
+    document.getElementById("factionFilter").addEventListener("change", renderLibrary);
 
-  if (card.unitType !== "Warlord" && influenceSpent + card.influenceCost > influenceLimit) {
-    return {
-      allowed: false,
-      reason: "Over cap"
-    };
-  }
-
-  return {
-    allowed: true,
-    reason: "Add"
-  };
-}
-
-function renderLibrary() {
-  const libraryList = document.getElementById("libraryList");
-  const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
-  const typeFilter = document.getElementById("typeFilter").value;
-  const factionFilter = document.getElementById("factionFilter").value;
-
-  const cards = window.IXON_CARDS.filter((card) => {
-    const searchableText = [
-      card.name,
-      card.role,
-      card.faction,
-      card.unitType,
-      card.coalitionKey,
-      card.vetoFlag,
-      card.notes
-    ].join(" ").toLowerCase();
-
-    const matchesSearch = searchTerm === "" || searchableText.includes(searchTerm);
-    const matchesType = typeFilter === "All" || card.unitType === typeFilter;
-    const matchesFaction = factionFilter === "All" || card.faction === factionFilter;
-
-    return matchesSearch && matchesType && matchesFaction;
-  });
-
-  libraryList.innerHTML = "";
-
-  if (cards.length === 0) {
-    libraryList.innerHTML = `<div class="empty-state">No matching cards found.</div>`;
-    return;
-  }
-
-  cards.forEach((card) => {
-    const selected = selectedUnitIds.includes(card.id);
-    const addCheck = canAddCard(card);
-
-    const influenceText = card.unitType === "Warlord"
-      ? `Provides ${card.influenceLimit || 0} Influence`
-      : `Costs ${card.influenceCost} Influence`;
-
-    const cardElement = document.createElement("article");
-    cardElement.className = `library-card ${selected ? "selected" : ""} ${!addCheck.allowed && !selected ? "disabled" : ""}`;
-
-    cardElement.innerHTML = `
-      <div class="card-topline">
-        <h3>${card.name}</h3>
-        <span class="type-chip">${card.unitType}</span>
-      </div>
-
-      <div class="card-meta">
-        <span><strong>${card.role}</strong></span>
-        <span>Faction: ${card.faction}</span>
-        <span>Influence: ${influenceText}</span>
-        <span>Coalition: ${card.coalitionKey}</span>
-        <span>Veto: ${card.vetoFlag}</span>
-      </div>
-
-      <div class="stat-row">
-        <span class="stat-pill">HP ${card.maxHp}</span>
-        <span class="stat-pill">MR ${card.stats.MR}</span>
-        <span class="stat-pill">AP ${card.stats.AP}</span>
-        <span class="stat-pill">AR ${card.stats.AR}</span>
-        <span class="stat-pill">DR ${card.stats.DR}</span>
-      </div>
-
-      <p>${card.notes || ""}</p>
-
-      <div class="actions" style="margin-top: 12px;">
-        <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="addCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
-          ${addCheck.reason}
-        </button>
-      </div>
-    `;
-
-    libraryList.appendChild(cardElement);
-  });
-}
-
-function addCard(cardId) {
-  const card = getCardById(cardId);
-  const addCheck = canAddCard(card);
-
-  if (!addCheck.allowed) {
-    alert(`Cannot add ${card.name}: ${addCheck.reason}.`);
-    return;
-  }
-
-  selectedUnitIds.push(cardId);
-  updateSummary();
-  renderLibrary();
-}
-function initializeBuilder() {
-  if (!window.IXON_CARDS || !window.IXON_STARTER_WARBANDS) {
-    alert("Card database failed to load. Check data/cards.js.");
-    return;
-  }
-
-  document.getElementById("searchInput").addEventListener("input", renderLibrary);
-  document.getElementById("typeFilter").addEventListener("change", renderLibrary);
-  document.getElementById("factionFilter").addEventListener("change", renderLibrary);
-
-  renderFactionFilter();
-  loadSavedWarband();
-}
-
+    renderFactionFilter();
     loadSavedWarband();
   }
 
