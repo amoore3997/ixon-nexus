@@ -583,37 +583,80 @@
       : `Costs ${card.influenceCost}`;
   }
 
-  function getStatus() {
-    const selectedWarlords = getSelectedWarlords();
-    const influenceLimit = getInfluenceLimit();
-    const influenceSpent = getInfluenceSpent();
+ function getStatus() {
+  const selectedCards = getSelectedCards();
+  const selectedWarlords = getSelectedWarlords();
+  const influenceLimit = getInfluenceLimit();
+  const influenceSpent = getInfluenceSpent();
 
-    if (selectedWarlords.length === 0) {
-      return {
-        label: "Select a Warlord.",
-        className: "warning-text"
-      };
-    }
-
-    if (selectedWarlords.length > 1) {
-      return {
-        label: "Too many Warlords.",
-        className: "danger-text"
-      };
-    }
-
-    if (influenceSpent > influenceLimit) {
-      return {
-        label: "Influence exceeded.",
-        className: "danger-text"
-      };
-    }
-
+  if (selectedWarlords.length === 0) {
     return {
-      label: "Valid Warband.",
-      className: "valid-text"
+      label: "Select a Warlord.",
+      className: "warning-text"
     };
   }
+
+  if (selectedWarlords.length > 1) {
+    return {
+      label: "Too many Warlords.",
+      className: "danger-text"
+    };
+  }
+
+  if (influenceSpent > influenceLimit) {
+    return {
+      label: "Influence exceeded.",
+      className: "danger-text"
+    };
+  }
+
+  const warlord = selectedWarlords[0];
+
+  const illegalCard = selectedCards.find((card) => {
+    if (!card || card.unitType === "Warlord") {
+      return false;
+    }
+
+    const compatibility = getRosterCompatibility(card, warlord);
+
+    if (!compatibility.allowed) {
+      return true;
+    }
+
+    const otherSelectedCards = selectedCards.filter((selectedCard) => {
+      return selectedCard && selectedCard.id !== card.id;
+    });
+
+    return hasVetoConflictWithSelected(card, otherSelectedCards);
+  });
+
+  if (illegalCard) {
+    return {
+      label: `Illegal: ${illegalCard.name}`,
+      className: "danger-text"
+    };
+  }
+
+  const duplicateUniqueCard = selectedCards.find((card) => {
+    if (!card || !card.unique) {
+      return false;
+    }
+
+    return getCardCopyCount(card.id) > 1;
+  });
+
+  if (duplicateUniqueCard) {
+    return {
+      label: `Duplicate Unique: ${duplicateUniqueCard.name}`,
+      className: "danger-text"
+    };
+  }
+
+  return {
+    label: "Valid Warband.",
+    className: "valid-text"
+  };
+}
 
   function updateSummary() {
     const selectedCards = getSelectedCards();
@@ -656,54 +699,223 @@
   function getCardCopyCount(cardId) {
     return selectedUnitIds.filter((unitId) => unitId === cardId).length;
   }
+function getArrayValue(value) {
+  if (Array.isArray(value)) {
+    return value.filter(Boolean);
+  }
 
-  function canAddCard(card) {
-    const alreadySelected = selectedUnitIds.includes(card.id);
-    const selectedWarlords = getSelectedWarlords();
-    const influenceLimit = getInfluenceLimit();
-    const influenceSpent = getInfluenceSpent();
-    const copyCount = getCardCopyCount(card.id);
+  if (!value || value === "None") {
+    return [];
+  }
 
-    if (card.unitType === "Warlord" && selectedWarlords.length >= 1) {
+  return [value];
+}
+
+function uniqueList(items) {
+  return [...new Set(items.filter(Boolean))];
+}
+
+function getFactionProfile(card) {
+  const profiles = window.IXON_RULES?.factionProfiles || {};
+
+  return profiles[card.faction] || {
+    coalitionKeys: [],
+    defaultTags: card.faction ? [card.faction] : [],
+    defaultVetoTags: []
+  };
+}
+
+function getEffectiveCoalitionKeys(card) {
+  const profile = getFactionProfile(card);
+
+  return uniqueList([
+    ...getArrayValue(profile.coalitionKeys),
+    ...getArrayValue(card.coalitionKeys),
+    ...getArrayValue(card.extraCoalitionKeys)
+  ]);
+}
+
+function getEffectiveTags(card) {
+  const profile = getFactionProfile(card);
+
+  return uniqueList([
+    ...getArrayValue(profile.defaultTags),
+    ...getArrayValue(card.tags),
+    ...getArrayValue(card.extraTags),
+    card.faction,
+    card.subFaction,
+    card.unitType,
+    card.cardClass
+  ]);
+}
+
+function getEffectiveVetoTags(card) {
+  const profile = getFactionProfile(card);
+
+  return uniqueList([
+    ...getArrayValue(profile.defaultVetoTags),
+    ...getArrayValue(card.vetoTags),
+    ...getArrayValue(card.extraVetoTags),
+    ...(card.vetoFlag && card.vetoFlag !== "None" ? [card.vetoFlag] : [])
+  ]);
+}
+
+function hasAnyOverlap(firstList, secondList) {
+  return getArrayValue(firstList).some((item) => getArrayValue(secondList).includes(item));
+}
+
+function getWarlordRules(warlord) {
+  const rawRules = warlord.warlordRules || {};
+
+  const allowedFactions = getArrayValue(rawRules.allowedFactions).length > 0
+    ? getArrayValue(rawRules.allowedFactions)
+    : [warlord.faction];
+
+  const allowedCoalitionKeys = getArrayValue(rawRules.allowedCoalitionKeys).length > 0
+    ? getArrayValue(rawRules.allowedCoalitionKeys)
+    : getEffectiveCoalitionKeys(warlord);
+
+  const allowedTags = getArrayValue(rawRules.allowedTags);
+
+  const vetoTags = getArrayValue(rawRules.vetoTags).length > 0
+    ? getArrayValue(rawRules.vetoTags)
+    : getEffectiveVetoTags(warlord);
+
+  return {
+    allowedFactions,
+    allowedCoalitionKeys,
+    allowedTags,
+    vetoTags
+  };
+}
+
+function getRosterCompatibility(card, warlord) {
+  const rules = getWarlordRules(warlord);
+
+  const cardCoalitionKeys = getEffectiveCoalitionKeys(card);
+  const cardTags = getEffectiveTags(card);
+  const cardVetoTags = getEffectiveVetoTags(card);
+  const warlordTags = getEffectiveTags(warlord);
+
+  const factionAllowed = rules.allowedFactions.includes(card.faction);
+  const coalitionAllowed = hasAnyOverlap(cardCoalitionKeys, rules.allowedCoalitionKeys);
+  const tagAllowed = hasAnyOverlap(cardTags, rules.allowedTags);
+
+  const vetoedByWarlord = hasAnyOverlap(cardTags, rules.vetoTags);
+  const cardVetoesWarlord = hasAnyOverlap(warlordTags, cardVetoTags);
+
+  if (vetoedByWarlord || cardVetoesWarlord) {
+    return {
+      allowed: false,
+      reason: "Veto conflict"
+    };
+  }
+
+  if (!factionAllowed && !coalitionAllowed && !tagAllowed) {
+    return {
+      allowed: false,
+      reason: "Faction/Coalition mismatch"
+    };
+  }
+
+  return {
+    allowed: true,
+    reason: "Allowed"
+  };
+}
+
+function hasVetoConflictWithSelected(card, selectedCards) {
+  const cardTags = getEffectiveTags(card);
+  const cardVetoTags = getEffectiveVetoTags(card);
+
+  return selectedCards.some((selectedCard) => {
+    if (!selectedCard || selectedCard.id === card.id) {
+      return false;
+    }
+
+    const selectedTags = getEffectiveTags(selectedCard);
+    const selectedVetoTags = getEffectiveVetoTags(selectedCard);
+
+    const selectedCardVetoesNewCard = hasAnyOverlap(cardTags, selectedVetoTags);
+    const newCardVetoesSelectedCard = hasAnyOverlap(selectedTags, cardVetoTags);
+
+    return selectedCardVetoesNewCard || newCardVetoesSelectedCard;
+  });
+}
+ function getCardLegality(card) {
+  const alreadySelected = selectedUnitIds.includes(card.id);
+  const selectedWarlords = getSelectedWarlords();
+  const influenceLimit = getInfluenceLimit();
+  const influenceSpent = getInfluenceSpent();
+  const copyCount = getCardCopyCount(card.id);
+
+  if (card.unitType === "Warlord") {
+    if (selectedWarlords.length >= 1) {
       return {
         allowed: false,
         reason: alreadySelected ? "In Build" : "Only one Warlord"
       };
     }
 
-    if (card.unique && alreadySelected) {
-      return {
-        allowed: false,
-        reason: "Unique"
-      };
-    }
-
-    if (card.maxCopies !== null && card.maxCopies !== undefined && copyCount >= card.maxCopies) {
-      return {
-        allowed: false,
-        reason: "Max copies"
-      };
-    }
-
-    if (card.unitType !== "Warlord" && selectedWarlords.length !== 1) {
-      return {
-        allowed: false,
-        reason: "Choose Warlord first"
-      };
-    }
-
-    if (card.unitType !== "Warlord" && influenceSpent + card.influenceCost > influenceLimit) {
-      return {
-        allowed: false,
-        reason: "Over cap"
-      };
-    }
-
     return {
       allowed: true,
-      reason: alreadySelected && !card.unique ? `Add another (${copyCount})` : "Add"
+      reason: "Add"
     };
   }
+
+  if (selectedWarlords.length !== 1) {
+    return {
+      allowed: false,
+      reason: "Choose Warlord first"
+    };
+  }
+
+  if (card.unique && copyCount >= 1) {
+    return {
+      allowed: false,
+      reason: "Unique"
+    };
+  }
+
+  if (card.maxCopies !== null && card.maxCopies !== undefined && copyCount >= card.maxCopies) {
+    return {
+      allowed: false,
+      reason: "Max copies"
+    };
+  }
+
+  const warlord = selectedWarlords[0];
+  const compatibility = getRosterCompatibility(card, warlord);
+
+  if (!compatibility.allowed) {
+    return compatibility;
+  }
+
+  const selectedCards = getSelectedCards();
+
+  if (hasVetoConflictWithSelected(card, selectedCards)) {
+    return {
+      allowed: false,
+      reason: "Veto conflict"
+    };
+  }
+
+  if (influenceSpent + card.influenceCost > influenceLimit) {
+    return {
+      allowed: false,
+      reason: "Over cap"
+    };
+  }
+
+  return {
+    allowed: true,
+    reason: alreadySelected && !card.unique ? `Add another (${copyCount})` : "Add"
+  };
+}
+
+function canAddCard(card) {
+  return getCardLegality(card);
+}D
 
   function renderLibrary() {
     const libraryList = document.getElementById("libraryList");
@@ -712,15 +924,20 @@
     const factionFilter = document.getElementById("factionFilter").value;
 
     const cards = window.IXON_CARDS.filter((card) => {
-      const searchableText = [
-        card.name,
-        card.role,
-        card.faction,
-        card.unitType,
-        card.coalitionKey,
-        card.vetoFlag,
-        card.notes
-      ].join(" ").toLowerCase();
+     const searchableText = [
+  card.name,
+  card.role,
+  card.faction,
+  card.subFaction,
+  card.unitType,
+  card.cardClass,
+  card.coalitionKey,
+  card.vetoFlag,
+  getEffectiveCoalitionKeys(card).join(" "),
+  getEffectiveTags(card).join(" "),
+  getEffectiveVetoTags(card).join(" "),
+  card.notes
+].join(" ").toLowerCase();
 
       const matchesSearch = searchTerm === "" || searchableText.includes(searchTerm);
       const matchesType = typeFilter === "All" || card.unitType === typeFilter;
