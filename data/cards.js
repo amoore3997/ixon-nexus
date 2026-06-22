@@ -1,6 +1,4 @@
-from pathlib import Path
-
-cards_js = """window.IXON_CARDS = [
+window.IXON_CARDS = [
   {
     id: "kaelen-veyne",
     name: "Kaelen Veyne",
