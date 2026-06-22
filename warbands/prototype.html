@@ -230,7 +230,7 @@
     </p>
 
     <div class="actions">
-      <button class="button primary" type="button">Save Warband</button>
+      <button class="button primary" type="button" onclick="saveWarband()">Save Warband</button>
       <a class="button secondary" href="../play/tracker.html">Open Match Tracker</a>
     </div>
   </section>
@@ -268,9 +268,9 @@
   </div>
 
   <div class="actions" style="margin-top: 18px;">
-    <button class="button primary" type="button">Load Prototype</button>
-    <button class="button secondary" type="button">Clear Builder</button>
-    <button class="button secondary" type="button">Clear Saved Warband</button>
+  <button class="button primary" type="button" onclick="loadPrototype()">Load Prototype</button>
+<button class="button secondary" type="button" onclick="clearBuilder()">Clear Builder</button>
+<button class="button secondary" type="button" onclick="clearSavedWarband()">Clear Saved Warband</button>
   </div>
 </div>
     <div class="builder-layout">
@@ -340,6 +340,166 @@
   </div>
 
   <script src="../data/cards.js"></script>
+<script>
+  const warbandStorageKey = "ixonSavedWarband";
 
+  let selectedUnitIds = [];
+
+  function getCardById(cardId) {
+    return window.IXON_CARDS.find((card) => card.id === cardId);
+  }
+
+  function getSelectedCards() {
+    return selectedUnitIds
+      .map((unitId) => getCardById(unitId))
+      .filter(Boolean);
+  }
+
+  function getSelectedWarlords() {
+    return getSelectedCards().filter((card) => card.unitType === "Warlord");
+  }
+
+  function getInfluenceLimit() {
+    const selectedWarlords = getSelectedWarlords();
+
+    if (selectedWarlords.length !== 1) {
+      return 0;
+    }
+
+    return selectedWarlords[0].influenceLimit || 0;
+  }
+
+  function getInfluenceSpent() {
+    return getSelectedCards()
+      .filter((card) => card.unitType !== "Warlord")
+      .reduce((total, card) => total + card.influenceCost, 0);
+  }
+
+  function getStatus() {
+    const selectedWarlords = getSelectedWarlords();
+    const influenceLimit = getInfluenceLimit();
+    const influenceSpent = getInfluenceSpent();
+
+    if (selectedWarlords.length === 0) {
+      return {
+        label: "Select a Warlord.",
+        className: "warning-text"
+      };
+    }
+
+    if (selectedWarlords.length > 1) {
+      return {
+        label: "Too many Warlords.",
+        className: "danger-text"
+      };
+    }
+
+    if (influenceSpent > influenceLimit) {
+      return {
+        label: "Influence exceeded.",
+        className: "danger-text"
+      };
+    }
+
+    return {
+      label: "Valid Warband.",
+      className: "valid-text"
+    };
+  }
+
+  function updateSummary() {
+    const selectedCards = getSelectedCards();
+    const selectedWarlords = getSelectedWarlords();
+    const influenceLimit = getInfluenceLimit();
+    const influenceSpent = getInfluenceSpent();
+    const status = getStatus();
+
+    document.getElementById("selectedWarlordValue").textContent =
+      selectedWarlords.length === 0
+        ? "None"
+        : selectedWarlords.map((card) => card.name).join(", ");
+
+    document.getElementById("warlordInfluenceValue").textContent = influenceLimit;
+    document.getElementById("builderInfluenceValue").textContent = `${influenceSpent} / ${influenceLimit}`;
+    document.getElementById("builderUnitCountValue").textContent = selectedCards.length;
+
+    const statusElement = document.getElementById("builderStatusValue");
+    statusElement.textContent = status.label;
+    statusElement.className = status.className;
+  }
+
+  function loadPrototype() {
+    selectedUnitIds = [...window.IXON_STARTER_WARBANDS.rangersPrototype.unitIds];
+    updateSummary();
+  }
+
+  function clearBuilder() {
+    selectedUnitIds = [];
+    updateSummary();
+  }
+
+  function clearSavedWarband() {
+    localStorage.removeItem(warbandStorageKey);
+    alert("Saved Warband cleared.");
+  }
+
+  function saveWarband() {
+    const selectedWarlords = getSelectedWarlords();
+    const influenceLimit = getInfluenceLimit();
+    const influenceSpent = getInfluenceSpent();
+
+    if (selectedWarlords.length !== 1) {
+      alert("Your Warband must include exactly one Warlord.");
+      return;
+    }
+
+    if (influenceSpent > influenceLimit) {
+      alert("Your Warband exceeds the Influence limit.");
+      return;
+    }
+
+    const savedWarband = {
+      id: "custom-warband",
+      name: "Custom Saved Warband",
+      faction: selectedWarlords[0].faction,
+      influenceLimit: influenceLimit,
+      influenceSpent: influenceSpent,
+      warlordId: selectedWarlords[0].id,
+      unitIds: selectedUnitIds
+    };
+
+    localStorage.setItem(warbandStorageKey, JSON.stringify(savedWarband));
+    alert("Warband saved. Open Match Tracker to use it.");
+  }
+
+  function loadSavedWarband() {
+    const savedWarband = localStorage.getItem(warbandStorageKey);
+
+    if (!savedWarband) {
+      updateSummary();
+      return;
+    }
+
+    try {
+      const parsedWarband = JSON.parse(savedWarband);
+      selectedUnitIds = parsedWarband.unitIds || [];
+    } catch {
+      selectedUnitIds = [];
+    }
+
+    updateSummary();
+  }
+
+  function initializeBuilder() {
+    if (!window.IXON_CARDS || !window.IXON_STARTER_WARBANDS) {
+      alert("Card database failed to load. Check data/cards.js.");
+      return;
+    }
+
+    loadSavedWarband();
+  }
+
+  initializeBuilder();
+</script>
 </body>
 </html>
