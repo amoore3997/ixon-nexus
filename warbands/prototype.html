@@ -746,7 +746,7 @@
       cardElement.innerHTML = `
         <div class="index-name">
           <strong>${card.name}</strong>
-          <span>${card.role}${copyCount > 0 ? ` • ${copyCount} in build` : ""}</span>
+          <span>${card.role}</span>
         </div>
 
         <span class="type-chip">${card.unitType}</span>
@@ -791,7 +791,7 @@
 
         <div class="slot-name">
           <strong>${card.name}</strong>
-          <span>${card.role}${copyCount > 0 ? ` • ${copyCount} in build` : ""}</span>
+          <span>${card.role}</span>
         </div>
 
         <div class="slot-cost">${getInfluenceText(card)}</div>
@@ -967,4 +967,3 @@
 </script>
 </body>
 </html>
-
