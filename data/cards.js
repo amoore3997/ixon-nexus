@@ -244,7 +244,82 @@ window.IXON_CARDS = [
     },
     cardImage: "",
     notes: "Unique Rangers Spec unit for the current prototype roster."
-  }
+  },
+
+{
+  id: "xa1",
+  name: "XA1",
+  role: "Warlord - Unique",
+  faction: "Concord",
+  subFaction: null,
+  unitType: "Warlord",
+  cardClass: "Warlord",
+
+  influenceDisplay: "12 Influence",
+  influenceLimit: 12,
+  influenceCost: 0,
+  commandPoints: 4,
+  unique: true,
+  maxCopies: 1,
+
+  coalitionKey: "Technology",
+  vetoFlag: "Survival / Devotion",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Warlord", "Unique"],
+  extraVetoTags: ["Survival", "Devotion"],
+
+  warlordRules: {
+    allowedFactions: ["Concord", "Factionless"],
+    allowedCoalitionKeys: ["Technology"],
+    allowedTags: [],
+    vetoTags: ["Survival", "Devotion"]
+  },
+
+  maxHp: 8,
+  stats: {
+    MR: 3,
+    AP: 5,
+    AR: 5,
+    DR: 3
+  },
+  cardImage: "",
+  notes: "Concord prototype Warlord. XA1 provides a 12 Influence Warband limit and allows Technology-aligned Concord forces while vetoing Survival and Devotion."
+},
+
+{
+  id: "v2-infantry-shell",
+  name: "V2 Infantry Shell",
+  role: "Basic Infantry",
+  faction: "Concord",
+  subFaction: null,
+  unitType: "Infantry",
+  cardClass: "Basic",
+
+  influenceDisplay: "1 Influence",
+  influenceLimit: null,
+  influenceCost: 1,
+  commandPoints: null,
+  unique: false,
+  maxCopies: null,
+
+  coalitionKey: "Technology",
+  vetoFlag: "None",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Basic", "Infantry"],
+  extraVetoTags: [],
+
+  maxHp: 5,
+  stats: {
+    MR: 3,
+    AP: 3,
+    AR: 4,
+    DR: 2
+  },
+  cardImage: "",
+  notes: "Prototype Concord basic infantry unit. V2 Infantry Shell can be added multiple times as long as the Warband remains within its Influence limit."
+}
 ];
 
 window.IXON_STARTER_WARBANDS = {
