@@ -959,6 +959,11 @@ function canAddCard(card) {
       const addCheck = canAddCard(card);
       const cardElement = document.createElement("article");
       cardElement.className = `library-card ${selected ? "selected" : ""} ${!addCheck.allowed && !selected ? "disabled" : ""}`;
+      cardElement.setAttribute("onmouseenter", `openCardPreview('${card.id}')`);
+      cardElement.setAttribute("onmouseleave", "closeCardPreview()");
+      cardElement.setAttribute("onfocusin", `openCardPreview('${card.id}')`);
+      cardElement.setAttribute("onfocusout", "closeCardPreview()");
+      cardElement.tabIndex = 0;
 
       cardElement.innerHTML = `
         <div class="index-name">
