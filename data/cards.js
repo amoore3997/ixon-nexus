@@ -352,7 +352,7 @@ window.IXON_CARDS = [
   extraVetoTags: ["Rangers", "Zol Empire"],
 
   warlordRules: {
-    allowedFactions: ["Factionless", "TROI"],
+    allowedFactions: ["TROI"],
     allowedCoalitionKeys: ["Technology", "Conquest"],
     allowedTags: ["Engineering Guild"],
     vetoTags: ["Rangers", "Zol Empire"]
