@@ -367,6 +367,46 @@ window.IXON_CARDS = [
   },
   cardImage: "",
   notes: "Factionless Engineering Guild Warlord. Vaelor Kryss provides an 8 Influence Warband limit, supports Technology and Conquest-aligned forces, and vetoes Rangers and Zol Empire units."
+},
+  {
+  id: "zekar-thul",
+  name: "Zekar Thul, Supreme Lord",
+  role: "Warlord - Unique",
+  faction: "Zol Empire",
+  subFaction: null,
+  unitType: "Warlord",
+  cardClass: "Warlord",
+
+  influenceDisplay: "7 Influence",
+  influenceLimit: 7,
+  influenceCost: 0,
+  commandPoints: 4,
+  unique: true,
+  maxCopies: 1,
+
+  coalitionKey: "Conquest",
+  vetoFlag: "Dominion of Thawn / Concord / Devotion",
+
+  extraCoalitionKeys: [],
+  extraTags: ["Warlord", "Unique", "Supreme Lord"],
+  extraVetoTags: ["Dominion of Thawn", "Concord", "Devotion"],
+
+  warlordRules: {
+    allowedFactions: ["Zol Empire"],
+    allowedCoalitionKeys: ["Conquest"],
+    allowedTags: [],
+    vetoTags: ["Dominion of Thawn", "Concord", "Devotion"]
+  },
+
+  maxHp: 7,
+  stats: {
+    MR: 3,
+    AP: 0,
+    AR: 3,
+    DR: 3
+  },
+  cardImage: "",
+  notes: "Zol Empire prototype Warlord. Zekar Thul provides a 7 Influence Warband limit, carries the Conquest Coalition Key, and vetoes Dominion of Thawn, Concord, and Devotion-aligned forces."
 }
 ];
 
