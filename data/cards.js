@@ -263,4 +263,3 @@ window.IXON_STARTER_WARBANDS = {
     ]
   }
 };
-};
