@@ -319,6 +319,54 @@ window.IXON_CARDS = [
   },
   cardImage: "",
   notes: "Prototype Concord basic infantry unit. V2 Infantry Shell can be added multiple times as long as the Warband remains within its Influence limit."
+},
+
+{
+  id: "vaelor-kryss",
+  name: "Vaelor Kryss, Engineering Guild Master",
+  role: "Warlord - Unique",
+  faction: "Factionless",
+  subFaction: "Engineering Guild",
+  unitType: "Warlord",
+  cardClass: "Warlord",
+
+  influenceDisplay: "8 Influence",
+  influenceLimit: 8,
+  influenceCost: 0,
+  commandPoints: 4,
+  unique: true,
+  maxCopies: 1,
+
+  coalitionKey: "Technology / Conquest",
+  vetoFlag: "Rangers / Zol Empire",
+
+  extraCoalitionKeys: ["Technology", "Conquest"],
+  extraTags: [
+    "Warlord",
+    "Unique",
+    "Engineering Guild",
+    "Guild Master",
+    "Technology",
+    "Conquest"
+  ],
+  extraVetoTags: ["Rangers", "Zol Empire"],
+
+  warlordRules: {
+    allowedFactions: ["Factionless", "TROI"],
+    allowedCoalitionKeys: ["Technology", "Conquest"],
+    allowedTags: ["Engineering Guild"],
+    vetoTags: ["Rangers", "Zol Empire"]
+  },
+
+  maxHp: 7,
+  stats: {
+    MR: 3,
+    AP: 4,
+    AR: 4,
+    DR: 4
+  },
+  cardImage: "",
+  notes: "Factionless Engineering Guild Warlord. Vaelor Kryss provides an 8 Influence Warband limit, supports Technology and Conquest-aligned forces, and vetoes Rangers and Zol Empire units."
 }
 ];
 
