@@ -358,7 +358,7 @@ window.IXON_CARDS = [
     vetoTags: ["Rangers", "Zol Empire"]
   },
 
-  maxHp: 7,
+  maxHp: 6,
   stats: {
     MR: 3,
     AP: 4,
