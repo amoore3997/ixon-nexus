@@ -18,26 +18,26 @@ window.IXON_RULES = {
   ],
 
   factionProfiles: {
-    Rangers: {
+    "Rangers": {
       coalitionKeys: ["Survival"],
       defaultTags: ["Rangers", "Survival"],
       defaultVetoTags: []
     },
 
-    Concord: {
+    "Concord": {
       coalitionKeys: ["Technology"],
       defaultTags: ["Concord", "Technology"],
       defaultVetoTags: []
     },
 
-    TROI: {
+    "TROI": {
       coalitionKeys: ["Technology", "Conquest"],
       defaultTags: ["TROI", "Technology", "Conquest"],
       defaultVetoTags: []
     },
 
     "Zol Empire": {
-      coalitionKeys: ["Conquest"],
+      coalitionKeys: ["Conquest", "Devotion"],
       defaultTags: ["Zol Empire", "Conquest"],
       defaultVetoTags: []
     },
@@ -48,7 +48,7 @@ window.IXON_RULES = {
       defaultVetoTags: []
     },
 
-    Everturned: {
+    "Everturned": {
       coalitionKeys: ["Devotion", "Technology"],
       defaultTags: ["Everturned", "Devotion", "Technology"],
       defaultVetoTags: []
@@ -60,7 +60,7 @@ window.IXON_RULES = {
       defaultVetoTags: []
     },
 
-    Factionless: {
+    "Factionless": {
       coalitionKeys: [],
       defaultTags: ["Factionless"],
       defaultVetoTags: []
@@ -86,25 +86,25 @@ window.IXON_CARDS = [
     maxCopies: 1,
 
     coalitionKey: "Survival 🛡",
-    vetoFlag: "Concord",
+    vetoFlag: "Technology",
 
     extraCoalitionKeys: [],
     extraTags: ["Warlord", "Unique"],
-    extraVetoTags: ["Concord"],
+    extraVetoTags: ["Technology"],
 
     warlordRules: {
       allowedFactions: ["Rangers", "Factionless"],
       allowedCoalitionKeys: ["Survival"],
       allowedTags: [],
-      vetoTags: ["Concord"]
+      vetoTags: ["Technology"]
     },
 
     maxHp: 8,
     stats: {
-      MR: 3,
+      MR: 4,
       AP: 5,
-      AR: 3,
-      DR: 3
+      AR: 4,
+      DR: 4
     },
     cardImage: "",
     notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
@@ -136,8 +136,8 @@ window.IXON_CARDS = [
     maxHp: 5,
     stats: {
       MR: 3,
-      AP: 3,
-      AR: 3,
+      AP: 4,
+      AR: 4,
       DR: 2
     },
     cardImage: "",
@@ -167,12 +167,12 @@ window.IXON_CARDS = [
     extraTags: ["Basic", "Ranged"],
     extraVetoTags: [],
 
-    maxHp: 4,
+    maxHp: 3,
     stats: {
-      MR: 3,
-      AP: 4,
+      MR: 2,
+      AP: 6,
       AR: 8,
-      DR: 2
+      DR: 1
     },
     cardImage: "",
     notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
@@ -201,12 +201,12 @@ window.IXON_CARDS = [
     extraTags: ["Basic", "Heavy"],
     extraVetoTags: [],
 
-    maxHp: 7,
+    maxHp: 6,
     stats: {
       MR: 2,
-      AP: 3,
+      AP: 2,
       AR: 2,
-      DR: 5
+      DR: 4
     },
     cardImage: "",
     notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
@@ -235,10 +235,10 @@ window.IXON_CARDS = [
     extraTags: ["Unique", "Spec"],
     extraVetoTags: [],
 
-    maxHp: 7,
+    maxHp: 6,
     stats: {
-      MR: 3,
-      AP: 6,
+      MR: 4,
+      AP: 5,
       AR: 2,
       DR: 4
     },
@@ -258,7 +258,7 @@ window.IXON_CARDS = [
   influenceDisplay: "12 Influence",
   influenceLimit: 12,
   influenceCost: 0,
-  commandPoints: 4,
+  commandPoints: 5,
   unique: true,
   maxCopies: 1,
 
@@ -276,20 +276,20 @@ window.IXON_CARDS = [
     vetoTags: ["Survival", "Devotion"]
   },
 
-  maxHp: 8,
+  maxHp: 6,
   stats: {
-    MR: 3,
-    AP: 5,
-    AR: 5,
-    DR: 3
+    MR: 6,
+    AP: 7,
+    AR: 3,
+    DR: 2
   },
   cardImage: "",
   notes: "Concord prototype Warlord. XA1 provides a 12 Influence Warband limit and allows Technology-aligned Concord forces while vetoing Survival and Devotion."
 },
 
 {
-  id: "v2-infantry-shell",
-  name: "V2 Infantry Shell",
+  id: "VS1-infantry-shell",
+  name: "VS-1 Infantry Shell",
   role: "Basic Infantry",
   faction: "Concord",
   subFaction: null,
@@ -310,12 +310,12 @@ window.IXON_CARDS = [
   extraTags: ["Basic", "Infantry"],
   extraVetoTags: [],
 
-  maxHp: 5,
+  maxHp: 3,
   stats: {
     MR: 3,
-    AP: 3,
-    AR: 4,
-    DR: 2
+    AP: 2,
+    AR: 3,
+    DR: 1
   },
   cardImage: "",
   notes: "Prototype Concord basic infantry unit. V2 Infantry Shell can be added multiple times as long as the Warband remains within its Influence limit."
