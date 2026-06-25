@@ -289,27 +289,28 @@
 
 .preview-modal {
   position: fixed;
-  inset: 0;
+  top: 92px;
+  right: 24px;
   z-index: 1000;
   display: none;
-  align-items: center;
-  justify-content: center;
   pointer-events: none;
 }
 
 .preview-modal.open {
-  display: flex;
+  display: block;
 }
 
 .preview-card {
-  width: min(360px, calc(100vw - 32px));
+  width: min(340px, calc(100vw - 48px));
+  max-height: calc(100vh - 120px);
+  overflow: auto;
   border: 1px solid rgba(93, 220, 255, 0.55);
   border-radius: 22px;
   background:
     radial-gradient(circle at top left, rgba(93, 220, 255, 0.18), transparent 45%),
     linear-gradient(180deg, rgba(14, 26, 48, 0.98), rgba(4, 9, 18, 0.98));
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.62);
-  padding: 18px;
+  padding: 12px;
 }
 
 .preview-image-frame {
