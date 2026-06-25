@@ -106,7 +106,7 @@ window.IXON_CARDS = [
       AR: 4,
       DR: 4
     },
-    cardImage: "",
+    cardImage: "../assets/cards/Kaelen Veyne.png",
     notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
   },
 
@@ -140,7 +140,7 @@ window.IXON_CARDS = [
       AR: 4,
       DR: 2
     },
-    cardImage: "",
+    cardImage: "../assets/cards/Hollowfang Signals Operator.png",
     notes: "Prototype Rangers infantry unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
 
@@ -174,7 +174,7 @@ window.IXON_CARDS = [
       AR: 8,
       DR: 1
     },
-    cardImage: "",
+    cardImage: "../assets/cards/Ashen-Hallow Recon Sniper.png",
     notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
 
@@ -208,7 +208,7 @@ window.IXON_CARDS = [
       AR: 2,
       DR: 4
     },
-    cardImage: "",
+    cardImage: "../assets/cards/Ironvale Shield Tech.png",
     notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
   },
 
@@ -242,7 +242,7 @@ window.IXON_CARDS = [
       AR: 2,
       DR: 4
     },
-    cardImage: "",
+    cardImage: "../assets/cards/Braedon Forge.png",
     notes: "Unique Rangers Spec unit for the current prototype roster."
   },
 
