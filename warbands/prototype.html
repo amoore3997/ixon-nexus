@@ -289,8 +289,8 @@
 
 .preview-modal {
   position: fixed;
-  top: 92px;
-  right: 24px;
+  top: 96px;
+  right: clamp(80px, 12vw, 260px);
   z-index: 1000;
   display: none;
   pointer-events: none;
@@ -301,9 +301,9 @@
 }
 
 .preview-card {
-  width: min(340px, calc(100vw - 48px));
-  max-height: calc(100vh - 120px);
-  overflow: auto;
+  width: clamp(460px, 30vw, 620px);
+  max-height: calc(100vh - 130px);
+  overflow: hidden;
   border: 1px solid rgba(93, 220, 255, 0.55);
   border-radius: 22px;
   background:
@@ -318,14 +318,14 @@
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.045);
   overflow: hidden;
-  min-height: 430px;
   display: grid;
   place-items: center;
 }
-
 .preview-image-frame img {
   width: 100%;
+  max-height: calc(100vh - 160px);
   height: auto;
+  object-fit: contain;
   display: block;
 }
 
