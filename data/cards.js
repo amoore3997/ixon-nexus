@@ -377,36 +377,36 @@ window.IXON_CARDS = [
   unitType: "Warlord",
   cardClass: "Warlord",
 
-  influenceDisplay: "7 Influence",
-  influenceLimit: 7,
+  influenceDisplay: "8 Influence",
+  influenceLimit: 8,
   influenceCost: 0,
   commandPoints: 4,
   unique: true,
   maxCopies: 1,
 
   coalitionKey: "Conquest",
-  vetoFlag: "Dominion of Thawn / Concord / Devotion",
+  vetoFlag: "Dominion of Thawn / Concord / Arcanum",
 
   extraCoalitionKeys: [],
   extraTags: ["Warlord", "Unique", "Supreme Lord"],
-  extraVetoTags: ["Dominion of Thawn", "Concord", "Devotion"],
+  extraVetoTags: ["Dominion of Thawn", "Concord", "Arcanum"],
 
   warlordRules: {
     allowedFactions: ["Zol Empire"],
-    allowedCoalitionKeys: ["Conquest"],
+    allowedCoalitionKeys: ["Conquest", "Devotion"],
     allowedTags: [],
-    vetoTags: ["Dominion of Thawn", "Concord", "Devotion"]
+    vetoTags: ["Dominion of Thawn", "Concord", "Arcanum"]
   },
 
-  maxHp: 7,
+  maxHp: 6,
   stats: {
     MR: 3,
     AP: 0,
-    AR: 3,
-    DR: 3
+    AR: 2,
+    DR: 6
   },
   cardImage: "",
-  notes: "Zol Empire prototype Warlord. Zekar Thul provides a 7 Influence Warband limit, carries the Conquest Coalition Key, and vetoes Dominion of Thawn, Concord, and Devotion-aligned forces."
+  notes: "Zol Empire prototype Warlord. Zekar Thul provides a 8 Influence Warband limit, carries the Conquest Coalition Key, and vetoes Dominion of Thawn, Concord, and Arcanum."
 }
 ];
 
