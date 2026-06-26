@@ -827,24 +827,25 @@ function getTacticalCardLegality(card) {
     };
   }
 
-   if (card.faction === "Factionless") {
+  if (card.faction === "Factionless") {
     return {
       allowed: true,
       reason: copyCount > 0 ? `Add another (${copyCount})` : "Add"
     };
   }
-  
-   if (!warbandFactions.includes(card.faction)) {
+
+  if (!warbandFactions.includes(card.faction)) {
     return {
       allowed: false,
       reason: `Requires ${card.faction} unit`
     };
   }
 
-    return {
+  return {
     allowed: true,
     reason: copyCount > 0 ? `Add another (${copyCount})` : "Add"
-    };
+  };
+}
   
 function getArrayValue(value) {
   if (Array.isArray(value)) {
@@ -1171,12 +1172,119 @@ function canAddCard(card) {
       slotList.appendChild(slotElement);
     });
   }
+  
+  function renderTacticalLibrary() {
+  const tacticalLibraryList = document.getElementById("tacticalLibraryList");
 
-  function renderAll() {
-    updateSummary();
-    renderLibrary();
-    renderSlots();
+  if (!tacticalLibraryList || !window.IXON_TACTICAL_CARDS) {
+    return;
   }
+
+  const searchTerm = document.getElementById("tacticalSearchInput").value.trim().toLowerCase();
+  const typeFilter = document.getElementById("tacticalTypeFilter").value;
+
+  const tacticalCards = window.IXON_TACTICAL_CARDS.filter((card) => {
+    const searchableText = [
+      card.name,
+      card.tacticalType,
+      card.faction,
+      card.rulesText,
+      ...(card.coalitionKeys || []),
+      ...(card.tags || [])
+    ].join(" ").toLowerCase();
+
+    const matchesSearch = searchTerm === "" || searchableText.includes(searchTerm);
+    const matchesType = typeFilter === "All" || card.tacticalType === typeFilter;
+
+    return matchesSearch && matchesType;
+  });
+
+  tacticalLibraryList.innerHTML = "";
+
+  if (tacticalCards.length === 0) {
+    tacticalLibraryList.innerHTML = `<div class="empty-state">No matching tactical cards found.</div>`;
+    return;
+  }
+
+  tacticalCards.forEach((card) => {
+    const copyCount = getTacticalCardCopyCount(card.id);
+    const selected = copyCount > 0;
+    const addCheck = getTacticalCardLegality(card);
+
+    const cardElement = document.createElement("article");
+    cardElement.className = `library-card ${selected ? "selected" : ""} ${!addCheck.allowed && !selected ? "disabled" : ""}`;
+
+    cardElement.innerHTML = `
+      <div class="index-name">
+        <strong>${card.name}</strong>
+        <span>${card.rulesText || ""}</span>
+      </div>
+
+      <span class="type-chip">${card.tacticalType}</span>
+
+      <div class="index-cost">${card.faction}</div>
+
+      <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="addTacticalCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
+        ${addCheck.reason}
+      </button>
+    `;
+
+    tacticalLibraryList.appendChild(cardElement);
+  });
+}
+
+function renderTacticalDeck() {
+  const tacticalDeckList = document.getElementById("tacticalDeckList");
+  const tacticalDeckCountValue = document.getElementById("tacticalDeckCountValue");
+
+  if (!tacticalDeckList) {
+    return;
+  }
+
+  const selectedTacticalCards = getSelectedTacticalCards();
+
+  if (tacticalDeckCountValue) {
+    tacticalDeckCountValue.textContent = `${selectedTacticalCards.length} / ${getTacticalDeckLimit()}`;
+  }
+
+  tacticalDeckList.innerHTML = "";
+
+  if (selectedTacticalCards.length === 0) {
+    tacticalDeckList.innerHTML = `
+      <div class="empty-state">
+        No tactical cards added yet. Add cards from the tactical library.
+      </div>
+    `;
+    return;
+  }
+
+  selectedTacticalCards.forEach((card, index) => {
+    const slotElement = document.createElement("article");
+    slotElement.className = "slot-card";
+
+    slotElement.innerHTML = `
+      <span class="slot-number">${index + 1}</span>
+
+      <div class="slot-name">
+        <strong>${card.name}</strong>
+        <span>${card.tacticalType} · ${card.faction}</span>
+      </div>
+
+      <div class="slot-cost">${getTacticalCardCopyCount(card.id)} / ${getTacticalCardMaxCopies(card)}</div>
+
+      <button class="button secondary" type="button" onclick="removeTacticalCardAtIndex(${index})">Remove</button>
+    `;
+
+    tacticalDeckList.appendChild(slotElement);
+  });
+}
+  function renderAll() {
+  updateSummary();
+  renderLibrary();
+  renderSlots();
+  renderTacticalLibrary();
+  renderTacticalDeck();
+}
 
   function addCard(cardId) {
     const card = getCardById(cardId);
@@ -1197,16 +1305,35 @@ function canAddCard(card) {
     renderAll();
   }
 
+  function addTacticalCard(cardId) {
+  const card = getTacticalCardById(cardId);
+  const addCheck = getTacticalCardLegality(card);
+
+  if (!addCheck.allowed) {
+    alert(`Cannot add ${card.name}: ${addCheck.reason}.`);
+    return;
+  }
+
+  selectedTacticalCardIds.push(cardId);
+  renderAll();
+}
+
+function removeTacticalCardAtIndex(index) {
+  selectedTacticalCardIds.splice(index, 1);
+  renderAll();
+}
+  
   function loadPrototype() {
     selectedUnitIds = [...window.IXON_STARTER_WARBANDS.rangersPrototype.unitIds];
     renderAll();
   }
 
   function clearBuilder() {
-    selectedUnitIds = [];
-    closeCardPreview();
-    renderAll();
-  }
+  selectedUnitIds = [];
+  selectedTacticalCardIds = [];
+  closeCardPreview();
+  renderAll();
+}
 
   function clearSavedWarband() {
     localStorage.removeItem(warbandStorageKey);
@@ -1229,13 +1356,15 @@ function canAddCard(card) {
     }
 
     const savedWarband = {
-      id: "custom-warband",
-      name: "Custom Saved Warband",
-      faction: selectedWarlords[0].faction,
-      influenceLimit: influenceLimit,
-      influenceSpent: influenceSpent,
-      warlordId: selectedWarlords[0].id,
-      unitIds: selectedUnitIds
+  id: "custom-warband",
+  name: "Custom Saved Warband",
+  faction: selectedWarlords[0].faction,
+  influenceLimit: influenceLimit,
+  influenceSpent: influenceSpent,
+  warlordId: selectedWarlords[0].id,
+  unitIds: selectedUnitIds,
+  tacticalCardIds: selectedTacticalCardIds,
+  tacticalDeckLimit: getTacticalDeckLimit()
     };
 
     localStorage.setItem(warbandStorageKey, JSON.stringify(savedWarband));
@@ -1254,7 +1383,8 @@ function canAddCard(card) {
       const parsedWarband = JSON.parse(savedWarband);
       selectedUnitIds = parsedWarband.unitIds || [];
     } catch {
-      selectedUnitIds = [];
+      selectedUnitIds = parsedWarband.unitIds || [];
+      selectedTacticalCardIds = parsedWarband.tacticalCardIds || [];
     }
 
     renderAll();
