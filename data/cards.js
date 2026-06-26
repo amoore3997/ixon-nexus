@@ -587,10 +587,10 @@ window.IXON_STARTER_TACTICAL_DECKS = {
   rangersPrototype: {
     id: "rangers-prototype-tactical-deck",
     name: "Rangers Prototype Tactical Deck",
-    cardIds: [
-      "field-reposition",
-      "return-fire",
-      "combat-overclock"
-    ]
+   cardIds: [
+  "clan-oath",
+  "dusty-ambush",
+  "explosive-charge"
+]
   }
 };
