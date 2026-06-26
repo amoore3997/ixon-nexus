@@ -1324,9 +1324,10 @@ function removeTacticalCardAtIndex(index) {
 }
   
   function loadPrototype() {
-    selectedUnitIds = [...window.IXON_STARTER_WARBANDS.rangersPrototype.unitIds];
-    renderAll();
-  }
+  selectedUnitIds = [...window.IXON_STARTER_WARBANDS.rangersPrototype.unitIds];
+  selectedTacticalCardIds = [...(window.IXON_STARTER_TACTICAL_DECKS?.rangersPrototype?.cardIds || [])];
+  renderAll();
+}
 
   function clearBuilder() {
   selectedUnitIds = [];
@@ -1449,14 +1450,20 @@ function removeTacticalCardAtIndex(index) {
   }
 
   function initializeBuilder() {
-    if (!window.IXON_CARDS || !window.IXON_STARTER_WARBANDS) {
-      alert("Card database failed to load. Check data/cards.js.");
-      return;
-    }
+  if (!window.IXON_CARDS || !window.IXON_STARTER_WARBANDS) {
+    alert("Card database failed to load. Check data/cards.js.");
+    return;
+  }
+
+  if (!window.IXON_TACTICAL_CARDS) {
+    window.IXON_TACTICAL_CARDS = [];
+  }
 
     document.getElementById("searchInput").addEventListener("input", renderLibrary);
     document.getElementById("typeFilter").addEventListener("change", renderLibrary);
     document.getElementById("factionFilter").addEventListener("change", renderLibrary);
+    document.getElementById("tacticalSearchInput").addEventListener("input", renderTacticalLibrary);
+    document.getElementById("tacticalTypeFilter").addEventListener("change", renderTacticalLibrary);
 
     renderFactionFilter();
     loadSavedWarband();
