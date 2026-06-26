@@ -439,43 +439,147 @@ window.IXON_DECK_RULES = {
 
 window.IXON_TACTICAL_CARDS = [
   {
-    id: "field-reposition",
-    name: "Field Reposition",
-    tacticalType: "Mobility",
-    cost: 1,
-    maxCopies: 3,
-    faction: "Generic",
-    coalitionKeys: [],
-    tags: ["Mobility", "Generic"],
-    cardImage: "",
-    rulesText: "Prototype Mobility card. Use this as a placeholder tactical card."
-  },
+  id: "clan-oath",
+  name: "Clan Oath",
+  tacticalType: "Enhancement",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Enhancement", "Attach", "Buff"],
+  cardImage: "../assets/cards/Clan Oath.png",
+  rulesText: "Attach this card to a unit. If the attached unit is removed from the game, discard this card. Attached unit gains +1 AP and +1 DR. All units in your warband that share a faction with the attached card gain +1 HP."
+},
 
-  {
-    id: "return-fire",
-    name: "Return Fire",
-    tacticalType: "Counter",
-    cost: 1,
-    maxCopies: 3,
-    faction: "Generic",
-    coalitionKeys: [],
-    tags: ["Counter", "Generic"],
-    cardImage: "",
-    rulesText: "Prototype Counter card. Use this as a placeholder tactical card."
-  },
+{
+  id: "dusty-ambush",
+  name: "Dusty Ambush",
+  tacticalType: "Mobility",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Mobility", "AP Buff", "Movement"],
+  cardImage: "../assets/cards/Dusty Ambush.png",
+  rulesText: "Choose a unit in your warband. If the target unit moved this turn, add +X AP to it until end of turn, where X is equal to the number of inches it moved this turn. It may not attack if activated next turn."
+},
 
-  {
-    id: "combat-overclock",
-    name: "Combat Overclock",
-    tacticalType: "Enhancement",
-    cost: 1,
-    maxCopies: 3,
-    faction: "Generic",
-    coalitionKeys: [],
-    tags: ["Enhancement", "Generic"],
-    cardImage: "",
-    rulesText: "Prototype Enhancement card. Use this as a placeholder tactical card."
-  }
+{
+  id: "explosive-charge",
+  name: "Explosive Charge",
+  tacticalType: "Counter",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Counter", "Direct Damage", "Deflect"],
+  cardImage: "../assets/cards/Explosive Charge.png",
+  rulesText: "Choose one: Deal 3 direct damage to all units within attack range of target unit in your warband. Or, deflect all damage being dealt to a unit in your warband, then deal 2 damage to that same unit."
+},
+
+{
+  id: "field-repair",
+  name: "Field Repair",
+  tacticalType: "Counter",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Counter", "Defense Buff", "Repair"],
+  cardImage: "../assets/cards/Field Repair.png",
+  rulesText: "Target unit gains +3 DR until end of turn."
+},
+
+{
+  id: "first-shot",
+  name: "First Shot",
+  tacticalType: "Counter",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Counter", "Direct Damage", "Attack"],
+  cardImage: "../assets/cards/First Shot.png",
+  rulesText: "Target unit's damage is direct. Direct damage is unaffected by mitigation dice until end of turn. That unit may not attack again until its next activation."
+},
+
+{
+  id: "hammer-of-the-forge",
+  name: "Hammer of the Forge",
+  tacticalType: "Enhancement",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Enhancement", "Attach", "Braedon Forge", "Buff"],
+  cardImage: "../assets/cards/Hammer of the Forge.png",
+  rulesText: "Attach this card to a target unit in your warband. Target attached unit gains +2 AP and +2 DR. If the target unit is Braedon Forge, add this active ability: On your next attack, replace your D6 with a D20."
+},
+
+{
+  id: "hit-and-fade",
+  name: "Hit & Fade",
+  tacticalType: "Mobility",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Mobility", "Move", "Attack"],
+  cardImage: "../assets/cards/Hit & Fade.png",
+  rulesText: "Target unit in your warband may move immediately after its next attack. Movement from this card does not affect actions."
+},
+
+{
+  id: "hollowfang-fury",
+  name: "Hollowfang Fury",
+  tacticalType: "Enhancement",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Enhancement", "Attach", "Kaelen Veyne", "Buff"],
+  cardImage: "../assets/cards/Hollowfang Fury.png",
+  rulesText: "Attach this card to target Ranger unit. Target unit gains +1 to all stats. If the target unit is Kaelen Veyne, gain +2 to all stats instead and also gain +4 HP."
+},
+
+{
+  id: "ixon-credit-transfer",
+  name: "Ixon Credit Transfer",
+  tacticalType: "Enhancement",
+  faction: "Factionless",
+  maxCopies: 4,
+  tags: ["Factionless", "Enhancement", "Command Points", "Discard"],
+  cardImage: "../assets/cards/Ixon Credit Transaction.png",
+  rulesText: "Discard any number of cards from your hand. Add +X Command Points to your Warlord until end of turn, where X is equal to the number of cards you discarded."
+},
+
+{
+  id: "last-stand",
+  name: "Last Stand",
+  tacticalType: "Enhancement",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Enhancement", "Last Unit", "Buff"],
+  cardImage: "../assets/cards/Last Stand.png",
+  rulesText: "Play this card only if you have one unit left on the battlefield, and only if that unit is also a Ranger. Double all stats of target unit."
+},
+
+{
+  id: "medi-pack",
+  name: "Medi-Pack",
+  tacticalType: "Counter",
+  faction: "Factionless",
+  maxCopies: 4,
+  tags: ["Factionless", "Counter", "Healing"],
+  cardImage: "../assets/cards/Medi-Pack.png",
+  rulesText: "Add +2 HP to target damaged unit."
+},
+
+{
+  id: "mis-fire",
+  name: "Mis-Fire",
+  tacticalType: "Counter",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Counter", "Reroll", "Attack Dice"],
+  cardImage: "../assets/cards/Mis-Fire.png",
+  rulesText: "Re-roll any number of your opponent's attack dice."
+},
+
+{
+  id: "overcharged-magazine",
+  name: "Overcharged Magazine",
+  tacticalType: "Enhancement",
+  faction: "Rangers",
+  maxCopies: 4,
+  tags: ["Rangers", "Enhancement", "AP Buff", "Attack"],
+  cardImage: "../assets/cards/Overcharged Magazine.png",
+  rulesText: "Target unit gains +3 AP until end of turn, but can only attack once this turn."
+}
 ];
 
 window.IXON_STARTER_TACTICAL_DECKS = {
