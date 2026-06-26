@@ -426,3 +426,65 @@ window.IXON_STARTER_WARBANDS = {
     ]
   }
 };
+window.IXON_DECK_RULES = {
+  tacticalDeckSize: 40,
+  defaultMaxCopies: 3,
+  tacticalTypes: [
+    "Enhancement",
+    "Counter",
+    "Mobility"
+  ]
+};
+
+window.IXON_TACTICAL_CARDS = [
+  {
+    id: "field-reposition",
+    name: "Field Reposition",
+    tacticalType: "Mobility",
+    cost: 1,
+    maxCopies: 3,
+    faction: "Generic",
+    coalitionKeys: [],
+    tags: ["Mobility", "Generic"],
+    cardImage: "",
+    rulesText: "Prototype Mobility card. Use this as a placeholder tactical card."
+  },
+
+  {
+    id: "return-fire",
+    name: "Return Fire",
+    tacticalType: "Counter",
+    cost: 1,
+    maxCopies: 3,
+    faction: "Generic",
+    coalitionKeys: [],
+    tags: ["Counter", "Generic"],
+    cardImage: "",
+    rulesText: "Prototype Counter card. Use this as a placeholder tactical card."
+  },
+
+  {
+    id: "combat-overclock",
+    name: "Combat Overclock",
+    tacticalType: "Enhancement",
+    cost: 1,
+    maxCopies: 3,
+    faction: "Generic",
+    coalitionKeys: [],
+    tags: ["Enhancement", "Generic"],
+    cardImage: "",
+    rulesText: "Prototype Enhancement card. Use this as a placeholder tactical card."
+  }
+];
+
+window.IXON_STARTER_TACTICAL_DECKS = {
+  rangersPrototype: {
+    id: "rangers-prototype-tactical-deck",
+    name: "Rangers Prototype Tactical Deck",
+    cardIds: [
+      "field-reposition",
+      "return-fire",
+      "combat-overclock"
+    ]
+  }
+};
