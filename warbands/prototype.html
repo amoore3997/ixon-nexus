@@ -215,6 +215,33 @@
 .slot-list {
   display: grid;
   gap: 8px;
+  max-height: 340px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  overscroll-behavior: contain;
+}
+
+.library-list::-webkit-scrollbar,
+.slot-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.library-list::-webkit-scrollbar-track,
+.slot-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.library-list::-webkit-scrollbar-thumb,
+.slot-list::-webkit-scrollbar-thumb {
+  background: rgba(93, 220, 255, 0.35);
+  border-radius: 999px;
+}
+
+.library-list::-webkit-scrollbar-thumb:hover,
+.slot-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(93, 220, 255, 0.6);
 }
 
 .library-card,
