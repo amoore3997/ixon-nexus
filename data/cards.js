@@ -97,7 +97,7 @@ window.IXON_CARDS = [
       allowedCoalitionKeys: ["Survival"],
       allowedTags: [],
       vetoTags: ["Technology"]
-    },
+    }
 
     maxHp: 8,
     stats: {
@@ -105,10 +105,10 @@ window.IXON_CARDS = [
       AP: 5,
       AR: 4,
       DR: 4
-    },
+    }
     cardImage: "../assets/cards/Kaelen Veyne.png",
     notes: "Required Warlord for the current Rangers prototype roster. Kaelen provides a 10 Influence Warband limit and does not spend Influence himself."
-  },
+  }
 
   {
     id: "hollowfang-signal-ops",
@@ -139,10 +139,10 @@ window.IXON_CARDS = [
       AP: 4,
       AR: 4,
       DR: 2
-    },
+    }
     cardImage: "../assets/cards/Hollowfang Signals Operator.png",
     notes: "Prototype Rangers infantry unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
-  },
+  }
 
   {
     id: "ashen-hallow-recon-sniper",
@@ -173,10 +173,10 @@ window.IXON_CARDS = [
       AP: 6,
       AR: 8,
       DR: 1
-    },
+    }
     cardImage: "../assets/cards/Ashen-Hallow Recon Sniper.png",
     notes: "Prototype Rangers ranged unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
-  },
+  }
 
   {
     id: "ironvale-shield-tech",
@@ -207,10 +207,10 @@ window.IXON_CARDS = [
       AP: 2,
       AR: 2,
       DR: 4
-    },
+    }
     cardImage: "../assets/cards/Ironvale Shield Tech.png",
     notes: "Prototype Rangers heavy unit. This card can be added multiple times as long as the Warband remains within its Influence limit."
-  },
+  }
 
   {
     id: "braedon-forge",
@@ -241,14 +241,14 @@ window.IXON_CARDS = [
       AP: 5,
       AR: 2,
       DR: 4
-    },
+    }
     cardImage: "../assets/cards/Braedon Forge.png",
     notes: "Unique Rangers Spec unit for the current prototype roster."
-  },
+  }
 
 {
-  id: "xa1",
-  name: "XA1",
+  id: "x-a1-avatar-of-the-concord",
+  name: "X-A1 - Avatar of the Concord",
   role: "Warlord - Unique",
   faction: "Concord",
   subFaction: null,
@@ -266,7 +266,7 @@ window.IXON_CARDS = [
   vetoFlag: "Survival / Devotion",
 
   extraCoalitionKeys: [],
-  extraTags: ["Warlord", "Unique"],
+  extraTags: ["Warlord", "Unique", "Avatar", "Concord", "Technology"],
   extraVetoTags: ["Survival", "Devotion"],
 
   warlordRules: {
@@ -274,7 +274,7 @@ window.IXON_CARDS = [
     allowedCoalitionKeys: ["Technology"],
     allowedTags: [],
     vetoTags: ["Survival", "Devotion"]
-  },
+  }
 
   maxHp: 6,
   stats: {
@@ -282,13 +282,13 @@ window.IXON_CARDS = [
     AP: 7,
     AR: 3,
     DR: 2
-  },
-  cardImage: "",
-  notes: "Concord prototype Warlord. XA1 provides a 12 Influence Warband limit and allows Technology-aligned Concord forces while vetoing Survival and Devotion."
-},
+  }
+  cardImage: "../assets/cards/X-A1 - Avatar of Concord.png",
+  notes: "Override: While X-A1 is on the battlefield, units in your warband have no activation limit. Concord units within MR of X-A1 gain +1 AP."
+}
 
 {
-  id: "VS1-infantry-shell",
+  id: "vs-1-infantry-shell",
   name: "VS-1 Infantry Shell",
   role: "Basic Infantry",
   faction: "Concord",
@@ -307,7 +307,7 @@ window.IXON_CARDS = [
   vetoFlag: "None",
 
   extraCoalitionKeys: [],
-  extraTags: ["Basic", "Infantry"],
+  extraTags: ["Basic", "Infantry", "Concord", "Technology", "Shell"],
   extraVetoTags: [],
 
   maxHp: 3,
@@ -316,10 +316,10 @@ window.IXON_CARDS = [
     AP: 2,
     AR: 3,
     DR: 1
-  },
-  cardImage: "",
-  notes: "Prototype Concord basic infantry unit. V2 Infantry Shell can be added multiple times as long as the Warband remains within its Influence limit."
-},
+  }
+  cardImage: "../assets/cards/VS-1 Infantry Shell.png",
+  notes: "While this unit is within MR of an allied Concord unit, it gains +1 AP."
+}
 
 {
   id: "vaelor-kryss",
@@ -356,7 +356,7 @@ window.IXON_CARDS = [
     allowedCoalitionKeys: ["Technology", "Conquest"],
     allowedTags: ["Engineering Guild"],
     vetoTags: ["Rangers", "Zol Empire"]
-  },
+  }
 
   maxHp: 6,
   stats: {
@@ -364,10 +364,10 @@ window.IXON_CARDS = [
     AP: 4,
     AR: 4,
     DR: 4
-  },
+  }
   cardImage: "",
   notes: "Factionless Engineering Guild Warlord. Vaelor Kryss provides an 8 Influence Warband limit, supports Technology and Conquest-aligned forces, and vetoes Rangers and Zol Empire units."
-},
+}
   {
   id: "zekar-thul",
   name: "Zekar Thul, Supreme Lord",
@@ -396,7 +396,7 @@ window.IXON_CARDS = [
     allowedCoalitionKeys: ["Conquest", "Devotion"],
     allowedTags: [],
     vetoTags: ["Dominion of Thawn", "Concord", "Arcanum"]
-  },
+  }
 
   maxHp: 6,
   stats: {
@@ -404,7 +404,7 @@ window.IXON_CARDS = [
     AP: 0,
     AR: 2,
     DR: 6
-  },
+  }
   cardImage: "",
   notes: "Zol Empire prototype Warlord. Zekar Thul provides a 8 Influence Warband limit, carries the Conquest Coalition Key, and vetoes Dominion of Thawn, Concord, and Arcanum."
 }
