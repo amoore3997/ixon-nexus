@@ -1228,20 +1228,20 @@ function canAddCard(card) {
     cardElement.tabIndex = 0;
     
 
-    cardElement.innerHTML = `
-      <div class="index-name">
-        <strong>${card.name}</strong>
-        <span>${card.rulesText || ""}</span>
-      </div>
+cardElement.innerHTML = `
+  <div class="index-name">
+    <strong>${card.name}</strong>
+    <span>${card.faction}</span>
+  </div>
 
-      <span class="type-chip">${card.tacticalType}</span>
+  <span class="type-chip">${card.tacticalType}</span>
 
-      <div class="index-cost">${card.faction}</div>
+  <div class="index-cost">${copyCount} / ${getTacticalCardMaxCopies(card)}</div>
 
-      <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="addTacticalCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
-        ${addCheck.reason}
-      </button>
-    `;
+  <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="addTacticalCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
+    ${addCheck.reason}
+  </button>
+`;
 
     tacticalLibraryList.appendChild(cardElement);
   });
