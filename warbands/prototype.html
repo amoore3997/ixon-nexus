@@ -1513,8 +1513,13 @@ function removeTacticalCardAtIndex(index) {
   }
 
   function initializeBuilder() {
-  if (!window.IXON_CARDS || !window.IXON_STARTER_WARBANDS) {
-    alert("Card database failed to load. Check data/cards.js.");
+  if (!window.IXON_CARDS) {
+    alert("window.IXON_CARDS is missing. Check data/cards.js.");
+    return;
+  }
+
+  if (!window.IXON_STARTER_WARBANDS) {
+    alert("window.IXON_STARTER_WARBANDS is missing. Check data/cards.js.");
     return;
   }
 
@@ -1522,15 +1527,16 @@ function removeTacticalCardAtIndex(index) {
     window.IXON_TACTICAL_CARDS = [];
   }
 
-    document.getElementById("searchInput").addEventListener("input", renderLibrary);
-    document.getElementById("typeFilter").addEventListener("change", renderLibrary);
-    document.getElementById("factionFilter").addEventListener("change", renderLibrary);
-    document.getElementById("tacticalSearchInput").addEventListener("input", renderTacticalLibrary);
-    document.getElementById("tacticalTypeFilter").addEventListener("change", renderTacticalLibrary);
+  document.getElementById("searchInput").addEventListener("input", renderLibrary);
+  document.getElementById("typeFilter").addEventListener("change", renderLibrary);
+  document.getElementById("factionFilter").addEventListener("change", renderLibrary);
 
-    renderFactionFilter();
-    loadSavedWarband();
-  }
+  document.getElementById("tacticalSearchInput").addEventListener("input", renderTacticalLibrary);
+  document.getElementById("tacticalTypeFilter").addEventListener("change", renderTacticalLibrary);
+
+  renderFactionFilter();
+  loadSavedWarband();
+}
 
   initializeBuilder();
 </script>
