@@ -627,7 +627,14 @@
   function getCardById(cardId) {
     return window.IXON_CARDS.find((card) => card.id === cardId);
   }
-
+  
+  function getPreviewCardById(cardId) {
+  return (
+    window.IXON_CARDS.find((card) => card.id === cardId) ||
+    window.IXON_TACTICAL_CARDS.find((card) => card.id === cardId)
+  );
+  }
+  
   function getSelectedCards() {
     return selectedUnitIds
       .map((unitId) => getCardById(unitId))
@@ -1213,6 +1220,13 @@ function canAddCard(card) {
 
     const cardElement = document.createElement("article");
     cardElement.className = `library-card ${selected ? "selected" : ""} ${!addCheck.allowed && !selected ? "disabled" : ""}`;
+    
+    cardElement.setAttribute("onmouseenter", `openCardPreview('${card.id}')`);
+    cardElement.setAttribute("onmouseleave", "closeCardPreview()");
+    cardElement.setAttribute("onfocusin", `openCardPreview('${card.id}')`);
+    cardElement.setAttribute("onfocusout", "closeCardPreview()");
+    cardElement.tabIndex = 0;
+    
 
     cardElement.innerHTML = `
       <div class="index-name">
@@ -1261,7 +1275,12 @@ function renderTacticalDeck() {
   selectedTacticalCards.forEach((card, index) => {
     const slotElement = document.createElement("article");
     slotElement.className = "slot-card";
-
+    
+    slotElement.setAttribute("onmouseenter", `openCardPreview('${card.id}')`);
+    slotElement.setAttribute("onmouseleave", "closeCardPreview()");
+    slotElement.setAttribute("onfocusin", `openCardPreview('${card.id}')`);
+    slotElement.setAttribute("onfocusout", "closeCardPreview()");
+    slotElement.tabIndex = 0;
     slotElement.innerHTML = `
       <span class="slot-number">${index + 1}</span>
 
@@ -1392,52 +1411,67 @@ function removeTacticalCardAtIndex(index) {
   }
 
   function openCardPreview(cardId) {
-    const card = getCardById(cardId);
-    const modal = document.getElementById("cardPreviewModal");
-    const content = document.getElementById("cardPreviewContent");
+  const card = getPreviewCardById(cardId);
+  const modal = document.getElementById("cardPreviewModal");
+  const content = document.getElementById("cardPreviewContent");
 
-    if (!card || !modal || !content) {
-      return;
-    }
-
-    if (card.cardImage) {
-      content.innerHTML = `
-        <div class="preview-image-frame">
-          <img src="${card.cardImage}" alt="${card.name} card preview" />
-        </div>
-      `;
-    } else {
-      content.innerHTML = `
-        <div class="preview-image-frame">
-          <div class="preview-placeholder">
-            <div>
-              <span class="type-chip">${card.unitType}</span>
-            </div>
-            <h3>${card.name}</h3>
-            <p>
-              <strong>${card.role}</strong><br />
-              Faction: ${card.faction}<br />
-              Influence: ${getInfluenceText(card)}<br />
-              Coalition: ${card.coalitionKey}<br />
-              Veto: ${card.vetoFlag}
-            </p>
-            <div class="preview-stat-grid">
-              <div class="preview-stat">HP ${card.maxHp}</div>
-              <div class="preview-stat">MR ${card.stats.MR}</div>
-              <div class="preview-stat">AP ${card.stats.AP}</div>
-              <div class="preview-stat">AR ${card.stats.AR}</div>
-              <div class="preview-stat">DR ${card.stats.DR}</div>
-            </div>
-            <p>${card.notes || "Card image placeholder. Add a cardImage path in data/cards.js later."}</p>
-          </div>
-        </div>
-      `;
-    }
-
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
+  if (!card || !modal || !content) {
+    return;
   }
 
+  if (card.cardImage) {
+    content.innerHTML = `
+      <div class="preview-image-frame">
+        <img src="${card.cardImage}" alt="${card.name} card preview" />
+      </div>
+    `;
+  } else if (card.tacticalType) {
+    content.innerHTML = `
+      <div class="preview-image-frame">
+        <div class="preview-placeholder">
+          <div>
+            <span class="type-chip">Tactical - ${card.tacticalType}</span>
+          </div>
+          <h3>${card.name}</h3>
+          <p>
+            <strong>${card.faction}</strong><br />
+            ${card.rulesText || "No rules text assigned."}
+          </p>
+          <p>Add a cardImage path in data/cards.js to show the PNG.</p>
+        </div>
+      </div>
+    `;
+  } else {
+    content.innerHTML = `
+      <div class="preview-image-frame">
+        <div class="preview-placeholder">
+          <div>
+            <span class="type-chip">${card.unitType}</span>
+          </div>
+          <h3>${card.name}</h3>
+          <p>
+            <strong>${card.role}</strong><br />
+            Faction: ${card.faction}<br />
+            Influence: ${getInfluenceText(card)}<br />
+            Coalition: ${card.coalitionKey}<br />
+            Veto: ${card.vetoFlag}
+          </p>
+          <div class="preview-stat-grid">
+            <div class="preview-stat">HP ${card.maxHp}</div>
+            <div class="preview-stat">MR ${card.stats.MR}</div>
+            <div class="preview-stat">AP ${card.stats.AP}</div>
+            <div class="preview-stat">AR ${card.stats.AR}</div>
+            <div class="preview-stat">DR ${card.stats.DR}</div>
+          </div>
+          <p>${card.notes || "Card image placeholder. Add a cardImage path in data/cards.js later."}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
   function closeCardPreview() {
     const modal = document.getElementById("cardPreviewModal");
 
