@@ -426,9 +426,10 @@ window.IXON_STARTER_WARBANDS = {
     ]
   }
 };
+
 window.IXON_DECK_RULES = {
   tacticalDeckSize: 40,
-  defaultMaxCopies: 3,
+  defaultMaxCopies: 4,
   tacticalTypes: [
     "Enhancement",
     "Counter",
