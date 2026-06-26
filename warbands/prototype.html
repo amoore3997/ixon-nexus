@@ -60,6 +60,31 @@
       gap: 18px;
       align-items: start;
     }
+
+.tactical-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 0.7fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.tactical-toolbar input,
+.tactical-toolbar select {
+  width: 100%;
+  border: 1px solid rgba(93, 220, 255, 0.22);
+  border-radius: 14px;
+  background: rgba(4, 9, 18, 0.88);
+  color: #ffffff;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.tactical-toolbar input:focus,
+.tactical-toolbar select:focus {
+  border-color: rgba(93, 220, 255, 0.72);
+  box-shadow: 0 0 0 3px rgba(93, 220, 255, 0.12);
+}
+    
 .library-toolbar {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr 0.8fr;
@@ -380,10 +405,11 @@
   }
 }
 
-    @media (max-width: 900px) {
+ @media (max-width: 900px) {
   .builder-layout,
   .builder-summary-grid,
-  .library-toolbar {
+  .library-toolbar,
+  .tactical-toolbar {
     grid-template-columns: 1fr;
   }
 }
@@ -524,6 +550,54 @@
   </div>
 </div>
     </div>
+  <div class="builder-layout">
+  <div class="builder-panel">
+    <div class="section-eyebrow">Tactical Card Library</div>
+    <h2>Tactical card library</h2>
+
+    <p class="lead">
+      Search the tactical card library and add cards to your tactical deck.
+      The prototype deck limit is 40 cards.
+    </p>
+
+    <div class="tactical-toolbar">
+      <input
+        id="tacticalSearchInput"
+        type="search"
+        placeholder="Search tactical cards..."
+      />
+
+      <select id="tacticalTypeFilter">
+        <option value="All">All Tactical Types</option>
+        <option value="Enhancement">Enhancement</option>
+        <option value="Counter">Counter</option>
+        <option value="Mobility">Mobility</option>
+      </select>
+    </div>
+
+    <div id="tacticalLibraryList" class="library-list">
+      <div class="empty-state">
+        Tactical cards will appear here once the builder script is connected.
+      </div>
+    </div>
+  </div>
+
+  <div class="builder-panel">
+    <div class="section-eyebrow">Tactical Deck</div>
+    <h2>Tactical deck</h2>
+
+    <p class="lead">
+      Added tactical cards appear here. Current deck count:
+      <strong id="tacticalDeckCountValue">0 / 40</strong>
+    </p>
+
+    <div id="tacticalDeckList" class="slot-list">
+      <div class="empty-state">
+        No tactical cards added yet. Add cards from the tactical library.
+      </div>
+    </div>
+  </div>
+</div>
   </section>
 </main>
 
@@ -547,7 +621,8 @@
 <script>
   const warbandStorageKey = "ixonSavedWarband";
 
-  let selectedUnitIds = [];
+ let selectedUnitIds = [];
+ let selectedTacticalCardIds = [];
 
   function getCardById(cardId) {
     return window.IXON_CARDS.find((card) => card.id === cardId);
@@ -701,6 +776,54 @@
   function getCardCopyCount(cardId) {
     return selectedUnitIds.filter((unitId) => unitId === cardId).length;
   }
+function getTacticalDeckLimit() {
+  return window.IXON_DECK_RULES?.tacticalDeckSize || 40;
+}
+
+function getTacticalCardById(cardId) {
+  return window.IXON_TACTICAL_CARDS.find((card) => card.id === cardId);
+}
+
+function getSelectedTacticalCards() {
+  return selectedTacticalCardIds
+    .map((cardId) => getTacticalCardById(cardId))
+    .filter(Boolean);
+}
+
+function getTacticalCardCopyCount(cardId) {
+  return selectedTacticalCardIds.filter((selectedId) => selectedId === cardId).length;
+}
+
+function getTacticalCardMaxCopies(card) {
+  return card.maxCopies || window.IXON_DECK_RULES?.defaultMaxCopies || 3;
+}
+
+function getTacticalCardLegality(card) {
+  const deckLimit = getTacticalDeckLimit();
+  const deckCount = selectedTacticalCardIds.length;
+  const copyCount = getTacticalCardCopyCount(card.id);
+  const maxCopies = getTacticalCardMaxCopies(card);
+
+  if (deckCount >= deckLimit) {
+    return {
+      allowed: false,
+      reason: "Deck full"
+    };
+  }
+
+  if (copyCount >= maxCopies) {
+    return {
+      allowed: false,
+      reason: "Max copies"
+    };
+  }
+
+  return {
+    allowed: true,
+    reason: copyCount > 0 ? `Add another (${copyCount})` : "Add"
+  };
+}
+  
 function getArrayValue(value) {
   if (Array.isArray(value)) {
     return value.filter(Boolean);
