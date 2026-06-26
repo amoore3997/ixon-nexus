@@ -795,14 +795,23 @@ function getTacticalCardCopyCount(cardId) {
 }
 
 function getTacticalCardMaxCopies(card) {
-  return card.maxCopies || window.IXON_DECK_RULES?.defaultMaxCopies || 3;
+  return card.maxCopies || window.IXON_DECK_RULES?.defaultMaxCopies || 4;
 }
-
+  
+function getWarbandFactions() {
+  return [...new Set(
+    getSelectedCards()
+      .map((card) => card.faction)
+      .filter(Boolean)
+  )];
+}
+  
 function getTacticalCardLegality(card) {
   const deckLimit = getTacticalDeckLimit();
   const deckCount = selectedTacticalCardIds.length;
   const copyCount = getTacticalCardCopyCount(card.id);
   const maxCopies = getTacticalCardMaxCopies(card);
+  const warbandFactions = getWarbandFactions();
 
   if (deckCount >= deckLimit) {
     return {
@@ -818,11 +827,24 @@ function getTacticalCardLegality(card) {
     };
   }
 
-  return {
+   if (card.faction === "Factionless") {
+    return {
+      allowed: true,
+      reason: copyCount > 0 ? `Add another (${copyCount})` : "Add"
+    };
+  }
+  
+   if (!warbandFactions.includes(card.faction)) {
+    return {
+      allowed: false,
+      reason: `Requires ${card.faction} unit`
+    };
+  }
+
+    return {
     allowed: true,
     reason: copyCount > 0 ? `Add another (${copyCount})` : "Add"
-  };
-}
+    };
   
 function getArrayValue(value) {
   if (Array.isArray(value)) {
