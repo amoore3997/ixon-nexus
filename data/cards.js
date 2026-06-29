@@ -590,7 +590,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Calculated Attrition.png",
+  cardImage: "../assets/cards/Calculated Attrition.png",
   notes: "This card costs 0 CP to play. Play this card in response to the elimination of a unit you control. All units within MR of the destroyed unit gain +1 HP."
 },
 
@@ -602,7 +602,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Combat Efficiency Algorithm.png",
+  cardImage: "../assets/cards/Combat Efficiency Algorithm.png",
   notes: "Add +2 AP to a target unit in your warband and +1 AP to any unit in your warband within target unit's MR until end of turn."
 },
 
@@ -614,7 +614,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 2,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/EMP Canon Burst.png",
+  cardImage: "../assets/cards/EMP Canon Burst.png",
   notes: "This tactical card costs 2 command points. Target a unit on the battlefield, destroy an attachment on target unit."
 },
 
@@ -626,7 +626,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Energy Distribution Grid.png",
+  cardImage: "../assets/cards/Energy Distribution Grid.png",
   notes: "Target a unit in your warband, place an energy counter on that unit and any unit in your warband within target unit's MR."
 },
 
@@ -638,7 +638,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Firewall Response.png",
+  cardImage: "../assets/cards/Firewall Response.png",
   notes: "Mitigate all incoming damage to target unit."
 },
 
@@ -650,7 +650,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Modular Weapons Cache.png",
+  cardImage: "../assets/cards/Modular Weapons Cache.png",
   notes: "Attachment. Every time you activate attached unit in your warband pick one ability: Attached unit gains +2 MR. Attached unit gains +2 AP. Attached unit gains +2 AR. Attached unit gains +2 DR."
 },
 
@@ -662,7 +662,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Teleportal Relay.png",
+  cardImage: "../assets/cards/Teleportal Relay.png",
   notes: "Target 2 units you control on the battlefield, swap their exact locations. Those units may not be activated this turn or next turn."
 },
 
@@ -674,7 +674,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Triangulated Fire.png",
+  cardImage: "../assets/cards/Triangulated Fire.png",
   notes: "Attachment. Whenever attached unit attacks a target enemy unit, attached unit gains +1 AP for every other Concord unit that has LOS and has target unit in its AR, for up to two units."
 },
 
@@ -686,7 +686,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "../assets/tactical/Vector Correction.png",
+  cardImage: "../assets/cards/Vector Correction.png",
   notes: "Target a unit you control on the battlefield. The next time that unit attacks, move X immediately after, where X is the amount of missed D6."
 }
 ];
