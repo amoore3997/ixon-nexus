@@ -820,6 +820,36 @@
   return window.IXON_TACTICAL_CARDS.find((card) => card.id === cardId);
 }
 
+function toRomanNumeral(number) {
+  const romanMap = [
+    { value: 1000, numeral: "M" },
+    { value: 900, numeral: "CM" },
+    { value: 500, numeral: "D" },
+    { value: 400, numeral: "CD" },
+    { value: 100, numeral: "C" },
+    { value: 90, numeral: "XC" },
+    { value: 50, numeral: "L" },
+    { value: 40, numeral: "XL" },
+    { value: 10, numeral: "X" },
+    { value: 9, numeral: "IX" },
+    { value: 5, numeral: "V" },
+    { value: 4, numeral: "IV" },
+    { value: 1, numeral: "I" }
+  ];
+
+  let remainingNumber = number;
+  let romanNumeral = "";
+
+  romanMap.forEach((entry) => {
+    while (remainingNumber >= entry.value) {
+      romanNumeral += entry.numeral;
+      remainingNumber -= entry.value;
+    }
+  });
+
+  return romanNumeral;
+}
+
 function shuffleCards(cards) {
   const shuffledCards = [...cards];
 
@@ -876,53 +906,70 @@ function buildRuntimeTacticalDeck(activeWarband) {
       return window.IXON_STARTER_WARBANDS.rangersPrototype;
     }
 
-    function buildUnitFromCard(card, instanceNumber) {
-      return {
-        id: `${card.id}--${instanceNumber}`,
-        sourceCardId: card.id,
-        name: card.name,
-        role: card.role,
-        faction: card.faction,
-        influenceDisplay: card.influenceDisplay,
-        influenceCost: card.influenceCost,
-        commandPoints: card.commandPoints,
-        coalitionKey: card.coalitionKey,
-        vetoFlag: card.vetoFlag,
-        maxHp: card.maxHp,
-        currentHp: card.maxHp,
-        stats: {
-          MR: { base: card.stats.MR, current: card.stats.MR },
-          AP: { base: card.stats.AP, current: card.stats.AP },
-          AR: { base: card.stats.AR, current: card.stats.AR },
-          DR: { base: card.stats.DR, current: card.stats.DR }
-        },
-        cardImage: card.cardImage,
-        notes: card.notes,
-        activated: false,
-        activationOpen: false,
-        selectedActions: [],
-        activationCount: 0,
-        dead: false
-      };
-    }
+   function buildUnitFromCard(card, instanceNumber, totalCopies) {
+  const displayName = totalCopies > 1
+    ? `${card.name} ${toRomanNumeral(instanceNumber)}`
+    : card.name;
+
+  return {
+    id: `${card.id}--${instanceNumber}`,
+    sourceCardId: card.id,
+    name: displayName,
+    baseName: card.name,
+    duplicateNumber: instanceNumber,
+    duplicateTotal: totalCopies,
+    role: card.role,
+    faction: card.faction,
+    influenceDisplay: card.influenceDisplay,
+    influenceCost: card.influenceCost,
+    commandPoints: card.commandPoints,
+    coalitionKey: card.coalitionKey,
+    vetoFlag: card.vetoFlag,
+    maxHp: card.maxHp,
+    currentHp: card.maxHp,
+    stats: {
+      MR: { base: card.stats.MR, current: card.stats.MR },
+      AP: { base: card.stats.AP, current: card.stats.AP },
+      AR: { base: card.stats.AR, current: card.stats.AR },
+      DR: { base: card.stats.DR, current: card.stats.DR }
+    },
+    cardImage: card.cardImage,
+    notes: card.notes,
+    activated: false,
+    activationOpen: false,
+    selectedActions: [],
+    activationCount: 0,
+    dead: false
+  };
+}
 
     function buildDefaultUnits() {
-      const activeWarband = getActiveWarband();
-      const copyCounters = {};
+  const activeWarband = getActiveWarband();
+  const totalCopyCounters = {};
+  const currentCopyCounters = {};
 
-      return activeWarband.unitIds
-        .map((unitId) => {
-          const card = getCardById(unitId);
+  activeWarband.unitIds.forEach((unitId) => {
+    totalCopyCounters[unitId] = (totalCopyCounters[unitId] || 0) + 1;
+  });
 
-          if (!card) {
-            return null;
-          }
+  return activeWarband.unitIds
+    .map((unitId) => {
+      const card = getCardById(unitId);
 
-          copyCounters[unitId] = (copyCounters[unitId] || 0) + 1;
-          return buildUnitFromCard(card, copyCounters[unitId]);
-        })
-        .filter(Boolean);
-    }
+      if (!card) {
+        return null;
+      }
+
+      currentCopyCounters[unitId] = (currentCopyCounters[unitId] || 0) + 1;
+
+      return buildUnitFromCard(
+        card,
+        currentCopyCounters[unitId],
+        totalCopyCounters[unitId]
+      );
+    })
+    .filter(Boolean);
+}
 
     function buildNewTrackerState() {
       const activeWarband = getActiveWarband();
