@@ -1231,9 +1231,9 @@ function canAddCard(card) {
 
         <div class="index-cost">${getInfluenceText(card)}</div>
 
-        <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="event.stopPropagation(); closeCardPreview(); addCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
-          ${addCheck.reason}
-        </button>
+        <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onmouseenter="closeCardPreview()" onclick="event.stopPropagation(); closeCardPreview(); addCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
+      ${addCheck.reason}
+    </button>
       `;
 
       libraryList.appendChild(cardElement);
@@ -1274,7 +1274,7 @@ function canAddCard(card) {
 
         <div class="slot-cost">${getInfluenceText(card)}</div>
 
-        <button class="button secondary" type="button" onclick="event.stopPropagation(); closeCardPreview(); removeCardAtIndex(${index})">Remove</button>
+        <button class="button secondary" type="button" onmouseenter="closeCardPreview()" onclick="event.stopPropagation(); closeCardPreview(); removeCardAtIndex(${index})">Remove</button>
       `;
 
       slotList.appendChild(slotElement);
@@ -1339,9 +1339,9 @@ cardElement.innerHTML = `
 
   <div class="index-cost">${copyCount} / ${getTacticalCardMaxCopies(card)}</div>
 
-  <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="event.stopPropagation(); closeCardPreview(); addTacticalCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
-    ${addCheck.reason}
-  </button>
+ <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onmouseenter="closeCardPreview()" onclick="event.stopPropagation(); closeCardPreview(); addTacticalCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
+  ${addCheck.reason}
+</button>
 `;
 
     tacticalLibraryList.appendChild(cardElement);
@@ -1392,7 +1392,7 @@ function renderTacticalDeck() {
 
       <div class="slot-cost">${getTacticalCardCopyCount(card.id)} / ${getTacticalCardMaxCopies(card)}</div>
 
-      <button class="button secondary" type="button" onclick="event.stopPropagation(); closeCardPreview(); removeTacticalCardAtIndex(${index})">Remove</button>
+      <button class="button secondary" type="button" onmouseenter="closeCardPreview()" onclick="event.stopPropagation(); closeCardPreview(); removeTacticalCardAtIndex(${index})">Remove</button>
     `;
 
     tacticalDeckList.appendChild(slotElement);
