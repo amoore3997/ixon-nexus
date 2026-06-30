@@ -526,6 +526,74 @@
   }
 }
 
+    .unit-card-image-frame {
+  border: 1px solid rgba(103, 232, 249, 0.22);
+  background: rgba(7, 10, 18, 0.72);
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  display: grid;
+  place-items: center;
+}
+
+.unit-card-image-frame img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  display: block;
+}
+
+.unit-quick-state {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.unit-mini-panel {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(7, 10, 18, 0.62);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.unit-mini-panel span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.74rem;
+  margin-bottom: 5px;
+}
+
+.unit-mini-panel strong {
+  color: var(--cyan);
+  font-size: 1.05rem;
+}
+
+.compact-button-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.compact-action-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+@media (max-width: 760px) {
+  .unit-quick-state,
+  .compact-button-row,
+  .compact-action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .unit-card-image-frame img {
+    max-height: 460px;
+  }
+}
+
     @media (max-width: 1200px) {
       .tracker-summary {
         grid-template-columns: repeat(4, 1fr);
@@ -1009,107 +1077,93 @@ if (trackerState.activeTacticalMenuId === undefined) {
         const hpDisabled = unit.dead ? "disabled" : "";
         const canOpenActivationModal = !unit.dead && !unit.activationOpen;
 
-        unitCard.innerHTML = `
-          <div class="unit-topline">
-            <div>
-              <h2>${unit.name}</h2>
-              <div class="unit-subtitle">${unit.role}</div>
-            </div>
+       unitCard.innerHTML = `
+  <div class="unit-topline">
+    <div>
+      <h2>${unit.name}</h2>
+      <div class="unit-subtitle">${unit.role}</div>
+    </div>
 
-            <div class="unit-status">
-              ${unit.dead ? "Destroyed" : unit.activationOpen ? "Activation Open" : unit.activated ? "Activated" : "Ready"}
-              <br />
-              Activations: ${unit.activationCount}
-            </div>
-          </div>
+    <div class="unit-status">
+      ${unit.dead ? "Destroyed" : unit.activationOpen ? "Activation Open" : unit.activated ? "Activated" : "Ready"}
+      <br />
+      Activations: ${unit.activationCount}
+    </div>
+  </div>
 
-          <div class="attribute-grid">
-            <div class="attribute">
-              <span>Faction</span>
-              <strong>${unit.faction}</strong>
-            </div>
+  <div class="unit-card-image-frame">
+    ${
+      unit.cardImage
+        ? `<img src="${unit.cardImage}" alt="${unit.name} card image" />`
+        : `<div class="card-placeholder"><p>No card image found for ${unit.name}.</p></div>`
+    }
+  </div>
 
-            <div class="attribute">
-              <span>Influence</span>
-              <strong>${unit.influenceDisplay}</strong>
-            </div>
+  <div class="unit-quick-state">
+    <div class="unit-mini-panel">
+      <span>Health Points</span>
+      <strong>${unit.currentHp} / ${unit.maxHp}</strong>
 
-            <div class="attribute">
-              <span>Coalition Key</span>
-              <strong>${unit.coalitionKey}</strong>
-            </div>
+      <div class="hp-buttons" style="margin-top: 8px;">
+        <button class="tiny-button" onclick="changeHp('${unit.id}', -1)" ${hpDisabled}>-</button>
+        <button class="tiny-button" onclick="changeHp('${unit.id}', 1)" ${hpDisabled}>+</button>
+        <button class="tiny-button" onclick="setHpToBase('${unit.id}')" ${hpDisabled}>Base</button>
+      </div>
+    </div>
 
-            <div class="attribute">
-              <span>Veto Flag</span>
-              <strong>${unit.vetoFlag}</strong>
-            </div>
+    <div class="unit-mini-panel">
+      <span>Status</span>
+      <strong>${unit.selectedActions.length} / 2 Actions</strong>
+      <br />
+      <span>CP</span>
+      <strong>${unit.commandPoints === null ? "N/A" : unit.commandPoints + " CP"}</strong>
+    </div>
+  </div>
 
-            <div class="attribute">
-              <span>Command Points</span>
-              <strong>${unit.commandPoints === null ? "N/A" : unit.commandPoints + " CP"}</strong>
-            </div>
+  <div class="stat-grid">
+    ${statTrackers}
+  </div>
 
-            <div class="attribute">
-              <span>Selected Actions</span>
-              <strong>${unit.selectedActions.length} / 2</strong>
-            </div>
-          </div>
+  <div class="action-panel">
+    <div class="action-panel-title">
+      Choose up to two actions after activation.
+    </div>
 
-          <div class="hp-box">
-            <span>Health Points</span>
-            <strong>${unit.currentHp} / ${unit.maxHp}</strong>
+    <div class="compact-action-row">
+      ${actionButtons}
+    </div>
+  </div>
 
-            <div class="hp-buttons">
-              <button class="tiny-button" onclick="changeHp('${unit.id}', -1)" ${hpDisabled}>- HP</button>
-              <button class="tiny-button" onclick="changeHp('${unit.id}', 1)" ${hpDisabled}>+ HP</button>
-              <button class="tiny-button" onclick="setHpToBase('${unit.id}')" ${hpDisabled}>Set Base</button>
-            </div>
-          </div>
+  <div class="compact-button-row">
+    <button
+      class="unit-button primary"
+      onclick="openActivationModal('${unit.id}')"
+      ${canOpenActivationModal ? "" : "disabled"}
+    >
+      Activate
+    </button>
 
-          <div class="stat-grid">
-            ${statTrackers}
-          </div>
+    <button
+      class="unit-button"
+      onclick="endActivation('${unit.id}')"
+      ${!unit.activationOpen || unit.dead ? "disabled" : ""}
+    >
+      End
+    </button>
 
-          <div class="action-panel">
-            <div class="action-panel-title">
-              Activate this unit to choose up to two actions. Action choices stay highlighted and can be toggled.
-            </div>
+    <button class="unit-button" onclick="openCardModal('${unit.id}')">
+      View
+    </button>
 
-            <div class="action-controls">
-              ${actionButtons}
-            </div>
-          </div>
+    <button class="unit-button" onclick="resetUnitStats('${unit.id}')" ${unit.dead ? "disabled" : ""}>
+      Reset
+    </button>
 
-          <div class="unit-controls" style="margin-top: 12px;">
-            <button
-              class="unit-button primary"
-              onclick="openActivationModal('${unit.id}')"
-              ${canOpenActivationModal ? "" : "disabled"}
-            >
-              Activate
-            </button>
-
-            <button
-              class="unit-button"
-              onclick="endActivation('${unit.id}')"
-              ${!unit.activationOpen || unit.dead ? "disabled" : ""}
-            >
-              End Activation
-            </button>
-
-            <button class="unit-button" onclick="openCardModal('${unit.id}')">
-              View Card
-            </button>
-
-            <button class="unit-button" onclick="resetUnitStats('${unit.id}')" ${unit.dead ? "disabled" : ""}>
-              Reset Stats
-            </button>
-
-            <button class="unit-button danger" onclick="toggleDead('${unit.id}')">
-              ${unit.dead ? "Revive Unit" : "Mark Destroyed"}
-            </button>
-          </div>
-        `;
+    <button class="unit-button danger" onclick="toggleDead('${unit.id}')">
+      ${unit.dead ? "Revive" : "Destroyed"}
+    </button>
+  </div>
+`;
 
         unitGrid.appendChild(unitCard);
       });
