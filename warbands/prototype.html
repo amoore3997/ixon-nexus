@@ -1554,7 +1554,7 @@ function removeTacticalCardAtIndex(index) {
       return;
     }
 
-    const savedWarband = {
+   const savedWarband = {
   id: "custom-warband",
   name: "Custom Saved Warband",
   faction: selectedWarlords[0].faction,
@@ -1564,31 +1564,32 @@ function removeTacticalCardAtIndex(index) {
   unitIds: selectedUnitIds,
   tacticalCardIds: selectedTacticalCardIds,
   tacticalDeckLimit: getTacticalDeckLimit()
-    };
+};
 
     localStorage.setItem(warbandStorageKey, JSON.stringify(savedWarband));
     alert("Warband saved. Open Match Tracker to use it.");
   }
 
   function loadSavedWarband() {
-    const savedWarband = localStorage.getItem(warbandStorageKey);
+  const savedWarband = localStorage.getItem(warbandStorageKey);
 
-    if (!savedWarband) {
-      renderAll();
-      return;
-    }
-
-    try {
-      const parsedWarband = JSON.parse(savedWarband);
-      selectedUnitIds = parsedWarband.unitIds || [];
-    } catch {
-      selectedUnitIds = parsedWarband.unitIds || [];
-      selectedTacticalCardIds = parsedWarband.tacticalCardIds || [];
-    }
-
+  if (!savedWarband) {
     renderAll();
+    return;
   }
 
+  try {
+    const parsedWarband = JSON.parse(savedWarband);
+
+    selectedUnitIds = parsedWarband.unitIds || [];
+    selectedTacticalCardIds = parsedWarband.tacticalCardIds || [];
+  } catch {
+    selectedUnitIds = [];
+    selectedTacticalCardIds = [];
+  }
+
+  renderAll();
+}
   function openCardPreview(cardId) {
   const card = getPreviewCardById(cardId);
   const modal = document.getElementById("cardPreviewModal");
