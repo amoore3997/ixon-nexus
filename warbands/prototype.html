@@ -339,6 +339,10 @@
   white-space: nowrap;
 }
 
+.preview-close-button {
+  display: none;
+}   
+    
 .preview-modal {
   position: fixed;
   top: 96px;
@@ -424,7 +428,29 @@
     object-fit: contain;
     display: block;
   }
+  
+  .preview-close-button {
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    z-index: 1001;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(93, 220, 255, 0.65);
+    border-radius: 999px;
+    background: rgba(4, 9, 18, 0.96);
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    pointer-events: auto;
+  }
+  
 }
+    
 .preview-placeholder {
   width: 100%;
   min-height: 430px;
@@ -682,6 +708,10 @@
   </div>
 
 <div class="preview-modal" id="cardPreviewModal" aria-hidden="true">
+  <button class="preview-close-button" type="button" onclick="closeCardPreview()" aria-label="Close card preview">
+    x
+  </button>
+
   <div class="preview-card" id="cardPreviewContent">
     <!-- JavaScript renders card preview here -->
   </div>
@@ -1201,7 +1231,7 @@ function canAddCard(card) {
 
         <div class="index-cost">${getInfluenceText(card)}</div>
 
-        <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="addCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
+        <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="event.stopPropagation(); closeCardPreview(); addCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
           ${addCheck.reason}
         </button>
       `;
@@ -1244,7 +1274,7 @@ function canAddCard(card) {
 
         <div class="slot-cost">${getInfluenceText(card)}</div>
 
-        <button class="button secondary" type="button" onclick="removeCardAtIndex(${index})">Remove</button>
+        <button class="button secondary" type="button" onclick="event.stopPropagation(); closeCardPreview(); removeCardAtIndex(${index})">Remove</button>
       `;
 
       slotList.appendChild(slotElement);
@@ -1309,7 +1339,7 @@ cardElement.innerHTML = `
 
   <div class="index-cost">${copyCount} / ${getTacticalCardMaxCopies(card)}</div>
 
-  <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="addTacticalCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
+  <button class="button ${addCheck.allowed ? "primary" : "secondary"}" type="button" onclick="event.stopPropagation(); closeCardPreview(); addTacticalCard('${card.id}')" ${addCheck.allowed ? "" : "disabled"}>
     ${addCheck.reason}
   </button>
 `;
@@ -1362,7 +1392,7 @@ function renderTacticalDeck() {
 
       <div class="slot-cost">${getTacticalCardCopyCount(card.id)} / ${getTacticalCardMaxCopies(card)}</div>
 
-      <button class="button secondary" type="button" onclick="removeTacticalCardAtIndex(${index})">Remove</button>
+      <button class="button secondary" type="button" onclick="event.stopPropagation(); closeCardPreview(); removeTacticalCardAtIndex(${index})">Remove</button>
     `;
 
     tacticalDeckList.appendChild(slotElement);
