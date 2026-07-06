@@ -268,6 +268,22 @@
   position: sticky;
   top: 118px;
   min-width: 0;
+  max-height: calc(100vh - 132px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.tracker-side-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tracker-side-panel::-webkit-scrollbar-thumb {
+  background: rgba(103, 232, 249, 0.28);
+  border-radius: 999px;
+}
+
+.tracker-side-panel::-webkit-scrollbar-track {
+  background: rgba(7, 10, 18, 0.45);
 }
 
 .tracker-side-panel .tactical-tracker-panel {
@@ -303,9 +319,12 @@
     grid-template-columns: 1fr;
   }
 
-  .tracker-side-panel {
-    position: static;
-  }
+ .tracker-side-panel {
+  position: static;
+  max-height: none;
+  overflow-y: visible;
+  padding-right: 0;
+}
 
   .tracker-side-panel .match-controls {
     display: flex;
