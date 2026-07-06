@@ -482,7 +482,7 @@
 
 .tactical-card-actions {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
   margin-top: 12px;
 }
@@ -580,6 +580,44 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   margin-top: 10px;
+}
+
+.attachment-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.attachment-chip {
+  border: 1px solid rgba(103, 232, 249, 0.28);
+  background: rgba(103, 232, 249, 0.08);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 9px 10px;
+  cursor: pointer;
+}
+
+.attachment-chip:hover {
+  border-color: rgba(103, 232, 249, 0.72);
+  color: var(--cyan);
+}
+
+.attachment-chip strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.attachment-chip span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.76rem;
+  margin-top: 3px;
+}
+
+.attach-target-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 @media (max-width: 760px) {
@@ -789,6 +827,23 @@
     </div>
   </div>
 
+  <div class="activation-modal-backdrop" id="attachModal" onclick="closeAttachModal(event)">
+  <div class="activation-modal">
+    <button class="modal-close-button" onclick="closeAttachModal()">Close</button>
+
+    <div class="section-eyebrow">Attach Tactical Card</div>
+    <h2 id="attachModalTitle">Choose Target Unit</h2>
+
+    <p class="modal-copy" id="attachModalText">
+      Select a unit to attach this card to.
+    </p>
+
+    <div class="attach-target-list" id="attachTargetList">
+      <!-- JavaScript renders attach targets here -->
+    </div>
+  </div>
+</div>
+
   <div class="card-modal-backdrop" id="cardModal" onclick="closeCardModal(event)">
     <div class="card-modal">
       <button class="modal-close-button" onclick="closeCardModal()">Close</button>
@@ -809,6 +864,8 @@
   <script>
     const storageKey = "ixonPlayTrackerV8";
     let pendingActivationUnitId = null;
+
+    let pendingAttachCardRuntimeId = null;
 
     const savedWarbandKey = "ixonSavedWarband";
 
@@ -939,6 +996,7 @@ function buildRuntimeTacticalDeck(activeWarband) {
     activationOpen: false,
     selectedActions: [],
     activationCount: 0,
+    attachments: [],
     dead: false
   };
 }
@@ -1043,6 +1101,11 @@ if (trackerState.activeTacticalMenuId === undefined) {
   trackerState.activeTacticalMenuId = null;
 }
 
+trackerState.units = trackerState.units.map((unit) => ({
+  ...unit,
+  attachments: unit.attachments || []
+}));
+
       renderTracker();
     }
 
@@ -1122,9 +1185,18 @@ if (trackerState.activeTacticalMenuId === undefined) {
         }).join("");
 
         const hpDisabled = unit.dead ? "disabled" : "";
-        const canOpenActivationModal = !unit.dead && !unit.activationOpen;
+const canOpenActivationModal = !unit.dead && !unit.activationOpen;
 
-       unitCard.innerHTML = `
+const attachmentList = (unit.attachments || []).map((attachment) => {
+  return `
+    <button class="attachment-chip" type="button" onclick="openAttachedCardMenu('${unit.id}', '${attachment.runtimeId}')">
+      <strong>${attachment.name}</strong>
+      <span>${attachment.tacticalType} · Attached</span>
+    </button>
+  `;
+}).join("");
+
+unitCard.innerHTML = `
   <div class="unit-topline">
     <div>
       <h2>${unit.name}</h2>
@@ -1145,6 +1217,15 @@ if (trackerState.activeTacticalMenuId === undefined) {
         : `<div class="card-placeholder"><p>No card image found for ${unit.name}.</p></div>`
     }
   </div>
+  
+  ${unit.attachments && unit.attachments.length > 0 ? `
+    <div class="action-panel">
+      <div class="action-panel-title">Attachments</div>
+      <div class="attachment-list">
+        ${attachmentList}
+      </div>
+    </div>
+  ` : ""}
 
   <div class="unit-quick-state">
     <div class="unit-mini-panel">
@@ -1259,6 +1340,7 @@ if (trackerState.activeTacticalMenuId === undefined) {
         <div class="tactical-card-actions" onclick="event.stopPropagation()">
           <button class="tactical-card-action" onclick="previewTacticalCard('${card.runtimeId}')">Preview</button>
           <button class="tactical-card-action" onclick="playTacticalCard('${card.runtimeId}')">Play</button>
+          <button class="tactical-card-action" onclick="openAttachMenu('${card.runtimeId}')">Attach</button>
           <button class="tactical-card-action" onclick="discardTacticalCard('${card.runtimeId}')">Discard</button>
           <button class="tactical-card-action danger" onclick="closeTacticalCardMenu()">Cancel</button>
         </div>
@@ -1346,6 +1428,127 @@ function shuffleDiscardIntoDeck() {
 
   trackerState.tacticalDiscard = [];
   trackerState.activeTacticalMenuId = null;
+
+  renderTracker();
+}
+
+   function openAttachMenu(runtimeId) {
+  const card = trackerState.tacticalHand.find((handCard) => handCard.runtimeId === runtimeId);
+
+  if (!card) {
+    return;
+  }
+
+  pendingAttachCardRuntimeId = runtimeId;
+
+  document.getElementById("attachModalTitle").textContent = `Attach ${card.name}`;
+  document.getElementById("attachModalText").textContent = "Choose a unit to receive this attachment.";
+
+  const attachTargetList = document.getElementById("attachTargetList");
+
+  attachTargetList.innerHTML = trackerState.units
+    .filter((unit) => !unit.dead)
+    .map((unit) => {
+      return `
+        <button class="modal-action-button" onclick="attachCardToUnit('${unit.id}')">
+          ${unit.name}
+        </button>
+      `;
+    })
+    .join("");
+
+  document.getElementById("attachModal").classList.add("open");
+}
+
+function closeAttachModal(event) {
+  if (event && event.target.id !== "attachModal") {
+    return;
+  }
+
+  pendingAttachCardRuntimeId = null;
+  document.getElementById("attachModal").classList.remove("open");
+}
+
+function attachCardToUnit(unitId) {
+  if (!pendingAttachCardRuntimeId) {
+    return;
+  }
+
+  const card = trackerState.tacticalHand.find((handCard) => handCard.runtimeId === pendingAttachCardRuntimeId);
+
+  if (!card) {
+    return;
+  }
+
+  trackerState.tacticalHand = trackerState.tacticalHand.filter((handCard) => {
+    return handCard.runtimeId !== pendingAttachCardRuntimeId;
+  });
+
+  trackerState.units = trackerState.units.map((unit) => {
+    if (unit.id !== unitId) {
+      return unit;
+    }
+
+    return {
+      ...unit,
+      attachments: [
+        ...(unit.attachments || []),
+        card
+      ]
+    };
+  });
+
+  trackerState.activeTacticalMenuId = null;
+  pendingAttachCardRuntimeId = null;
+  document.getElementById("attachModal").classList.remove("open");
+
+  renderTracker();
+}
+
+function openAttachedCardMenu(unitId, attachmentRuntimeId) {
+  const unit = trackerState.units.find((unit) => unit.id === unitId);
+
+  if (!unit) {
+    return;
+  }
+
+  const attachment = (unit.attachments || []).find((card) => card.runtimeId === attachmentRuntimeId);
+
+  if (!attachment) {
+    return;
+  }
+
+  const shouldUnattach = confirm(
+    `${attachment.name}\n\nOK = Unattach to discard.\nCancel = Preview card.`
+  );
+
+  if (shouldUnattach) {
+    unattachCardToDiscard(unitId, attachmentRuntimeId);
+    return;
+  }
+
+  showCardPreview(attachment);
+}
+
+function unattachCardToDiscard(unitId, attachmentRuntimeId) {
+  let removedAttachment = null;
+
+  trackerState.units = trackerState.units.map((unit) => {
+    if (unit.id !== unitId) {
+      return unit;
+    }
+
+    removedAttachment = (unit.attachments || []).find((card) => card.runtimeId === attachmentRuntimeId);
+
+    return {
+      ...unit,
+      attachments: (unit.attachments || []).filter((card) => card.runtimeId !== attachmentRuntimeId)
+    };
+  });
+
+  if (removedAttachment) {
+    trackerState.tacticalDiscard.push(removedAttachment);
+  }
 
   renderTracker();
 }
