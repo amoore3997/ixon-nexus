@@ -193,19 +193,17 @@
   font-size: 1.15rem;
 }
 
-.tracker-command-strip .match-controls,
 .tracker-command-strip .phase-controls {
   gap: 8px;
   margin: 8px 0 0;
 }
 
-.tracker-command-strip .match-button,
 .tracker-command-strip .phase-button {
   padding: 8px 10px;
   border-radius: 10px;
   font-size: 0.82rem;
 }
-
+    
 .tracker-command-strip .summary-card {
   min-height: 58px;
   padding: 8px 12px;
@@ -214,6 +212,25 @@
 .tracker-command-strip .summary-card strong {
   font-size: 1rem;
   line-height: 1.05;
+}
+
+.match-control-drawer {
+  border: 1px solid var(--border);
+  background: rgba(17, 24, 39, 0.84);
+  border-radius: 18px;
+  padding: 12px;
+  margin: 0 0 18px;
+}
+
+.match-control-drawer summary {
+  color: var(--cyan);
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+}
+
+.match-control-drawer .match-controls {
+  margin: 12px 0 0;
 }
 
 .tracker-command-strip .summary-card span {
@@ -249,7 +266,7 @@
 
 .tracker-side-panel {
   position: sticky;
-  top: 158px;
+  top: 118px;
   min-width: 0;
 }
 
@@ -300,14 +317,12 @@
 }
 
 @media (min-width: 1200px) {
-  .tracker-command-strip .match-controls,
   .tracker-command-strip .phase-controls {
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 2px;
   }
 
-  .tracker-command-strip .match-button,
   .tracker-command-strip .phase-button {
     white-space: nowrap;
   }
@@ -979,20 +994,6 @@
         </div>
       </section>
 
-      <section class="match-controls">
-        <button class="match-button" onclick="changeBaseCp(-1)">- Base CP</button>
-        <button class="match-button" onclick="changeBaseCp(1)">+ Base CP</button>
-        <button class="match-button" onclick="changeShardCp(-1)">- Shard CP</button>
-        <button class="match-button" onclick="changeShardCp(1)">+ Shard CP</button>
-        <button class="match-button" onclick="addTemporaryCp()">+1 Temporary CP</button>
-        <button class="match-button" onclick="changeQeReserve(1)">+ QE</button>
-        <button class="match-button" onclick="changeQeReserve(-1)">- QE</button>
-        <button class="match-button" onclick="spendCp()">Spend 1 CP</button>
-        <button class="match-button primary" onclick="resetTurn()">Reset Turn</button>
-        <button class="match-button" onclick="nextRound()">Next Round</button>
-        <button class="match-button danger" onclick="resetMatch()">Reset Match</button>
-      </section>
-
       <section class="phase-controls">
         <button class="phase-button" id="drawPhaseButton" onclick="setPhase('Draw Phase')">Draw Phase</button>
         <button class="phase-button" id="commandPhaseButton" onclick="setPhase('Command Phase')">Command Phase</button>
@@ -1001,6 +1002,24 @@
       </section>
    </section>
 
+      <details class="match-control-drawer">
+        <summary>More Match Controls</summary>
+      
+        <section class="match-controls">
+          <button class="match-button" onclick="adjustBaseCp(-1)">- Base CP</button>
+          <button class="match-button" onclick="adjustBaseCp(1)">+ Base CP</button>
+          <button class="match-button" onclick="adjustShardCp(-1)">- Shard CP</button>
+          <button class="match-button" onclick="adjustShardCp(1)">+ Shard CP</button>
+          <button class="match-button" onclick="addTemporaryCp()">+1 Temporary CP</button>
+          <button class="match-button" onclick="adjustQeReserve(1)">+ QE</button>
+          <button class="match-button" onclick="adjustQeReserve(-1)">- QE</button>
+          <button class="match-button" onclick="spendCp()">Spend 1 CP</button>
+          <button class="match-button primary" onclick="resetTurn()">Reset Turn</button>
+          <button class="match-button" onclick="nextRound()">Next Round</button>
+          <button class="match-button danger" onclick="resetMatch()">Reset Match</button>
+        </section>
+      </details>
+      
       <div class="tracker-play-layout">
   <main class="tracker-main-column">
     <section class="tracker-grid" id="unitTrackerGrid">
