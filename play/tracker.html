@@ -162,24 +162,53 @@
       gap: 14px;
     }
 
-    .tracker-command-strip {
+   .tracker-command-strip {
   position: sticky;
   top: 0;
   z-index: 30;
   background: rgba(5, 7, 17, 0.96);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 14px 0 12px;
+  padding: 10px 0;
   margin-bottom: 18px;
 }
 
 .tracker-command-strip .tracker-summary {
-  margin-top: 0;
+  grid-template-columns: repeat(8, minmax(110px, 1fr));
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.tracker-command-strip .summary-card {
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.tracker-command-strip .summary-card span {
+  font-size: 0.68rem;
+  margin-bottom: 4px;
+}
+
+.tracker-command-strip .summary-card strong {
+  font-size: 1.15rem;
+}
+
+.tracker-command-strip .match-controls,
+.tracker-command-strip .phase-controls {
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.tracker-command-strip .match-button,
+.tracker-command-strip .phase-button {
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 0.82rem;
 }
 
 .tracker-play-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 460px;
+  grid-template-columns: minmax(0, 1fr) 420px;
   gap: 16px;
   align-items: start;
 }
@@ -190,7 +219,7 @@
 
 .tracker-side-panel {
   position: sticky;
-  top: 140px;
+  top: 118px;
   min-width: 0;
 }
 
@@ -232,6 +261,28 @@
 
   .tracker-side-panel .tactical-count-grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .tracker-command-strip .match-controls,
+  .tracker-command-strip .phase-controls {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .tracker-command-strip .match-button,
+  .tracker-command-strip .phase-button {
+    white-space: nowrap;
+  }
+
+  .unit-card-image-frame img {
+    max-height: 390px;
+  }
+
+  .live-unit-card {
+    min-height: auto;
   }
 }
 
@@ -1061,7 +1112,7 @@
     <div class="card-modal">
       <button class="modal-close-button" onclick="closeCardModal()">Close</button>
 
-      <div class="section-eyebrow">Unit Card Preview</div>
+      <div class="section-eyebrow">Card Preview</div>
       <h2 id="modalCardTitle">Unit Card</h2>
 
       <div class="card-placeholder">
