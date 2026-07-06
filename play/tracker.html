@@ -25,20 +25,15 @@
       padding: 18px 0 40px;
     }
 
-    .tracker-header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-      padding: 14px 0;
-      background: rgba(5, 7, 17, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
+   .tracker-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+  background: rgba(5, 7, 17, 0.92);
+  border-bottom: 1px solid var(--border);
+}
     .tracker-header h1 {
       font-size: clamp(1.6rem, 4vw, 3.2rem);
       letter-spacing: -0.04em;
@@ -166,6 +161,89 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
+
+    .tracker-command-strip {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(5, 7, 17, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0 12px;
+  margin-bottom: 18px;
+}
+
+.tracker-command-strip .tracker-summary {
+  margin-top: 0;
+}
+
+.tracker-play-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 16px;
+  align-items: start;
+}
+
+.tracker-main-column {
+  min-width: 0;
+}
+
+.tracker-side-panel {
+  position: sticky;
+  top: 140px;
+  min-width: 0;
+}
+
+.tracker-side-panel .tactical-tracker-panel {
+  margin-top: 0;
+}
+
+.tracker-side-panel .tactical-tracker-topline {
+  display: grid;
+  gap: 12px;
+}
+
+.tracker-side-panel .match-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+}
+
+.tracker-side-panel .tactical-count-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.tracker-side-panel .tactical-card-actions {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 1300px) {
+  .tracker-play-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-side-panel {
+    position: static;
+  }
+
+  .tracker-side-panel .match-controls {
+    display: flex;
+  }
+
+  .tracker-side-panel .tactical-count-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .tracker-command-strip {
+    position: static;
+  }
+
+  .tracker-side-panel .tactical-count-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
     .live-unit-card {
       border: 1px solid var(--border);
@@ -772,6 +850,7 @@
     </header>
 
     <main>
+    <section class="tracker-command-strip">
       <section class="tracker-summary">
         <div class="summary-card">
           <span>Round</span>
@@ -834,7 +913,16 @@
         <button class="phase-button" id="activationPhaseButton" onclick="setPhase('Activation Phase')">Activation Phase</button>
         <button class="phase-button" id="endPhaseButton" onclick="setPhase('End Phase')">End Phase</button>
       </section>
+   </section>
 
+      <div class="tracker-play-layout">
+  <main class="tracker-main-column">
+    <section class="tracker-grid" id="unitTrackerGrid">
+      <!-- JavaScript creates unit cards here -->
+    </section>
+  </main>
+
+  <aside class="tracker-side-panel">
       <section class="tactical-tracker-panel">
   <div class="tactical-tracker-topline">
     <div>
@@ -881,11 +969,9 @@
     </div>
   </div>
 </section>
-
-      <section class="tracker-grid" id="unitTrackerGrid">
-        <!-- JavaScript creates unit cards here -->
-      </section>
-
+  </aside>
+</div>
+      
       <section class="tracker-note">
         <strong>Turn flow:</strong>
         Start in Draw Phase, move into Command Phase to spend CP or QE, enter Activation Phase
