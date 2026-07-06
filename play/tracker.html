@@ -1146,7 +1146,7 @@
 
     <div class="match-controls" style="margin: 0;">
      <button class="match-button" onclick="drawTacticalCard()">Draw 1</button>
-    <button class="match-button primary" onclick="drawToHandLimit()">Draw to 5</button>
+    <button class="match-button primary" onclick="drawToHandLimit()">Draw to 3</button>
     <button class="match-button" onclick="toggleHandHidden()">Hide / Show Hand</button>
     <button class="match-button" onclick="shuffleTacticalDeck()">Shuffle Deck</button>
     <button class="match-button" onclick="openTopDeckModal()">View Top X</button>
@@ -1842,6 +1842,15 @@ function drawToHandLimit() {
   }
 
   trackerState.activeTacticalMenuId = null;
+  renderTracker();
+}
+
+function drawToThree() {
+  while (trackerState.tacticalHand.length < 3 && trackerState.tacticalDeck.length > 0) {
+    const drawnCard = trackerState.tacticalDeck.shift();
+    trackerState.tacticalHand.push(drawnCard);
+  }
+
   renderTracker();
 }
 
