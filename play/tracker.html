@@ -206,6 +206,30 @@
   font-size: 0.82rem;
 }
 
+.tracker-command-strip .summary-card {
+  min-height: 58px;
+  padding: 8px 12px;
+}
+
+.tracker-command-strip .summary-card strong {
+  font-size: 1rem;
+  line-height: 1.05;
+}
+
+.tracker-command-strip .summary-card span {
+  font-size: 0.65rem;
+}
+
+.tracker-command-strip .tracker-summary {
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tracker-command-strip .match-controls,
+.tracker-command-strip .phase-controls {
+  margin-top: 6px;
+}
+
 .tracker-play-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 420px;
@@ -217,9 +241,15 @@
   min-width: 0;
 }
 
+@media (min-width: 1301px) {
+  .tracker-main-column .tracker-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .tracker-side-panel {
   position: sticky;
-  top: 118px;
+  top: 158px;
   min-width: 0;
 }
 
@@ -230,6 +260,11 @@
 .tracker-side-panel .tactical-tracker-topline {
   display: grid;
   gap: 12px;
+}
+
+.tracker-side-panel .tactical-tracker-panel h2 {
+  font-size: clamp(1.8rem, 2vw, 2.4rem);
+  line-height: 1.05;
 }
 
 .tracker-side-panel .match-controls {
@@ -278,7 +313,7 @@
   }
 
   .unit-card-image-frame img {
-    max-height: 390px;
+    max-height: 340px;
   }
 
   .live-unit-card {
