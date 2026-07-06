@@ -934,6 +934,30 @@
   margin: 8px 0 10px;
 }
 
+    .unit-stat-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin: 8px 0 10px;
+}
+
+.unit-stat-summary span {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(7, 10, 18, 0.62);
+  border-radius: 10px;
+  padding: 7px 8px;
+  color: var(--cyan);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .unit-stat-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
     .unit-card-image-frame {
   border: 1px solid rgba(103, 232, 249, 0.22);
   background: rgba(7, 10, 18, 0.72);
@@ -1507,6 +1531,7 @@ function buildRuntimeTacticalDeck(activeWarband) {
     },
     cardImage: card.cardImage,
     cardCollapsed: true,
+    statsCollapsed: true,
     notes: card.notes,
     activated: false,
     activationOpen: false,
@@ -1620,7 +1645,8 @@ if (trackerState.activeTacticalMenuId === undefined) {
 trackerState.units = trackerState.units.map((unit) => ({
   ...unit,
   attachments: unit.attachments || [],
-  cardCollapsed: unit.cardCollapsed !== false
+  cardCollapsed: unit.cardCollapsed !== false,
+  statsCollapsed: unit.statsCollapsed !== false
 }));
       renderTracker();
     }
@@ -1784,9 +1810,25 @@ ${!unit.cardCollapsed ? `
     </div>
   </div>
 
+ <div class="unit-card-toggle-row">
+  <button class="tiny-button" type="button" onclick="toggleUnitStats('${unit.id}')">
+    ${unit.statsCollapsed ? "Show Stats" : "Hide Stats"}
+  </button>
+</div>
+
+<div class="unit-stat-summary">
+  <span>HP ${unit.currentHp} / ${unit.maxHp}</span>
+  <span>MR ${unit.stats.MR.current} / ${unit.stats.MR.base}</span>
+  <span>AP ${unit.stats.AP.current} / ${unit.stats.AP.base}</span>
+  <span>AR ${unit.stats.AR.current} / ${unit.stats.AR.base}</span>
+  <span>DR ${unit.stats.DR.current} / ${unit.stats.DR.base}</span>
+</div>
+
+${!unit.statsCollapsed ? `
   <div class="stat-grid">
     ${statTrackers}
   </div>
+` : ""}
 
   <div class="action-panel">
     <div class="action-panel-title">
@@ -2591,6 +2633,21 @@ function toggleUnitCardImage(unitId) {
     return {
       ...unit,
       cardCollapsed: !unit.cardCollapsed
+    };
+  });
+
+  renderTracker();
+}
+
+  function toggleUnitStats(unitId) {
+  trackerState.units = trackerState.units.map((unit) => {
+    if (unit.id !== unitId) {
+      return unit;
+    }
+
+    return {
+      ...unit,
+      statsCollapsed: !unit.statsCollapsed
     };
   });
 
