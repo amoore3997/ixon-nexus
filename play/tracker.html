@@ -515,6 +515,67 @@
   border-radius: 14px;
 }
 
+.deck-view-list {
+  display: grid;
+  gap: 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.deck-view-card {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(7, 10, 18, 0.66);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.deck-view-card strong {
+  display: block;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.deck-view-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.deck-view-actions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.deck-view-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.deck-view-controls input {
+  border: 1px solid var(--border);
+  background: rgba(7, 10, 18, 0.85);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 12px;
+  width: 120px;
+}
+
+@media (max-width: 760px) {
+  .deck-view-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .deck-view-controls input,
+  .deck-view-controls button {
+    width: 100%;
+  }
+}
+
 @media (max-width: 760px) {
   .tactical-tracker-topline {
     flex-direction: column;
@@ -782,10 +843,13 @@
     </div>
 
     <div class="match-controls" style="margin: 0;">
-      <button class="match-button" onclick="drawTacticalCard()">Draw 1</button>
-      <button class="match-button primary" onclick="drawToHandLimit()">Draw to 5</button>
-      <button class="match-button" onclick="toggleHandHidden()">Hide / Show Hand</button>
-      <button class="match-button" onclick="shuffleDiscardIntoDeck()">Shuffle Discard</button>
+     <button class="match-button" onclick="drawTacticalCard()">Draw 1</button>
+    <button class="match-button primary" onclick="drawToHandLimit()">Draw to 5</button>
+    <button class="match-button" onclick="toggleHandHidden()">Hide / Show Hand</button>
+    <button class="match-button" onclick="shuffleTacticalDeck()">Shuffle Deck</button>
+    <button class="match-button" onclick="openTopDeckModal()">View Top X</button>
+    <button class="match-button" onclick="openDiscardModal()">View Discard</button>
+    <button class="match-button" onclick="shuffleDiscardIntoDeck()">Shuffle Discard Into Deck</button>
     </div>
   </div>
 
@@ -864,6 +928,45 @@
 
     <div class="attach-target-list" id="attachTargetList">
       <!-- JavaScript renders attach targets here -->
+    </div>
+  </div>
+</div>
+
+  <div class="activation-modal-backdrop" id="topDeckModal" onclick="closeTopDeckModal(event)">
+  <div class="activation-modal">
+    <button class="modal-close-button" onclick="closeTopDeckModal()">Close</button>
+
+    <div class="section-eyebrow">Deck Intel</div>
+    <h2>View Top Cards</h2>
+
+    <p class="modal-copy">
+      Choose how many cards to reveal from the top of your tactical deck.
+    </p>
+
+    <div class="deck-view-controls">
+      <input id="topDeckAmountInput" type="number" min="1" max="40" value="3" />
+      <button class="modal-action-button primary" onclick="renderTopDeckCards()">Reveal</button>
+    </div>
+
+    <div class="deck-view-list" id="topDeckList">
+      <!-- JavaScript renders top deck cards here -->
+    </div>
+  </div>
+</div>
+
+<div class="activation-modal-backdrop" id="discardModal" onclick="closeDiscardModal(event)">
+  <div class="activation-modal">
+    <button class="modal-close-button" onclick="closeDiscardModal()">Close</button>
+
+    <div class="section-eyebrow">Discard Pile</div>
+    <h2>Played / Discarded Cards</h2>
+
+    <p class="modal-copy">
+      View discarded tactical cards and retrieve them to your hand or deck.
+    </p>
+
+    <div class="deck-view-list" id="discardPileList">
+      <!-- JavaScript renders discard pile here -->
     </div>
   </div>
 </div>
@@ -1474,6 +1577,192 @@ function shuffleDiscardIntoDeck() {
   renderTracker();
 }
 
+   function shuffleTacticalDeck() {
+  if (!trackerState.tacticalDeck || trackerState.tacticalDeck.length <= 1) {
+    alert("There are not enough cards in the deck to shuffle.");
+    return;
+  }
+
+  trackerState.tacticalDeck = shuffleCards(trackerState.tacticalDeck);
+  trackerState.activeTacticalMenuId = null;
+  renderTracker();
+}
+
+function openTopDeckModal() {
+  document.getElementById("topDeckModal").classList.add("open");
+  renderTopDeckCards();
+}
+
+function closeTopDeckModal(event) {
+  if (event && event.target.id !== "topDeckModal") {
+    return;
+  }
+
+  document.getElementById("topDeckModal").classList.remove("open");
+}
+
+function renderTopDeckCards() {
+  const amountInput = document.getElementById("topDeckAmountInput");
+  const topDeckList = document.getElementById("topDeckList");
+
+  const requestedAmount = Math.max(1, Number(amountInput.value || 1));
+  const revealAmount = Math.min(requestedAmount, trackerState.tacticalDeck.length);
+
+  if (trackerState.tacticalDeck.length === 0) {
+    topDeckList.innerHTML = `
+      <div class="tracker-note">
+        Your tactical deck is empty.
+      </div>
+    `;
+    return;
+  }
+
+  const cardsToShow = trackerState.tacticalDeck.slice(0, revealAmount);
+
+  topDeckList.innerHTML = cardsToShow.map((card, index) => {
+    return `
+      <div class="deck-view-card">
+        <strong>${index + 1}. ${card.name}</strong>
+        <span>${card.tacticalType} · ${card.faction}</span>
+
+        <div class="deck-view-actions">
+          <button class="tiny-button" onclick="showCardPreviewByRuntimeId('${card.runtimeId}')">Preview</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openDiscardModal() {
+  document.getElementById("discardModal").classList.add("open");
+  renderDiscardPile();
+}
+
+function closeDiscardModal(event) {
+  if (event && event.target.id !== "discardModal") {
+    return;
+  }
+
+  document.getElementById("discardModal").classList.remove("open");
+}
+
+function renderDiscardPile() {
+  const discardPileList = document.getElementById("discardPileList");
+
+  if (!trackerState.tacticalDiscard || trackerState.tacticalDiscard.length === 0) {
+    discardPileList.innerHTML = `
+      <div class="tracker-note">
+        Your discard pile is empty.
+      </div>
+    `;
+    return;
+  }
+
+  discardPileList.innerHTML = trackerState.tacticalDiscard.map((card) => {
+    const handFull = trackerState.tacticalHand.length >= 5;
+
+    return `
+      <div class="deck-view-card">
+        <strong>${card.name}</strong>
+        <span>${card.tacticalType} · ${card.faction}</span>
+
+        <div class="deck-view-actions">
+          <button class="tiny-button" onclick="showCardPreviewByRuntimeId('${card.runtimeId}')">Preview</button>
+
+          <button class="tiny-button" onclick="retrieveDiscardToHand('${card.runtimeId}')" ${handFull ? "disabled" : ""}>
+            To Hand
+          </button>
+
+          <button class="tiny-button" onclick="retrieveDiscardToTopDeck('${card.runtimeId}')">
+            Top Deck
+          </button>
+
+          <button class="tiny-button" onclick="retrieveDiscardToBottomDeck('${card.runtimeId}')">
+            Bottom Deck
+          </button>
+
+          <button class="tiny-button" onclick="retrieveDiscardRandomIntoDeck('${card.runtimeId}')">
+            Random Deck
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+} 
+
+    function removeCardFromDiscard(runtimeId) {
+  const card = trackerState.tacticalDiscard.find((discardCard) => discardCard.runtimeId === runtimeId);
+
+  if (!card) {
+    return null;
+  }
+
+  trackerState.tacticalDiscard = trackerState.tacticalDiscard.filter((discardCard) => {
+    return discardCard.runtimeId !== runtimeId;
+  });
+
+  return card;
+}
+
+function retrieveDiscardToHand(runtimeId) {
+  if (trackerState.tacticalHand.length >= 5) {
+    alert("Your hand is already at the maximum size of 5.");
+    return;
+  }
+
+  const card = removeCardFromDiscard(runtimeId);
+
+  if (!card) {
+    return;
+  }
+
+  trackerState.tacticalHand.push(card);
+  trackerState.activeTacticalMenuId = null;
+
+  renderTracker();
+  renderDiscardPile();
+}
+
+function retrieveDiscardToTopDeck(runtimeId) {
+  const card = removeCardFromDiscard(runtimeId);
+
+  if (!card) {
+    return;
+  }
+
+  trackerState.tacticalDeck.unshift(card);
+
+  renderTracker();
+  renderDiscardPile();
+}
+
+function retrieveDiscardToBottomDeck(runtimeId) {
+  const card = removeCardFromDiscard(runtimeId);
+
+  if (!card) {
+    return;
+  }
+
+  trackerState.tacticalDeck.push(card);
+
+  renderTracker();
+  renderDiscardPile();
+}
+
+function retrieveDiscardRandomIntoDeck(runtimeId) {
+  const card = removeCardFromDiscard(runtimeId);
+
+  if (!card) {
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * (trackerState.tacticalDeck.length + 1));
+  trackerState.tacticalDeck.splice(randomIndex, 0, card);
+
+  renderTracker();
+  renderDiscardPile();
+}
+
    function openAttachMenu(runtimeId) {
   const card = trackerState.tacticalHand.find((handCard) => handCard.runtimeId === runtimeId);
 
@@ -1946,7 +2235,8 @@ function unattachCardToDiscard(unitId, attachmentRuntimeId) {
   document.getElementById("cardModal").classList.add("open");
 }
 
-    function showCardPreviewByRuntimeId(runtimeId) {
+   function showCardPreviewByRuntimeId(runtimeId) {
+  const deckCard = trackerState.tacticalDeck.find((card) => card.runtimeId === runtimeId);
   const handCard = trackerState.tacticalHand.find((card) => card.runtimeId === runtimeId);
   const discardCard = trackerState.tacticalDiscard.find((card) => card.runtimeId === runtimeId);
 
@@ -1954,7 +2244,7 @@ function unattachCardToDiscard(unitId, attachmentRuntimeId) {
     .flatMap((unit) => unit.attachments || [])
     .find((card) => card.runtimeId === runtimeId);
 
-  const card = handCard || discardCard || attachedCard;
+  const card = deckCard || handCard || discardCard || attachedCard;
 
   if (!card) {
     return;
