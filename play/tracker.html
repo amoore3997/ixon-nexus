@@ -311,6 +311,36 @@
   min-height: 34px;
 }
 
+.tracker-side-panel .tactical-card-menu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.tracker-side-panel .tactical-card-menu .tiny-button,
+.tracker-side-panel .tactical-card-menu button {
+  padding: 6px 7px;
+  border-radius: 9px;
+  font-size: 0.72rem;
+  min-height: 30px;
+}
+
+.tracker-side-panel .tactical-card.active,
+.tracker-side-panel .tactical-hand-card.active,
+.tracker-side-panel .tactical-card-row.active {
+  align-items: stretch;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+}
+
+.tracker-side-panel .tactical-card.active strong,
+.tracker-side-panel .tactical-hand-card.active strong,
+.tracker-side-panel .tactical-card-row.active strong {
+  width: 100%;
+}
+
 .tracker-side-panel .tactical-count-grid {
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
