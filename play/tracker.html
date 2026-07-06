@@ -415,6 +415,48 @@
   min-height: 30px;
 }
 
+.tracker-side-panel .tactical-card,
+.tracker-side-panel .tactical-hand-card,
+.tracker-side-panel .tactical-card-row {
+  position: relative;
+  min-height: 34px;
+}
+
+.tracker-side-panel .tactical-card.active,
+.tracker-side-panel .tactical-hand-card.active,
+.tracker-side-panel .tactical-card-row.active {
+  min-height: 34px;
+  height: 34px;
+  padding: 7px 9px;
+  overflow: visible;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.tracker-side-panel .tactical-card-menu {
+  position: absolute;
+  right: 8px;
+  top: 38px;
+  z-index: 50;
+  width: 190px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid rgba(103, 232, 249, 0.45);
+  background: rgba(15, 23, 42, 0.98);
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+.tracker-side-panel .tactical-card-menu .tiny-button,
+.tracker-side-panel .tactical-card-menu button {
+  padding: 6px 7px;
+  border-radius: 9px;
+  font-size: 0.72rem;
+  min-height: 30px;
+}
+
 @media (max-width: 1300px) {
   .tracker-play-layout {
     grid-template-columns: 1fr;
