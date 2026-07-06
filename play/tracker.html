@@ -620,6 +620,30 @@
   margin-top: 12px;
 }
 
+.attachment-chip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.attachment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+@media (max-width: 760px) {
+  .attachment-chip {
+    grid-template-columns: 1fr;
+  }
+
+  .attachment-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 760px) {
   .unit-quick-state,
   .compact-button-row,
@@ -1189,10 +1213,22 @@ const canOpenActivationModal = !unit.dead && !unit.activationOpen;
 
 const attachmentList = (unit.attachments || []).map((attachment) => {
   return `
-    <button class="attachment-chip" type="button" onclick="openAttachedCardMenu('${unit.id}', '${attachment.runtimeId}')">
-      <strong>${attachment.name}</strong>
-      <span>${attachment.tacticalType} · Attached</span>
-    </button>
+    <div class="attachment-chip">
+      <div>
+        <strong>${attachment.name}</strong>
+        <span>${attachment.tacticalType} · Attached</span>
+      </div>
+
+      <div class="attachment-actions">
+        <button class="tiny-button" type="button" onclick="showCardPreviewByRuntimeId('${attachment.runtimeId}')">
+          Preview
+        </button>
+
+        <button class="tiny-button" type="button" onclick="unattachCardToDiscard('${unit.id}', '${attachment.runtimeId}')">
+          Unattach
+        </button>
+      </div>
+    </div>
   `;
 }).join("");
 
@@ -1908,6 +1944,23 @@ function unattachCardToDiscard(unitId, attachmentRuntimeId) {
   }
 
   document.getElementById("cardModal").classList.add("open");
+}
+
+    function showCardPreviewByRuntimeId(runtimeId) {
+  const handCard = trackerState.tacticalHand.find((card) => card.runtimeId === runtimeId);
+  const discardCard = trackerState.tacticalDiscard.find((card) => card.runtimeId === runtimeId);
+
+  const attachedCard = trackerState.units
+    .flatMap((unit) => unit.attachments || [])
+    .find((card) => card.runtimeId === runtimeId);
+
+  const card = handCard || discardCard || attachedCard;
+
+  if (!card) {
+    return;
+  }
+
+  showCardPreview(card);
 }
 
 function openCardModal(unitId) {
