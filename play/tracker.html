@@ -839,6 +839,12 @@
   }
 }
 
+    .unit-card-toggle-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0 10px;
+}
+
     .unit-card-image-frame {
   border: 1px solid rgba(103, 232, 249, 0.22);
   background: rgba(7, 10, 18, 0.72);
@@ -1382,6 +1388,7 @@ function buildRuntimeTacticalDeck(activeWarband) {
       DR: { base: card.stats.DR, current: card.stats.DR }
     },
     cardImage: card.cardImage,
+    cardCollapsed: true,
     notes: card.notes,
     activated: false,
     activationOpen: false,
@@ -1494,9 +1501,9 @@ if (trackerState.activeTacticalMenuId === undefined) {
 
 trackerState.units = trackerState.units.map((unit) => ({
   ...unit,
-  attachments: unit.attachments || []
+  attachments: unit.attachments || [],
+  cardCollapsed: unit.cardCollapsed !== false
 }));
-
       renderTracker();
     }
 
@@ -1613,6 +1620,13 @@ unitCard.innerHTML = `
     </div>
   </div>
 
+<div class="unit-card-toggle-row">
+  <button class="tiny-button" type="button" onclick="toggleUnitCardImage('${unit.id}')">
+    ${unit.cardCollapsed ? "Show Card" : "Hide Card"}
+  </button>
+</div>
+
+${!unit.cardCollapsed ? `
   <div class="unit-card-image-frame">
     ${
       unit.cardImage
@@ -1620,6 +1634,7 @@ unitCard.innerHTML = `
         : `<div class="card-placeholder"><p>No card image found for ${unit.name}.</p></div>`
     }
   </div>
+` : ""}
   
   ${unit.attachments && unit.attachments.length > 0 ? `
     <div class="action-panel">
@@ -2434,6 +2449,21 @@ function unattachCardToDiscard(unitId, attachmentRuntimeId) {
     return {
       ...unit,
       selectedActions: []
+    };
+  });
+
+  renderTracker();
+}
+
+function toggleUnitCardImage(unitId) {
+  trackerState.units = trackerState.units.map((unit) => {
+    if (unit.id !== unitId) {
+      return unit;
+    }
+
+    return {
+      ...unit,
+      cardCollapsed: !unit.cardCollapsed
     };
   });
 
