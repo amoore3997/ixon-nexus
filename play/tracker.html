@@ -272,12 +272,12 @@
 
 .tracker-side-panel .tactical-tracker-panel {
   margin-top: 0;
-  max-height: calc(100vh - 116px);
+  max-height: calc(100vh - 128px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px;
+  gap: 6px;
+  padding: 10px;
 }
 
 .tracker-side-panel .tactical-tracker-topline {
@@ -298,7 +298,7 @@
 
 .tracker-side-panel .match-controls {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 6px;
   margin: 0;
 }
@@ -346,9 +346,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 7px 9px;
+  padding: 6px 9px;
   border-radius: 10px;
-  min-height: 34px;
+  min-height: 30px;
 }
 
 .tracker-side-panel .tactical-card strong,
@@ -1114,7 +1114,7 @@
     <button class="match-button" onclick="shuffleTacticalDeck()">Shuffle Deck</button>
     <button class="match-button" onclick="openTopDeckModal()">View Top X</button>
     <button class="match-button" onclick="openDiscardModal()">View Discard</button>
-    <button class="match-button" onclick="shuffleDiscardIntoDeck()">Shuffle Discard Into Deck</button>
+   <!--<button class="match-button" onclick="shuffleDiscardIntoDeck()">Shuffle Discard Into Deck</button>-->
     </div>
   </div>
 
