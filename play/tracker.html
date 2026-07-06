@@ -1147,26 +1147,26 @@ trackerState.units = trackerState.units.map((unit) => ({
         unitCard.className = cardClass;
 
         const actionButtons = ["Move", "Attack", "Claim", "Ability"].map((action) => {
-          const selected = unit.selectedActions.includes(action);
-          const limitReached = unit.selectedActions.length >= 2 && !selected;
-          const disabled = !unit.activationOpen || unit.dead || limitReached;
-
-          let className = "action-choice";
-
-          if (selected) {
-            className += " selected";
-          }
-
-          return `
-            <button
-              class="${className}"
-              onclick="toggleAction('${unit.id}', '${action}')"
-              ${disabled ? "disabled" : ""}
-            >
-              ${action}
-            </button>
-          `;
-        }).join("");
+        const actionCount = unit.selectedActions.filter((selectedAction) => selectedAction === action).length;
+        const limitReached = unit.selectedActions.length >= 2;
+        const disabled = !unit.activationOpen || unit.dead || limitReached;
+      
+        let className = "action-choice";
+      
+        if (actionCount > 0) {
+          className += " selected";
+        }
+      
+        return `
+          <button
+            class="${className}"
+            onclick="addAction('${unit.id}', '${action}')"
+            ${disabled ? "disabled" : ""}
+          >
+            ${action}${actionCount > 0 ? ` x${actionCount}` : ""}
+          </button>
+        `;
+      }).join("");
 
         const statTrackers = Object.keys(unit.stats).map((statName) => {
           const stat = unit.stats[statName];
@@ -1261,6 +1261,12 @@ unitCard.innerHTML = `
       ${actionButtons}
     </div>
   </div>
+
+  <div class="compact-button-row">
+  <button class="unit-button" onclick="clearUnitActions('${unit.id}')" ${!unit.activationOpen || unit.dead ? "disabled" : ""}>
+    Clear Actions
+  </button>
+</div>
 
   <div class="compact-button-row">
     <button
@@ -1811,35 +1817,41 @@ function unattachCardToDiscard(unitId, attachmentRuntimeId) {
       renderTracker();
     }
 
-    function toggleAction(unitId, actionName) {
-      trackerState.units = trackerState.units.map((unit) => {
-        if (unit.id !== unitId || !unit.activationOpen || unit.dead) {
-          return unit;
-        }
-
-        const alreadySelected = unit.selectedActions.includes(actionName);
-
-        if (alreadySelected) {
-          return {
-            ...unit,
-            selectedActions: unit.selectedActions.filter((action) => action !== actionName)
-          };
-        }
-
-        if (unit.selectedActions.length >= 2) {
-          return unit;
-        }
-
-        return {
-          ...unit,
-          selectedActions: [...unit.selectedActions, actionName]
-        };
-      });
-
-      renderTracker();
+   function addAction(unitId, actionName) {
+  trackerState.units = trackerState.units.map((unit) => {
+    if (unit.id !== unitId || !unit.activationOpen || unit.dead) {
+      return unit;
     }
 
-    function endActivation(unitId) {
+    if (unit.selectedActions.length >= 2) {
+      return unit;
+    }
+
+    return {
+      ...unit,
+      selectedActions: [...unit.selectedActions, actionName]
+    };
+  });
+
+  renderTracker();
+}
+
+  function clearUnitActions(unitId) {
+  trackerState.units = trackerState.units.map((unit) => {
+    if (unit.id !== unitId || unit.dead) {
+      return unit;
+    }
+
+    return {
+      ...unit,
+      selectedActions: []
+    };
+  });
+
+  renderTracker();
+}
+    
+  function endActivation(unitId) {
       trackerState.units = trackerState.units.map((unit) => {
         if (unit.id !== unitId || unit.dead) {
           return unit;
