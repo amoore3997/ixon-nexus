@@ -249,13 +249,92 @@
 
 .tracker-play-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
+  grid-template-columns: minmax(520px, 1fr) 300px 420px;
   gap: 16px;
   align-items: start;
 }
 
 .tracker-main-column {
   min-width: 0;
+}
+
+.selected-unit-viewport,
+.unit-list-panel {
+  min-width: 0;
+}
+
+.unit-list-panel {
+  position: sticky;
+  top: 130px;
+  border: 1px solid var(--border);
+  background: rgba(17, 24, 39, 0.84);
+  border-radius: 22px;
+  padding: 14px;
+  max-height: calc(100vh - 145px);
+  overflow: hidden;
+}
+
+.unit-list-panel h2 {
+  font-size: 1.25rem;
+  line-height: 1;
+  margin: 4px 0 12px;
+}
+
+.unit-list {
+  display: grid;
+  gap: 8px;
+}
+
+.unit-list-row {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(7, 10, 18, 0.66);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.unit-list-row:hover {
+  border-color: rgba(103, 232, 249, 0.7);
+}
+
+.unit-list-row.selected {
+  border-color: rgba(103, 232, 249, 0.9);
+  background: rgba(103, 232, 249, 0.12);
+}
+
+.unit-list-row.dead {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+
+.unit-list-row strong {
+  display: block;
+  font-size: 0.9rem;
+  line-height: 1.1;
+}
+
+.unit-list-row span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  margin-top: 4px;
+}
+
+.unit-list-status {
+  color: var(--cyan);
+  font-weight: 800;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.unit-list-status span {
+  color: var(--cyan);
 }
 
 @media (min-width: 1301px) {
@@ -461,6 +540,12 @@
   .tracker-play-layout {
     grid-template-columns: 1fr;
   }
+
+  .unit-list-panel {
+  position: static;
+  max-height: none;
+  overflow: visible;
+}
 
  .tracker-side-panel {
   position: static;
@@ -1243,10 +1328,19 @@
       
       <div class="tracker-play-layout">
   <main class="tracker-main-column">
-    <section class="tracker-grid" id="unitTrackerGrid">
-      <!-- JavaScript creates unit cards here -->
-    </section>
-  </main>
+  <section class="selected-unit-viewport" id="selectedUnitViewport">
+    <!-- JavaScript renders the selected unit here -->
+  </section>
+</main>
+
+<aside class="unit-list-panel">
+  <div class="section-eyebrow">Units</div>
+  <h2>Warband Units</h2>
+
+  <section class="unit-list" id="unitListPanel">
+    <!-- JavaScript renders compact unit rows here -->
+  </section>
+</aside>
 
   <aside class="tracker-side-panel">
       <section class="tactical-tracker-panel">
@@ -1587,6 +1681,7 @@ function buildRuntimeTacticalDeck(activeWarband) {
         currentCp: baseCp,
         qeReserve: 0,
         units: units,
+        selectedUnitId: units[0]?.id || null,
         tacticalDeck: tacticalDeck,
         tacticalHand: [],
         tacticalDiscard: [],
@@ -1648,6 +1743,15 @@ trackerState.units = trackerState.units.map((unit) => ({
   cardCollapsed: unit.cardCollapsed !== false,
   statsCollapsed: unit.statsCollapsed !== false
 }));
+
+const selectedUnitStillExists = trackerState.units.some((unit) => {
+  return unit.id === trackerState.selectedUnitId;
+});
+
+if (!trackerState.selectedUnitId || !selectedUnitStillExists) {
+  trackerState.selectedUnitId = trackerState.units[0]?.id || null;
+}
+      
       renderTracker();
     }
 
@@ -1670,8 +1774,10 @@ trackerState.units = trackerState.units.map((unit) => ({
       document.getElementById("influenceValue").textContent = `${totalInfluence} / ${trackerState.influenceLimit || 10}`;
       document.getElementById("activeUnitsValue").textContent = livingUnits;
 
-      const unitGrid = document.getElementById("unitTrackerGrid");
-      unitGrid.innerHTML = "";
+      const selectedUnitViewport = document.getElementById("selectedUnitViewport");
+      const unitListPanel = document.getElementById("unitListPanel");
+      selectedUnitViewport.innerHTML = "";
+      unitListPanel.innerHTML = "";
 
       trackerState.units.forEach((unit) => {
         const unitCard = document.createElement("article");
@@ -1877,7 +1983,28 @@ ${!unit.statsCollapsed ? `
   </div>
 `;
 
-        unitGrid.appendChild(unitCard);
+const unitRow = document.createElement("button");
+unitRow.className = `unit-list-row ${unit.id === trackerState.selectedUnitId ? "selected" : ""} ${unit.dead ? "dead" : ""}`;
+unitRow.type = "button";
+unitRow.onclick = () => selectUnit(unit.id);
+
+unitRow.innerHTML = `
+  <div>
+    <strong>${unit.name}</strong>
+    <span>${unit.role || "Unit"} · HP ${unit.currentHp} / ${unit.maxHp}</span>
+  </div>
+
+  <div class="unit-list-status">
+    <span>${unit.dead ? "Destroyed" : unit.activationOpen ? "Active" : "Ready"}</span>
+    <span>Act: ${unit.activationCount || 0}</span>
+  </div>
+`;
+
+unitListPanel.appendChild(unitRow);
+
+if (unit.id === trackerState.selectedUnitId) {
+  selectedUnitViewport.appendChild(unitCard);
+}
       });
 
       renderTacticalTracker();
@@ -2651,6 +2778,11 @@ function toggleUnitCardImage(unitId) {
     };
   });
 
+  renderTracker();
+}
+
+  function selectUnit(unitId) {
+  trackerState.selectedUnitId = unitId;
   renderTracker();
 }
     
