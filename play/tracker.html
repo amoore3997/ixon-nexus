@@ -1060,6 +1060,64 @@
   display: block;
 }
 
+.unit-card-image-frame img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Paste Part 2 here */
+.selected-unit-viewport .live-unit-card {
+  min-height: auto;
+}
+
+.selected-unit-viewport .selected-unit-card-image {
+  margin-bottom: 10px;
+}
+
+.selected-unit-viewport .selected-unit-card-image img {
+  max-height: 360px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.selected-unit-viewport .unit-quick-state {
+  gap: 8px;
+}
+
+.selected-unit-viewport .unit-mini-panel {
+  padding: 8px 10px;
+}
+
+.selected-unit-viewport .unit-mini-panel span {
+  font-size: 0.68rem;
+  margin-bottom: 3px;
+}
+
+.selected-unit-viewport .unit-mini-panel strong {
+  font-size: 0.95rem;
+}
+
+.selected-unit-viewport .stat-grid {
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.selected-unit-viewport .stat-tracker {
+  padding: 8px 10px;
+}
+
+.selected-unit-viewport .stat-tracker strong {
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+.selected-unit-viewport .action-panel {
+  padding: 10px;
+  margin-top: 10px;
+}
+
 .unit-quick-state {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1870,10 +1928,12 @@ unitCard.innerHTML = `
     </div>
   </div>
 
-<div class="unit-card-toggle-row">
-  <button class="tiny-button" type="button" onclick="toggleUnitCardImage('${unit.id}')">
-    ${unit.cardCollapsed ? "Show Card" : "Hide Card"}
-  </button>
+<div class="unit-card-image-frame selected-unit-card-image">
+  ${
+    unit.cardImage
+      ? `<img src="${unit.cardImage}" alt="${unit.name} card image" />`
+      : `<div class="card-placeholder"><p>No card image found for ${unit.name}.</p></div>`
+  }
 </div>
 
 ${!unit.cardCollapsed ? `
