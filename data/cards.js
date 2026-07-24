@@ -322,6 +322,94 @@ window.IXON_CARDS = [
 },
 
 {
+  id: "vs-2-scout-shell",
+  name: "VS-2 Scout Shell",
+  faction: "Concord",
+  role: "Basic Ranged",
+  type: "Unit",
+  influenceDisplay: "2",
+  influenceCost: 2,
+  commandPoints: 0,
+  coalitionKey: "Technology",
+  vetoFlag: null,
+  maxHp: 2,
+  stats: {
+    MR: 2,
+    AP: 5,
+    AR: 6,
+    DR: 1
+  },
+  cardImage: "../assets/cards/VS-2 Scout Shell.png",
+  notes: "Zero 2: Activate this ability once per turn. When this unit attacks replace X of its D6 dice with D20 where X is equal to its Zero value. If this unit is within MR of an allied Concord unit it gains +1 AR."
+},
+  
+{
+  id: "vs-3-drone-shell",
+  name: "VS-3 Drone Shell",
+  faction: "Concord",
+  role: "Basic Ranged",
+  type: "Unit",
+  influenceDisplay: "2",
+  influenceCost: 2,
+  commandPoints: 0,
+  coalitionKey: "Technology",
+  vetoFlag: null,
+  maxHp: 2,
+  stats: {
+    MR: 3,
+    AP: 1,
+    AR: 3,
+    DR: 1
+  },
+  cardImage: "../assets/cards/VS-3 Drone Shell.png",
+  notes: "Flight: This unit can move through terrain and other units."
+},
+  
+{
+  id: "vs-8-heavy-trooper-shell",
+  name: "VS-8 Heavy Trooper Shell",
+  faction: "Concord",
+  role: "Basic Heavy",
+  type: "Unit",
+  influenceDisplay: "3",
+  influenceCost: 3,
+  commandPoints: 0,
+  coalitionKey: "Technology",
+  vetoFlag: null,
+  maxHp: 5,
+  stats: {
+    MR: 1,
+    AP: 6,
+    AR: 2,
+    DR: 3
+  },
+  cardImage: "../assets/cards/VS-8 Heavy Trooper Shell.png",
+  notes: "If this unit is within MR of an allied Concord unit it gains +1 DR for every unit in range."
+},
+  
+{
+  id: "vs-12-juggernaught-shell",
+  name: "VS-12 Juggernaught Shell",
+  faction: "Concord",
+  role: "Unique Spec.",
+  type: "Unit",
+  influenceDisplay: "3",
+  influenceCost: 3,
+  commandPoints: 0,
+  coalitionKey: "Technology",
+  vetoFlag: null,
+  maxHp: 5,
+  stats: {
+    MR: 2,
+    AP: 6,
+    AR: 1,
+    DR: 4
+  },
+  cardImage: "../assets/cards/VS-12 Juggernaught Shell.png",
+  notes: "Ion Canons: Activate this ability once per turn. This unit gains +4 AR until end of turn but then cannot be activated next turn. Knock-back: When this unit deals combat damage to a unit move the damaged unit in any direction by 1 inch."
+},
+
+{
   id: "vaelor-kryss",
   name: "Vaelor Kryss, Engineering Guild Master",
   role: "Warlord - Unique",
