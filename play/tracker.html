@@ -1090,7 +1090,7 @@
 }
 
 .selected-unit-viewport .selected-unit-card-image img {
-  max-height: 630px;
+  max-height: 760px;
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -1119,6 +1119,21 @@
 
 .selected-unit-viewport .compact-action-row {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.selected-unit-viewport .unit-topline,
+.selected-unit-viewport .unit-subtitle,
+.selected-unit-viewport .unit-quick-state,
+.selected-unit-viewport .unit-stat-summary,
+.selected-unit-viewport .stat-grid,
+.selected-unit-viewport .action-panel,
+.selected-unit-viewport .compact-button-row,
+.selected-unit-viewport .compact-action-row {
+  width: min(100%, 620px);
+}
+
+.selected-unit-viewport .selected-unit-card-image {
+  width: min(100%, 620px);
 }
 
 .selected-unit-viewport .unit-quick-state {
