@@ -602,7 +602,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "/assets/cards/Combat Efficiency Algorithm.png",
+  cardImage: "../assets/cards/Combat Efficiency Algorithm.png",
   notes: "Add +2 AP to a target unit in your warband and +1 AP to any unit in your warband within target unit's MR until end of turn."
 },
 
@@ -626,7 +626,7 @@ window.IXON_TACTICAL_CARDS = [
   commandCost: 0,
   unique: false,
   maxCopies: 4,
-  cardImage: "/assets/cards/Energy Distribution Grid.png",
+  cardImage: "../assets/cards/Energy Distribution Grid.png",
   notes: "Target a unit in your warband, place an energy counter on that unit and any unit in your warband within target unit's MR."
 },
 
